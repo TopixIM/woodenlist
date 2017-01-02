@@ -2,7 +2,8 @@
 (ns woodenlist-server.updater.core
   (:require [woodenlist-server.updater.state :as state]
             [woodenlist-server.updater.user :as user]
-            [woodenlist-server.updater.router :as router]))
+            [woodenlist-server.updater.router :as router]
+            [woodenlist-server.updater.task-group :as task-group]))
 
 (defn updater [db op op-data state-id op-id op-time]
   (case op
@@ -13,4 +14,5 @@
     :user/log-out (user/log-out db op-data state-id op-id op-time)
     :state/remove-notification (state/remove-notification db op-data state-id op-id op-time)
     :router/change (router/change db op-data state-id op-id op-time)
+    :task-group/create (task-group/create db op-data state-id op-id op-time)
     db))

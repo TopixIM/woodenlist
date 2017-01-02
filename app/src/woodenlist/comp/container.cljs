@@ -9,7 +9,9 @@
             [woodenlist.comp.header :refer [comp-header]]
             [woodenlist.comp.profile :refer [comp-profile]]
             [woodenlist.comp.login :refer [comp-login]]
-            [respo-message.comp.msg-list :refer [comp-msg-list]]))
+            [respo-message.comp.msg-list :refer [comp-msg-list]]
+            [woodenlist.comp.portal :refer [comp-portal]]
+            [woodenlist.comp.group :refer [comp-group]]))
 
 (def style-body {:padding "8px 16px"})
 
@@ -25,12 +27,14 @@
       (div
        {:style (merge ui/row style-body)}
        (if (:logged-in? store)
-         (let [router (get-in store [:state :router])]
+         (let [router (:router store)]
            (case (:name router)
              :profile (comp-profile (:user store))
+             :portal (comp-portal (:data router))
+             :group (comp-group (:data router))
              (div {} (comp-text (str "404 page: " (pr-str router)) nil))))
          (comp-login))))
-     (comp-debug store style-debugger)
+     (comp-debug (:router store) style-debugger)
      (comp-msg-list (get-in store [:state :notifications]) :state/remove-notification))))
 
 (def comp-container (create-comp :container render))

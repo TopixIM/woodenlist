@@ -25,7 +25,7 @@
     (go-loop
      []
      (let [[op op-data state-id op-id op-time] (<! server-ch)]
-       (println "Action:" op op-data state-id op-id op-time)
+       (println "Action:" op (pr-str op-data) state-id op-id op-time)
        (comment println "Database:" @writer-db-ref)
        (try
         (let [new-db (updater @writer-db-ref op op-data state-id op-id op-time)]
@@ -37,8 +37,8 @@
   (println "server started"))
 
 (defn rm-caches! []
-  (.execSync (js/require "child_process") "rm .lumo_cache/workflow_server_SLASH_*"))
+  (.execSync (js/require "child_process") "rm .lumo_cache/woodenlist_server*"))
 
-(defn on-jsload! [] (println "code updated.") (render-clients! @reader-db-ref))
+(defn on-jsload! [] (println "Code updated.") (render-clients! @reader-db-ref))
 
 (set! *main-cli-fn* -main)

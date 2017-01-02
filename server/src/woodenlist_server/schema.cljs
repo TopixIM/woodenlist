@@ -1,9 +1,12 @@
 
 (ns woodenlist-server.schema )
 
-(def user {:password nil, :name nil, :nickname nil, :id nil, :avatar nil})
+(def user
+  {:involved-groups #{}, :password nil, :name nil, :nickname nil, :id nil, :avatar nil})
 
-(def database {:states {}, :topics {}, :users {}})
+(def database {:states {}, :task-groups {}, :users {}})
+
+(def task {:time nil, :done? false, :id nil, :text nil})
 
 (def state
   {:router {:router nil, :name :home, :data nil},
@@ -15,3 +18,5 @@
 (def router {:router nil, :name nil, :title nil, :data {}})
 
 (def notification {:id nil, :kind nil, :text nil})
+
+(def task-group {:admins #{}, :name nil, :tasks {}, :id nil, :order :none, :users #{}})
