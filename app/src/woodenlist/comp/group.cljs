@@ -5,9 +5,8 @@
             [respo-ui.style.colors :as colors]
             [respo.alias :refer [create-comp div span input]]
             [respo.comp.debug :refer [comp-debug]]
-            [respo.comp.text :refer [comp-code comp-text]]))
-
-(def style-draft {:width 400})
+            [respo.comp.text :refer [comp-code comp-text]]
+            [woodenlist.comp.task-draft :refer [comp-task-draft]]))
 
 (def style-container {:width "100%"})
 
@@ -30,7 +29,7 @@
       (let [tasks (:tasks task-group)]
         (div
          {}
-         (div {} (input {:style (merge ui/input style-draft)}))
+         (div {} (comp-task-draft (:id task-group)))
          (if (empty? tasks)
            (div {:style style-empty} (comp-text "No tasks" nil))
            (div
