@@ -30,4 +30,4 @@
             :logged-in? true,
             :statistics {},
             :user (twig-user user)})
-         {:state state, :logged-in? true})))))
+         {:state state, :logged-in? false})))))

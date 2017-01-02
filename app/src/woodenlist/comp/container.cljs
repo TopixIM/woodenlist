@@ -34,7 +34,7 @@
              :group (comp-group (:data router))
              (div {} (comp-text (str "404 page: " (pr-str router)) nil))))
          (comp-login))))
-     (comp-debug (:router store) style-debugger)
+     (comp-debug store style-debugger)
      (comp-msg-list (get-in store [:state :notifications]) :state/remove-notification))))
 
 (def comp-container (create-comp :container render))
