@@ -11,7 +11,9 @@
             [woodenlist.comp.login :refer [comp-login]]
             [respo-message.comp.msg-list :refer [comp-msg-list]]
             [woodenlist.comp.portal :refer [comp-portal]]
-            [woodenlist.comp.group :refer [comp-group]]))
+            [woodenlist.comp.group :refer [comp-group]]
+            [woodenlist.comp.group-editor :refer [comp-group-editor]]
+            [woodenlist.comp.task-editor :refer [comp-task-editor]]))
 
 (def style-body {:padding "8px 16px"})
 
@@ -32,9 +34,11 @@
              :profile (comp-profile (:user store))
              :portal (comp-portal (:data router))
              :group (comp-group (:data router))
+             :group-editor (comp-group-editor (:data router))
+             :task-editor (comp-task-editor (:data router))
              (div {} (comp-text (str "404 page: " (pr-str router)) nil))))
          (comp-login))))
-     (comp-debug store style-debugger)
+     (comp-debug (:router store) style-debugger)
      (comp-msg-list (get-in store [:state :notifications]) :state/remove-notification))))
 
 (def comp-container (create-comp :container render))

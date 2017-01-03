@@ -6,10 +6,10 @@
 
 (def database {:states {}, :task-groups {}, :users {}})
 
-(def task {:time nil, :done? false, :id nil, :text nil})
+(def task {:group-id nil, :time nil, :done? false, :id nil, :text nil})
 
 (def state
-  {:router {:router nil, :name :home, :data nil},
+  {:router {:router nil, :name :portal, :data nil},
    :nickname nil,
    :user-id nil,
    :notifications [],

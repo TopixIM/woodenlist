@@ -1,6 +1,9 @@
 
 (ns woodenlist-server.updater.task-group (:require [woodenlist-server.schema :as schema]))
 
+(defn rename [db op-data state-id op-id op-time]
+  (assoc-in db [:task-groups (:id op-data) :name] (:text op-data)))
+
 (defn create [db op-data state-id op-id op-time]
   (let [user-id (get-in db [:states state-id :user-id])]
     (-> db

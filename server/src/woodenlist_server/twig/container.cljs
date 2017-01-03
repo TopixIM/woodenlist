@@ -25,6 +25,12 @@
                                      [:id :name])]))
                                 (into {})))
                        :group (get-in db [:task-groups (:params router)])
+                       :group-editor (get-in db [:task-groups (:params router)])
+                       :task-editor
+                         (let [params (:params router)]
+                           (get-in
+                            db
+                            [:task-groups (:group-id params) :tasks (:task-id params)]))
                        nil)),
             :state state,
             :logged-in? true,
