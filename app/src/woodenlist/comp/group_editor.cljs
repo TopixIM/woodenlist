@@ -41,6 +41,7 @@
       (button
        {:style (merge ui/button {:background-color colors/irreversible}),
         :event {:click (on-delete (:id task-group))}}
-       (comp-text "Delete" nil))))))
+       (comp-text "Delete" nil)))
+     (div {} ()))))
 
 (def comp-group-editor (create-comp :group-editor init-state update-state render))

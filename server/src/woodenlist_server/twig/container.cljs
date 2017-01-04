@@ -26,6 +26,18 @@
                                 (into {})))
                        :group (get-in db [:task-groups (:params router)])
                        :group-editor (get-in db [:task-groups (:params router)])
+                       :group-manager
+                         (let [task-group (get-in db [:task-groups (:params router)])
+                               read-user (fn [user-ids]
+                                           (->> user-ids
+                                                (map
+                                                 (fn [user-id]
+                                                   [user-id
+                                                    (twig-user (get-in db [:users user-id]))]))
+                                                (into {})))]
+                           (-> task-group
+                               (update :admins read-user)
+                               (update :users read-user)))
                        :task-editor
                          (let [params (:params router)]
                            (get-in

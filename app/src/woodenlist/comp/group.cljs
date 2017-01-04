@@ -24,6 +24,9 @@
 
 (def style-name {:font-size 24, :font-weight 100, :font-family "Josefin Sans"})
 
+(defn on-group-manage [group-id]
+  (fn [e dispatch!] (dispatch! :router/change {:name :group-manager, :params group-id})))
+
 (defn render [task-group]
   (fn [state mutate!]
     (div
@@ -46,6 +49,11 @@
        (span
         {:style style-icon,
          :event {:click (on-edit-group (:id task-group))},
-         :attrs {:class-name "icon ion-md-create"}}))))))
+         :attrs {:class-name "icon ion-md-create"}})
+       (comp-space 8 nil)
+       (span
+        {:style style-icon,
+         :event {:click (on-group-manage (:id task-group))},
+         :attrs {:class-name "icon ion-md-people"}}))))))
 
 (def comp-group (create-comp :group render))
