@@ -31,7 +31,6 @@
 
 (defn render [task-groups]
   (fn [state mutate!]
-    (println "Task groups" task-groups)
     (div
      {}
      (div

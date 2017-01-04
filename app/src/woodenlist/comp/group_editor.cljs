@@ -20,6 +20,8 @@
     (if (not (string/blank? state))
       (do (dispatch! :task-group/rename {:id group-id, :text state}) (mutate! "")))))
 
+(defn on-delete [group-id] (fn [e dispatch!] (dispatch! :task-group/delete group-id)))
+
 (defn render [task-group]
   (fn [state mutate!]
     (div
@@ -34,6 +36,11 @@
       (comp-space 8 nil)
       (button
        {:style ui/button, :event {:click (on-rename (:id task-group) state mutate!)}}
-       (comp-text "Submit" nil))))))
+       (comp-text "Submit" nil))
+      (comp-space 8 nil)
+      (button
+       {:style (merge ui/button {:background-color colors/irreversible}),
+        :event {:click (on-delete (:id task-group))}}
+       (comp-text "Delete" nil))))))
 
 (def comp-group-editor (create-comp :group-editor init-state update-state render))

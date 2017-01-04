@@ -1,6 +1,12 @@
 
 (ns woodenlist-server.updater.task (:require [woodenlist-server.schema :as schema]))
 
+(defn delete [db op-data state-id op-id op-time]
+  (update-in
+   db
+   [:task-groups (:group-id op-data) :tasks]
+   (fn [cursor] (dissoc cursor (:task-id op-data)))))
+
 (defn edit [db op-data state-id op-id op-time]
   (assoc-in
    db

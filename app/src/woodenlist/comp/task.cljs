@@ -19,7 +19,11 @@
   (fn [e dispatch!] (dispatch! :task/toggle {:task-id task-id, :group-id group-id})))
 
 (def style-text
-  {:min-width 400, :background-color colors/paper, :padding "0 8px", :height 40})
+  {:line-height "40px",
+   :min-width 400,
+   :background-color colors/paper,
+   :padding "0 8px",
+   :height 40})
 
 (defn on-edit [group-id task-id]
   (fn [e dispatch!]
