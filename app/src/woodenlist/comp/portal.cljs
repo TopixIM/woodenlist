@@ -19,11 +19,7 @@
    :height 64})
 
 (def style-trigger
-  {:color :white,
-   :background-color colors/motif-light,
-   :width 128,
-   :cursor :pointer,
-   :height 64})
+  {:color colors/motif, :font-size 40, :cursor :pointer, :display :inline-block})
 
 (def style-group-list {:flex-wrap :wrap, :cursor :pointer})
 
@@ -45,6 +41,6 @@
                 (comp-text (:name task-group)))]))))
      (div
       {:style (merge ui/center style-trigger), :event {:click on-create}}
-      (comp-text "New Group")))))
+      (span {:attrs {:class-name "icon ion-md-add-circle"}})))))
 
 (def comp-portal (create-comp :portal render))
