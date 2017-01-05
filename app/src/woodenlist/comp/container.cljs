@@ -37,7 +37,7 @@
              :group (comp-group (:data router))
              :group-editor (comp-group-editor (:data router))
              :task-editor (comp-task-editor (:data router))
-             :group-manager (comp-group-manager (:data router))
+             :group-manager (comp-group-manager (:data router) (:user store))
              (div {} (comp-text (str "404 page: " (pr-str router)) nil))))
          (comp-login))))
      (comp-debug (:router store) style-debugger)

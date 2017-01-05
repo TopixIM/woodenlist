@@ -21,6 +21,15 @@
                      (fn [groups] (into #{} (disj groups op-data))))])))
               (into {}))))))
 
+(defn add-member [db op-data state-id op-id op-time]
+  (-> db
+      (update-in
+       [:task-groups (:group-id op-data) :users]
+       (fn [users] (conj users (:user-id op-data))))
+      (update-in
+       [:users (:user-id op-data) :involved-groups]
+       (fn [groups] (conj groups (:group-id op-data))))))
+
 (defn create [db op-data state-id op-id op-time]
   (let [user-id (get-in db [:states state-id :user-id])]
     (-> db
@@ -30,3 +39,15 @@
         (update-in
          [:users user-id :involved-groups]
          (fn [involved-groups] (into #{} (conj involved-groups op-id)))))))
+
+(defn delete-member [db op-data state-id op-id op-time]
+  (-> db
+      (update-in
+       [:task-groups (:group-id op-data) :users]
+       (fn [users] (disj users (:user-id op-data))))
+      (update-in
+       [:task-groups (:group-id op-data) :admins]
+       (fn [users] (disj users (:user-id op-data))))
+      (update-in
+       [:users (:user-id op-data) :involved-groups]
+       (fn [groups] (disj groups (:group-id op-data))))))
