@@ -30,6 +30,19 @@
        [:users (:user-id op-data) :involved-groups]
        (fn [groups] (conj groups (:group-id op-data))))))
 
+(defn change-role [db op-data state-id op-id op-time]
+  (update-in
+   db
+   [:task-groups (:group-id op-data)]
+   (fn [task-group]
+     (if (:admin? op-data)
+       (-> task-group
+           (update :admins (fn [admins] (disj admins (:user-id op-data))))
+           (update :users (fn [users] (conj users (:user-id op-data)))))
+       (-> task-group
+           (update :admins (fn [admins] (conj admins (:user-id op-data))))
+           (update :users (fn [users] (disj users (:user-id op-data)))))))))
+
 (defn create [db op-data state-id op-id op-time]
   (let [user-id (get-in db [:states state-id :user-id])]
     (-> db

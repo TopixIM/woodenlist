@@ -21,6 +21,10 @@
    :margin-bottom 16,
    :height 48})
 
+(defn on-change-role [group-id user-id admin?]
+  (fn [e dispatch!]
+    (dispatch! :task-group/change-role {:group-id group-id, :admin? admin?, :user-id user-id})))
+
 (def style-avatar {:width 32, :border-radius "50%", :height 32})
 
 (defn on-delete [group-id user-id]
@@ -36,9 +40,16 @@
      (comp-text (:name member) nil)
      (comp-space 16 nil)
      (if (and by-admin? (not= user-id (:id member)))
-       (span
-        {:style style-icon,
-         :event {:click (on-delete group-id (:id member))},
-         :attrs {:class-name "icon ion-md-remove-circle"}})))))
+       (div
+        {}
+        (span
+         {:style style-icon,
+          :event {:click (on-delete group-id (:id member))},
+          :attrs {:class-name "icon ion-md-remove-circle"}})
+        (comp-space 16 nil)
+        (span
+         {:style style-icon,
+          :event {:click (on-change-role group-id (:id member) admin?)},
+          :attrs {:class-name "icon ion-md-build"}}))))))
 
 (def comp-member-card (create-comp :member-card render))

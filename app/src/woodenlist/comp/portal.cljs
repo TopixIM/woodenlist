@@ -21,7 +21,7 @@
 (def style-trigger
   {:color colors/motif, :font-size 40, :cursor :pointer, :display :inline-block})
 
-(def style-group-list {:flex-wrap :wrap, :cursor :pointer})
+(def style-group-list {:flex-wrap :wrap, :cursor :pointer, :display :inline-flex})
 
 (defn on-create [e dispatch!] (dispatch! :task-group/create "New Group"))
 

@@ -20,6 +20,7 @@
     :task-group/delete (task-group/delete db op-data state-id op-id op-time)
     :task-group/add-member (task-group/add-member db op-data state-id op-id op-time)
     :task-group/delete-member (task-group/delete-member db op-data state-id op-id op-time)
+    :task-group/change-role (task-group/change-role db op-data state-id op-id op-time)
     :task/create (task/create db op-data state-id op-id op-time)
     :task/toggle (task/toggle db op-data state-id op-id op-time)
     :task/edit (task/edit db op-data state-id op-id op-time)
