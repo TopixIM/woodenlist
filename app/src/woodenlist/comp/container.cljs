@@ -14,7 +14,8 @@
             [woodenlist.comp.group :refer [comp-group]]
             [woodenlist.comp.group-editor :refer [comp-group-editor]]
             [woodenlist.comp.task-editor :refer [comp-task-editor]]
-            [woodenlist.comp.group-manager :refer [comp-group-manager]]))
+            [woodenlist.comp.group-manager :refer [comp-group-manager]]
+            [woodenlist.comp.person :refer [comp-person]]))
 
 (def style-body {:padding "8px 16px"})
 
@@ -38,6 +39,7 @@
              :group-editor (comp-group-editor (:data router))
              :task-editor (comp-task-editor (:data router))
              :group-manager (comp-group-manager (:data router) (:user store))
+             :person (comp-person (:data router))
              (div {} (comp-text (str "404 page: " (pr-str router)) nil))))
          (comp-login))))
      (comp-debug (:router store) style-debugger)

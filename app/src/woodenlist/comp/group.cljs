@@ -39,7 +39,11 @@
          (div {} (comp-task-draft (:id task-group)))
          (if (empty? tasks)
            (div {:style style-empty} (comp-text "No tasks" nil))
-           (div {} (->> (vals tasks) (map (fn [task] [(:id task) (comp-task task)]))))))))
+           (div
+            {}
+            (->> (vals tasks)
+                 (sort (fn [a b] ()))
+                 (map (fn [task] [(:id task) (comp-task task)]))))))))
      (div
       {:style style-sidebar}
       (div

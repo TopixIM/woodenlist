@@ -10,6 +10,9 @@
 
 (def style-icon {:cursor :pointer})
 
+(defn on-view-member [user-id]
+  (fn [e dispatch!] (dispatch! :router/change {:name :person, :params user-id})))
+
 (def style-container
   {:min-width 120,
    :align-items :center,
@@ -25,7 +28,7 @@
   (fn [e dispatch!]
     (dispatch! :task-group/change-role {:group-id group-id, :admin? admin?, :user-id user-id})))
 
-(def style-avatar {:width 32, :border-radius "50%", :height 32})
+(def style-avatar {:width 32, :cursor :pointer, :border-radius "50%", :height 32})
 
 (defn on-delete [group-id user-id]
   (fn [e dispatch!]
@@ -35,7 +38,10 @@
   (fn [state mutate!]
     (div
      {:style (merge ui/row style-container)}
-     (img {:style style-avatar, :attrs {:src (:avatar member)}})
+     (img
+      {:style style-avatar,
+       :event {:click (on-view-member (:id member))},
+       :attrs {:src (:avatar member)}})
      (comp-space 8 nil)
      (comp-text (:name member) nil)
      (comp-space 16 nil)
