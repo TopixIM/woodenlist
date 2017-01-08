@@ -8,7 +8,8 @@
             [respo.comp.debug :refer [comp-debug]]
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-code comp-text]]
-            [woodenlist.comp.member-card :refer [comp-member-card]]))
+            [woodenlist.comp.member-card :refer [comp-member-card]]
+            [woodenlist.comp.back :refer [comp-back]]))
 
 (defn on-input [mutate!] (fn [e dispatch!] (mutate! (:value e))))
 
@@ -63,6 +64,8 @@
         (div {} (comp-text "Members" nil))
         (if (empty? (:users task-group))
           (render-empty)
-          (render-members (:users task-group) false (:id task-group) (:id user) by-admin?)))))))
+          (render-members (:users task-group) false (:id task-group) (:id user) by-admin?)))
+       (comp-space nil 120)
+       (comp-back (:id task-group))))))
 
 (def comp-group-manager (create-comp :group-manager init-state update-state render))

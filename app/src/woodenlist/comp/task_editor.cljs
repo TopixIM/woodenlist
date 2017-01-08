@@ -7,7 +7,8 @@
             [respo.alias :refer [create-comp div span a input button]]
             [respo.comp.debug :refer [comp-debug]]
             [respo.comp.text :refer [comp-code comp-text]]
-            [respo.comp.space :refer [comp-space]]))
+            [respo.comp.space :refer [comp-space]]
+            [woodenlist.comp.back :refer [comp-back]]))
 
 (defn on-input [mutate!] (fn [e dispatch!] (mutate! (:value e))))
 
@@ -45,6 +46,8 @@
       (button
        {:style (merge ui/button {:background-color colors/irreversible}),
         :event {:click (on-delete (:group-id task) (:id task))}}
-       (comp-text "Delete" nil))))))
+       (comp-text "Delete" nil))
+      (comp-space nil 120)
+      (div {} (comp-back (:group-id task) nil))))))
 
 (def comp-task-editor (create-comp :task-editor init-state update-state render))
