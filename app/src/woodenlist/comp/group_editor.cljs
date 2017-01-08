@@ -37,13 +37,17 @@
       (comp-space 8 nil)
       (button
        {:style ui/button, :event {:click (on-rename (:id task-group) state mutate!)}}
-       (comp-text "Submit" nil))
+       (comp-text "Submit" nil)))
+     (comp-space nil 120)
+     (div
+      {}
+      (comp-text "Delete the whole group!")
       (comp-space 8 nil)
       (button
        {:style (merge ui/button {:background-color colors/irreversible}),
         :event {:click (on-delete (:id task-group))}}
        (comp-text "Delete" nil)))
-     (comp-space nil 120)
+     (comp-space nil 16)
      (comp-back (:id task-group)))))
 
 (def comp-group-editor (create-comp :group-editor init-state update-state render))

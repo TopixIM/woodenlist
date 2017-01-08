@@ -15,6 +15,7 @@
    :color :white,
    :background-color colors/motif,
    :cursor :pointer,
+   :padding 8,
    :margin-right 16,
    :margin-bottom 16})
 

@@ -8,8 +8,6 @@
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-code comp-text]]))
 
-(def style-icon {:cursor :pointer})
-
 (def style-container {:align-items :center, :margin-top 8})
 
 (def style-done
@@ -23,6 +21,7 @@
   {:line-height "40px",
    :min-width 400,
    :background-color colors/paper,
+   :cursor :pointer,
    :padding "0 8px",
    :height 40})
 
@@ -40,11 +39,8 @@
       {:style (merge style-done (if (:done? task) {:background-color colors/verdant})),
        :event {:click (on-toggle (:group-id task) (:id task) (:done? task))}})
      (comp-space 8 nil)
-     (comp-text (:text task) style-text)
-     (comp-space 8 nil)
-     (span
-      {:style style-icon,
-       :event {:click (on-edit (:group-id task) (:id task))},
-       :attrs {:class-name "icon ion-md-create"}}))))
+     (div
+      {:style style-text, :event {:click (on-edit (:group-id task) (:id task))}}
+      (comp-text (:text task) nil)))))
 
 (def comp-task (create-comp :task render))
