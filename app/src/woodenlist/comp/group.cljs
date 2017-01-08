@@ -12,6 +12,9 @@
 
 (def style-icon {:cursor :pointer})
 
+(defn on-toggle-hidden [group-id]
+  (fn [e dispatch!] (dispatch! :task-group/toggle-hidden group-id)))
+
 (defn on-edit-group [group-id]
   (fn [e dispatch!] (dispatch! :router/change {:name :group-editor, :params group-id})))
 
@@ -33,17 +36,26 @@
      {:style (merge ui/row style-container)}
      (div
       {:style ui/flex}
-      (let [tasks (:tasks task-group)]
+      (let [tasks (:tasks task-group), done-tasks (:done-tasks task-group)]
         (div
          {}
          (div {} (comp-task-draft (:id task-group)))
          (if (empty? tasks)
            (div {:style style-empty} (comp-text "No tasks" nil))
+           (div {} (->> (vals tasks) (map (fn [task] [(:id task) (comp-task task)])))))
+         (comp-space nil 32)
+         (div
+          {}
+          (comp-text "Done tasks:" nil)
+          (comp-space 8 nil)
+          (div
+           {:style ui/clickable-text, :event {:click (on-toggle-hidden (:id task-group))}}
+           (comp-text "Toggle" nil)))
+         (if (empty? done-tasks)
            (div
-            {}
-            (->> (vals tasks)
-                 (sort (fn [a b] ()))
-                 (map (fn [task] [(:id task) (comp-task task)]))))))))
+            {:style style-empty}
+            (comp-text (if (:show-done? task-group) "No tasks" "Hidden") nil))
+           (div {} (->> (vals done-tasks) (map (fn [task] [(:id task) (comp-task task)]))))))))
      (div
       {:style style-sidebar}
       (div

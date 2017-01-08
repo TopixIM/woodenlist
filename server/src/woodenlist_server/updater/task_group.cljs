@@ -1,6 +1,9 @@
 
 (ns woodenlist-server.updater.task-group (:require [woodenlist-server.schema :as schema]))
 
+(defn toggle-hidden [db op-data state-id op-id op-time]
+  (update-in db [:task-groups op-data :show-done?] not))
+
 (defn rename [db op-data state-id op-id op-time]
   (assoc-in db [:task-groups (:id op-data) :name] (:text op-data)))
 

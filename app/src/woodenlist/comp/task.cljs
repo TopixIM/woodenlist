@@ -15,8 +15,9 @@
 (def style-done
   {:background-color colors/attractive, :width 40, :cursor :pointer, :height 40})
 
-(defn on-toggle [group-id task-id]
-  (fn [e dispatch!] (dispatch! :task/toggle {:task-id task-id, :group-id group-id})))
+(defn on-toggle [group-id task-id done?]
+  (fn [e dispatch!]
+    (dispatch! :task/toggle {:task-id task-id, :group-id group-id, :done? done?})))
 
 (def style-text
   {:line-height "40px",
@@ -37,7 +38,7 @@
      {:style (merge ui/row style-container)}
      (div
       {:style (merge style-done (if (:done? task) {:background-color colors/verdant})),
-       :event {:click (on-toggle (:group-id task) (:id task))}})
+       :event {:click (on-toggle (:group-id task) (:id task) (:done? task))}})
      (comp-space 8 nil)
      (comp-text (:text task) style-text)
      (comp-space 8 nil)

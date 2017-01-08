@@ -14,7 +14,22 @@
    (:text op-data)))
 
 (defn toggle [db op-data state-id op-id op-time]
-  (update-in db [:task-groups (:group-id op-data) :tasks (:task-id op-data) :done?] not))
+  (update-in
+   db
+   [:task-groups (:group-id op-data)]
+   (fn [task-group]
+     (let [task-id (:task-id op-data)
+           task (update
+                 (get-in task-group [(if (:done? op-data) :done-tasks :tasks) task-id])
+                 :done?
+                 not)]
+       (if (:done? op-data)
+         (-> task-group
+             (assoc-in [:tasks task-id] task)
+             (update :done-tasks (fn [tasks] (dissoc tasks task-id))))
+         (-> task-group
+             (assoc-in [:done-tasks task-id] task)
+             (update :tasks (fn [tasks] (dissoc tasks task-id)))))))))
 
 (defn create [db op-data state-id op-id op-time]
   (let [group-id (:group-id op-data), text (:text op-data)]

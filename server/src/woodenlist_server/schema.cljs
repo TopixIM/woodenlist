@@ -19,4 +19,5 @@
 
 (def notification {:id nil, :kind nil, :text nil})
 
-(def task-group {:admins #{}, :name nil, :tasks {}, :id nil, :order :none, :users #{}})
+(def task-group
+  {:show-done? false, :admins #{}, :name nil, :tasks {}, :id nil, :order :none, :users #{}})

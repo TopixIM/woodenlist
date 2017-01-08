@@ -2,6 +2,7 @@
 (ns woodenlist-server.twig.container
   (:require [recollect.bunch :refer [create-twig]]
             [woodenlist-server.twig.user :refer [twig-user]]
+            [woodenlist-server.twig.group :refer [twig-group]]
             [woodenlist-server.twig.group-brief :refer [twig-group-brief]]))
 
 (def twig-container
@@ -25,7 +26,7 @@
                                      (get-in db [:task-groups group-id])
                                      [:id :name])]))
                                 (into {})))
-                       :group (get-in db [:task-groups (:params router)])
+                       :group (twig-group (get-in db [:task-groups (:params router)]))
                        :group-editor (get-in db [:task-groups (:params router)])
                        :group-manager
                          (let [task-group (get-in db [:task-groups (:params router)])
