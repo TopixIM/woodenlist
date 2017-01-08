@@ -19,12 +19,18 @@
 
 (def style-body {:padding "8px 16px"})
 
+(def style-container
+  {:color colors/paper,
+   :background-image (str
+                      "url(https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-440209.jpg)"),
+   :background-size :cover})
+
 (def style-debugger {:bottom 0, :max-width "100%", :left 0})
 
 (defn render [store]
   (fn [state mutate!]
     (div
-     {:style (merge ui/global ui/fullscreen ui/column)}
+     {:style (merge ui/global ui/fullscreen ui/column style-container)}
      (comp-header (:logged-in? store))
      (div
       {:style style-body}

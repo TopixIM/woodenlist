@@ -14,7 +14,6 @@
 (def style-header
   {:color :white,
    :font-size 16,
-   :background-color colors/motif,
    :padding "0 16px",
    :justify-content :space-between,
    :height 48})
@@ -22,7 +21,8 @@
 (defn on-home [e dispatch!]
   (dispatch! :router/change {:router nil, :name :portal, :params nil}))
 
-(def style-logo {:cursor "pointer"})
+(def style-logo
+  {:font-size 32, :font-weight 100, :cursor "pointer", :font-family "Josefin Sans"})
 
 (def style-pointer {:cursor "pointer"})
 

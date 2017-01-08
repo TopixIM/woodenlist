@@ -4,6 +4,8 @@
 
 A realtime Todolist.
 
+Background image https://alpha.wallhaven.cc/wallpaper/440209
+
 ### Workflow
 
 To run the client side app:

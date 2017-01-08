@@ -17,12 +17,14 @@
    :cursor :pointer,
    :padding "0 8px"})
 
+(def style-container {:color colors/paper})
+
 (def style-avatar {:width 80, :border-radius "50%", :background-size :cover, :height 80})
 
 (defn render [user]
   (fn [state mutate!]
     (div
-     {}
+     {:style style-container}
      (div
       {}
       (div

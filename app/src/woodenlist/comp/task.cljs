@@ -8,7 +8,7 @@
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-code comp-text]]))
 
-(def style-container {:align-items :center, :margin-top 8})
+(def style-container {:align-items :center, :color colors/texture, :margin-top 8})
 
 (def style-done
   {:background-color colors/attractive, :width 40, :cursor :pointer, :height 40})
