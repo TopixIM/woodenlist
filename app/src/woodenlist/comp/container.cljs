@@ -16,12 +16,15 @@
             [woodenlist.comp.group-editor :refer [comp-group-editor]]
             [woodenlist.comp.task-editor :refer [comp-task-editor]]
             [woodenlist.comp.group-manager :refer [comp-group-manager]]
-            [woodenlist.comp.person :refer [comp-person]]))
+            [woodenlist.comp.person :refer [comp-person]]
+            [woodenlist.comp.groups-view :refer [comp-groups-view]]
+            [woodenlist.comp.people :refer [comp-people]]))
 
 (def style-body {:overflow :auto, :padding "16px 200px"})
 
 (def style-container
   {:color colors/paper,
+   :background-color :black,
    :background-image (str
                       "url(https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-440209.jpg)"),
    :background-size :cover})
@@ -46,6 +49,8 @@
             :task-editor (comp-task-editor (:data router))
             :group-manager (comp-group-manager (:data router) (:user store))
             :person (comp-person (:data router))
+            :groups (comp-groups-view (:data router))
+            :people (comp-people (:data router))
             (div {} (comp-text (str "404 page: " (pr-str router)) nil))))
         (comp-login))
       (comp-space nil 120))

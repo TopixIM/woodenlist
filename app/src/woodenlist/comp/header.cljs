@@ -22,19 +22,37 @@
    :position :absolute,
    :height 48})
 
+(defn on-groups [e dispatch!] (dispatch! :router/change {:name :groups, :params nil}))
+
 (defn on-home [e dispatch!]
   (dispatch! :router/change {:router nil, :name :portal, :params nil}))
 
+(def style-smaller {:font-size 24})
+
 (def style-logo
-  {:font-size 32, :font-weight 100, :cursor "pointer", :font-family "Josefin Sans"})
+  {:font-size 32,
+   :font-weight 100,
+   :cursor "pointer",
+   :margin-right 32,
+   :font-family "Josefin Sans"})
 
 (def style-pointer {:cursor "pointer"})
+
+(defn on-people [e dispatch!] (dispatch! :router/change {:name :people, :params nil}))
 
 (defn render [logged-in?]
   (fn [state mutate!]
     (div
      {:style (merge ui/row-center style-header)}
-     (div {:style style-logo, :event {:click on-home}} (comp-text "Woodenlist" nil))
+     (div
+      {:style (merge ui/row {:align-items :center})}
+      (div {:style style-logo, :event {:click on-home}} (comp-text "Woodenlist" nil))
+      (div
+       {:style (merge style-logo style-smaller), :event {:click on-groups}}
+       (comp-text "Groups" nil))
+      (div
+       {:style (merge style-logo style-smaller), :event {:click on-people}}
+       (comp-text "People" nil)))
      (div
       {:style style-pointer, :event {:click on-profile}}
       (comp-text (if logged-in? "Me" "Guest") nil)))))

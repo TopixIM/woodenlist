@@ -4,4 +4,5 @@
 (def twig-group-brief
   (create-twig
    :group-brief
-   (fn [task-group] (-> task-group (dissoc :tasks) (dissoc :admins) (dissoc :users)))))
+   (fn [task-group]
+     (-> task-group (dissoc :tasks) (dissoc :done-tasks) (dissoc :admins) (dissoc :users)))))

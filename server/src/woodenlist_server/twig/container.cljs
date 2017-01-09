@@ -58,6 +58,16 @@
                                               (get-in db [:task-groups group-id]))]))
                                          (into {})),
                             :user (twig-user member)})
+                       :groups
+                         (->> (vals (:task-groups db))
+                              (map
+                               (fn [task-group]
+                                 [(:id task-group) (twig-group-brief task-group)]))
+                              (into {}))
+                       :people
+                         (->> (vals (:users db))
+                              (map (fn [member] [(:id member) (twig-user member)]))
+                              (into {}))
                        nil)),
             :logged-in? true,
             :user (twig-user user),
