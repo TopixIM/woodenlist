@@ -3,7 +3,8 @@
   (:require [respo.core :refer [render! clear-cache!]]
             [woodenlist.comp.container :refer [comp-container]]
             [cljs.reader :refer [read-string]]
-            [woodenlist.network :refer [send! setup-socket!]]))
+            [woodenlist.network :refer [send! setup-socket!]]
+            [woodenlist.schema :as schema]))
 
 (defn dispatch! [op op-data] (send! op op-data))
 
@@ -24,7 +25,7 @@
     :url (str "ws://" (.-hostname js/location) ":5021")})
   (add-watch store-ref :changes render-app!)
   (add-watch states-ref :changes render-app!)
-  (let [raw (.getItem js/localStorage "woodenlist-login")]
+  (let [raw (.getItem js/localStorage (:storage-key schema/configs))]
     (if (some? raw)
       (do (println "Found login information:" raw) (dispatch! :user/log-in (read-string raw)))))
   (println "app started!"))

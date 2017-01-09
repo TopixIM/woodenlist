@@ -1,15 +1,28 @@
 
 (ns woodenlist-server.main
   (:require [cljs.nodejs :as nodejs]
+            [cljs.reader :refer [read-string]]
             [woodenlist-server.schema :as schema]
             [woodenlist-server.network :refer [run-server! render-clients!]]
             [woodenlist-server.updater.core :refer [updater]]
             [cljs.core.async :refer [<!]])
   (:require-macros [cljs.core.async.macros :refer [go-loop]]))
 
-(defonce writer-db-ref (atom schema/database))
+(defonce writer-db-ref
+  (atom
+   (let [fs (js/require "fs")]
+     (if (fs.existsSync (:storage-key schema/configs))
+       (do
+        (println "Found storage, loading.")
+        (read-string (fs.readFileSync (:storage-key schema/configs) "utf8")))
+       (do (println "No storage found.") schema/database)))))
 
 (defonce reader-db-ref (atom @writer-db-ref))
+
+(defn persist-db! []
+  (let [raw (pr-str @writer-db-ref), fs (js/require "fs")]
+    (println "Writing DB to storage.")
+    (fs.writeFileSync (:storage-key schema/configs) raw)))
 
 (defn render-loop! []
   (if (not= @reader-db-ref @writer-db-ref)
@@ -34,7 +47,8 @@
        (recur)))
     (render-loop!))
   (add-watch reader-db-ref :log (fn [] ))
-  (println "server started"))
+  (.on js/process "exit" (fn [code] (println "Exit:" code) (persist-db!)))
+  (println "Server started."))
 
 (defn rm-caches! []
   (.execSync (js/require "child_process") "rm .lumo_cache/woodenlist_server*"))

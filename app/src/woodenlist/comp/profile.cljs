@@ -6,11 +6,12 @@
             [respo.alias :refer [create-comp div span a input]]
             [respo.comp.debug :refer [comp-debug]]
             [respo.comp.text :refer [comp-code comp-text]]
-            [respo.comp.space :refer [comp-space]]))
+            [respo.comp.space :refer [comp-space]]
+            [woodenlist.schema :as schema]))
 
 (defn on-log-out [e dispatch!]
   (dispatch! :user/log-out nil)
-  (.removeItem js/localStorage "woodenlist-login"))
+  (.removeItem js/localStorage (:storage-key schema/configs)))
 
 (def style-trigger
   {:color :white,

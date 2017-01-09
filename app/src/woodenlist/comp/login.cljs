@@ -4,7 +4,8 @@
             [respo.comp.text :refer [comp-text]]
             [respo.comp.space :refer [comp-space]]
             [respo.comp.debug :refer [comp-debug]]
-            [respo-ui.style :as ui]))
+            [respo-ui.style :as ui]
+            [woodenlist.schema :as schema]))
 
 (defn on-input [mutate! k] (fn [e dispatch!] (mutate! k (:value e))))
 
@@ -20,7 +21,7 @@
   (fn [e dispatch!]
     (do
      (dispatch! (if signup? :user/sign-up :user/log-in) [username password])
-     (.setItem js/localStorage "woodenlist-login" (pr-str [username password])))))
+     (.setItem js/localStorage (:storage-key schema/configs) (pr-str [username password])))))
 
 (defn render []
   (fn [state mutate!]

@@ -1,6 +1,8 @@
 
 (ns woodenlist-server.schema )
 
+(def configs {:port 5021, :storage-key "/tmp/woodenlist-storage.edn"})
+
 (def user
   {:involved-groups #{}, :password nil, :name nil, :nickname nil, :id nil, :avatar nil})
 
