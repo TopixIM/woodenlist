@@ -21,13 +21,16 @@
   (render-app!)
   (setup-socket!
    store-ref
-   {:on-close! (fn [event] (.error js/console "Lost connection!")),
+   {:on-open! (fn [event]
+      (let [raw (.getItem js/localStorage (:storage-key schema/configs))]
+        (if (some? raw)
+          (do
+           (println "Found login information:" raw)
+           (dispatch! :user/log-in (read-string raw)))))),
+    :on-close! (fn [event] (.error js/console "Lost connection!")),
     :url (str "ws://" (.-hostname js/location) ":5021")})
   (add-watch store-ref :changes render-app!)
   (add-watch states-ref :changes render-app!)
-  (let [raw (.getItem js/localStorage (:storage-key schema/configs))]
-    (if (some? raw)
-      (do (println "Found login information:" raw) (dispatch! :user/log-in (read-string raw)))))
   (println "app started!"))
 
 (defn on-jsload! [] (clear-cache!) (render-app!) (println "code updated."))
