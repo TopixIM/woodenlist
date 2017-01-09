@@ -15,12 +15,14 @@
 (defn on-toggle-hidden [group-id]
   (fn [e dispatch!] (dispatch! :session/toggle-hidden group-id)))
 
+(def style-draft {:margin-left 48})
+
 (defn on-edit-group [group-id]
   (fn [e dispatch!] (dispatch! :router/change {:name :group-editor, :params group-id})))
 
-(def style-list {:overflow :auto, :height "100%"})
+(def style-list {})
 
-(def style-container {:width "100%", :height "100%"})
+(def style-container {:width "100%"})
 
 (def style-empty
   {:color colors/texture-light, :font-size 20, :font-weight 100, :font-family "Josefin Sans"})
@@ -41,7 +43,8 @@
       (let [tasks (:tasks task-group), done-tasks (:done-tasks task-group)]
         (div
          {}
-         (div {} (comp-task-draft (:id task-group)))
+         (div {:style style-draft} (comp-task-draft (:id task-group)))
+         (comp-space nil 32)
          (if (empty? tasks)
            (div {:style style-empty} (comp-text "No tasks" nil))
            (div

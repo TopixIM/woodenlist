@@ -14,8 +14,12 @@
 (def style-header
   {:color :white,
    :font-size 16,
+   :background-color (hsl 0 0 0 0.6),
+   :width "100%",
+   :z-index 100,
    :padding "0 16px",
    :justify-content :space-between,
+   :position :absolute,
    :height 48})
 
 (defn on-home [e dispatch!]
