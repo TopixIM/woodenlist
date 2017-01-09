@@ -24,6 +24,9 @@
     :url (str "ws://" (.-hostname js/location) ":5021")})
   (add-watch store-ref :changes render-app!)
   (add-watch states-ref :changes render-app!)
+  (let [raw (.getItem js/localStorage "woodenlist-login")]
+    (if (some? raw)
+      (do (println "Found login information:" raw) (dispatch! :user/log-in (read-string raw)))))
   (println "app started!"))
 
 (defn on-jsload! [] (clear-cache!) (render-app!) (println "code updated."))

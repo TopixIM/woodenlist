@@ -1,13 +1,13 @@
 
 (ns woodenlist-server.updater.task-group (:require [woodenlist-server.schema :as schema]))
 
-(defn toggle-hidden [db op-data state-id op-id op-time]
+(defn toggle-hidden [db op-data session-id op-id op-time]
   (update-in db [:task-groups op-data :show-done?] not))
 
-(defn rename [db op-data state-id op-id op-time]
+(defn rename [db op-data session-id op-id op-time]
   (assoc-in db [:task-groups (:id op-data) :name] (:text op-data)))
 
-(defn delete [db op-data state-id op-id op-time]
+(defn delete [db op-data session-id op-id op-time]
   (-> db
       (update :task-groups (fn [cursor] (dissoc cursor op-data)))
       (update
@@ -24,7 +24,7 @@
                      (fn [groups] (into #{} (disj groups op-data))))])))
               (into {}))))))
 
-(defn add-member [db op-data state-id op-id op-time]
+(defn add-member [db op-data session-id op-id op-time]
   (-> db
       (update-in
        [:task-groups (:group-id op-data) :users]
@@ -33,7 +33,7 @@
        [:users (:user-id op-data) :involved-groups]
        (fn [groups] (conj groups (:group-id op-data))))))
 
-(defn change-role [db op-data state-id op-id op-time]
+(defn change-role [db op-data session-id op-id op-time]
   (update-in
    db
    [:task-groups (:group-id op-data)]
@@ -46,8 +46,8 @@
            (update :admins (fn [admins] (conj admins (:user-id op-data))))
            (update :users (fn [users] (disj users (:user-id op-data)))))))))
 
-(defn create [db op-data state-id op-id op-time]
-  (let [user-id (get-in db [:states state-id :user-id])]
+(defn create [db op-data session-id op-id op-time]
+  (let [user-id (get-in db [:sessions session-id :user-id])]
     (-> db
         (assoc-in
          [:task-groups op-id]
@@ -56,7 +56,7 @@
          [:users user-id :involved-groups]
          (fn [involved-groups] (into #{} (conj involved-groups op-id)))))))
 
-(defn delete-member [db op-data state-id op-id op-time]
+(defn delete-member [db op-data session-id op-id op-time]
   (-> db
       (update-in
        [:task-groups (:group-id op-data) :users]

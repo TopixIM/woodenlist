@@ -8,7 +8,9 @@
             [respo.comp.text :refer [comp-code comp-text]]
             [respo.comp.space :refer [comp-space]]))
 
-(defn on-log-out [e dispatch!] (dispatch! :user/log-out nil))
+(defn on-log-out [e dispatch!]
+  (dispatch! :user/log-out nil)
+  (.removeItem js/localStorage "woodenlist-login"))
 
 (def style-trigger
   {:color :white,

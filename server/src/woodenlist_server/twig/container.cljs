@@ -8,8 +8,8 @@
 (def twig-container
   (create-twig
    :container
-   (fn [db state]
-     (let [user-id (:user-id state), router (:router state)]
+   (fn [db session]
+     (let [user-id (:user-id session), router (:router session)]
        (if (some? user-id)
          (let [user (get-in db [:users user-id])]
            {:router (assoc
@@ -56,8 +56,7 @@
                                          (into {})),
                             :user (twig-user member)})
                        nil)),
-            :state state,
             :logged-in? true,
-            :statistics {},
-            :user (twig-user user)})
-         {:state state, :logged-in? false})))))
+            :user (twig-user user),
+            :session session})
+         {:logged-in? false, :session session})))))

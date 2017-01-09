@@ -1,19 +1,19 @@
 
 (ns woodenlist-server.updater.task (:require [woodenlist-server.schema :as schema]))
 
-(defn delete [db op-data state-id op-id op-time]
+(defn delete [db op-data session-id op-id op-time]
   (update-in
    db
    [:task-groups (:group-id op-data) :tasks]
    (fn [cursor] (dissoc cursor (:task-id op-data)))))
 
-(defn edit [db op-data state-id op-id op-time]
+(defn edit [db op-data session-id op-id op-time]
   (assoc-in
    db
    [:task-groups (:group-id op-data) :tasks (:task-id op-data) :text]
    (:text op-data)))
 
-(defn toggle [db op-data state-id op-id op-time]
+(defn toggle [db op-data session-id op-id op-time]
   (update-in
    db
    [:task-groups (:group-id op-data)]
@@ -31,7 +31,7 @@
              (assoc-in [:done-tasks task-id] task)
              (update :tasks (fn [tasks] (dissoc tasks task-id)))))))))
 
-(defn create [db op-data state-id op-id op-time]
+(defn create [db op-data session-id op-id op-time]
   (let [group-id (:group-id op-data), text (:text op-data)]
     (assoc-in
      db

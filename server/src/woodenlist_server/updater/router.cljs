@@ -1,5 +1,5 @@
 
 (ns woodenlist-server.updater.router )
 
-(defn change [db op-data state-id op-id op-time]
-  (assoc-in db [:states state-id :router] op-data))
+(defn change [db op-data session-id op-id op-time]
+  (assoc-in db [:sessions session-id :router] op-data))
