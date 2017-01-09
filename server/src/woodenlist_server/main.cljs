@@ -11,6 +11,7 @@
 (defonce writer-db-ref
   (atom
    (let [fs (js/require "fs")]
+     (enable-console-print!)
      (if (fs.existsSync (:storage-key schema/configs))
        (do
         (println "Found storage, loading.")
