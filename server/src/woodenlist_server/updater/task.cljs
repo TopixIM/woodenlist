@@ -8,10 +8,10 @@
    (fn [cursor] (dissoc cursor (:task-id op-data)))))
 
 (defn edit [db op-data session-id op-id op-time]
-  (assoc-in
+  (update-in
    db
-   [:task-groups (:group-id op-data) :tasks (:task-id op-data) :text]
-   (:text op-data)))
+   [:task-groups (:group-id op-data) :tasks (:task-id op-data)]
+   (fn [task] (-> task (assoc :text (:text op-data)) (assoc :updated-time op-time)))))
 
 (defn toggle [db op-data session-id op-id op-time]
   (update-in
@@ -19,10 +19,9 @@
    [:task-groups (:group-id op-data)]
    (fn [task-group]
      (let [task-id (:task-id op-data)
-           task (update
-                 (get-in task-group [(if (:done? op-data) :done-tasks :tasks) task-id])
-                 :done?
-                 not)]
+           task (-> (get-in task-group [(if (:done? op-data) :done-tasks :tasks) task-id])
+                    (update :done? not)
+                    (assoc :updated-time op-time))]
        (if (:done? op-data)
          (-> task-group
              (assoc-in [:tasks task-id] task)
@@ -36,4 +35,10 @@
     (assoc-in
      db
      [:task-groups group-id :tasks op-id]
-     (merge schema/task {:group-id group-id, :time op-time, :id op-id, :text text}))))
+     (merge
+      schema/task
+      {:group-id group-id,
+       :updated-time op-time,
+       :id op-id,
+       :created-time op-time,
+       :text text}))))

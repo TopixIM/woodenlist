@@ -8,7 +8,8 @@
 
 (def database {:task-groups {}, :sessions {}, :users {}})
 
-(def task {:group-id nil, :time nil, :done? false, :id nil, :text nil})
+(def task
+  {:group-id nil, :done? false, :updated-time nil, :id nil, :created-time nil, :text nil})
 
 (def router {:router nil, :name nil, :title nil, :data {}})
 

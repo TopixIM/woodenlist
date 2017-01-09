@@ -18,7 +18,9 @@
 (defn on-edit-group [group-id]
   (fn [e dispatch!] (dispatch! :router/change {:name :group-editor, :params group-id})))
 
-(def style-container {:width "100%"})
+(def style-list {:overflow :auto, :height "100%"})
+
+(def style-container {:width "100%", :height "100%"})
 
 (def style-empty
   {:color colors/texture-light, :font-size 20, :font-weight 100, :font-family "Josefin Sans"})
@@ -35,14 +37,18 @@
     (div
      {:style (merge ui/row style-container)}
      (div
-      {:style ui/flex}
+      {:style (merge ui/flex style-list)}
       (let [tasks (:tasks task-group), done-tasks (:done-tasks task-group)]
         (div
          {}
          (div {} (comp-task-draft (:id task-group)))
          (if (empty? tasks)
            (div {:style style-empty} (comp-text "No tasks" nil))
-           (div {} (->> (vals tasks) (map (fn [task] [(:id task) (comp-task task)])))))
+           (div
+            {}
+            (->> (vals tasks)
+                 (sort (fn [a b] (compare (:updated-time b) (:updated-time a))))
+                 (map (fn [task] [(:id task) (comp-task task)])))))
          (comp-space nil 32)
          (div
           {}
@@ -55,7 +61,11 @@
            (div
             {:style style-empty}
             (comp-text (if (:show-done? task-group) "No tasks" "Hidden") nil))
-           (div {} (->> (vals done-tasks) (map (fn [task] [(:id task) (comp-task task)]))))))))
+           (div
+            {}
+            (->> (vals done-tasks)
+                 (sort (fn [a b] (compare (:updated-time b) (:updated-time a))))
+                 (map (fn [task] [(:id task) (comp-task task)]))))))))
      (div
       {:style style-sidebar}
       (div
