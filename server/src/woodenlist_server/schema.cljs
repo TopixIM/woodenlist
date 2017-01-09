@@ -14,7 +14,8 @@
 (def router {:router nil, :name nil, :title nil, :data {}})
 
 (def session
-  {:router {:router nil, :name :portal, :data nil},
+  {:show-done? false,
+   :router {:router nil, :name :portal, :data nil},
    :nickname nil,
    :user-id nil,
    :notifications [],

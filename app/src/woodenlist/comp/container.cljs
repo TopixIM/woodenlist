@@ -41,7 +41,7 @@
            (case (:name router)
              :profile (comp-profile (:user store))
              :portal (comp-portal (:data router))
-             :group (comp-group (:data router))
+             :group (comp-group (:data router) (get-in store [:session :show-done?]))
              :group-editor (comp-group-editor (:data router))
              :task-editor (comp-task-editor (:data router))
              :group-manager (comp-group-manager (:data router) (:user store))

@@ -22,7 +22,7 @@
     :task-group/add-member (task-group/add-member db op-data session-id op-id op-time)
     :task-group/delete-member (task-group/delete-member db op-data session-id op-id op-time)
     :task-group/change-role (task-group/change-role db op-data session-id op-id op-time)
-    :task-group/toggle-hidden (task-group/toggle-hidden db op-data session-id op-id op-time)
+    :session/toggle-hidden (session/toggle-hidden db op-data session-id op-id op-time)
     :task/create (task/create db op-data session-id op-id op-time)
     :task/toggle (task/toggle db op-data session-id op-id op-time)
     :task/edit (task/edit db op-data session-id op-id op-time)

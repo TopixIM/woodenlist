@@ -26,7 +26,10 @@
                                      (get-in db [:task-groups group-id])
                                      [:id :name])]))
                                 (into {})))
-                       :group (twig-group (get-in db [:task-groups (:params router)]))
+                       :group
+                         (twig-group
+                          (get-in db [:task-groups (:params router)])
+                          (:show-done? session))
                        :group-editor (get-in db [:task-groups (:params router)])
                        :group-manager
                          (let [task-group (get-in db [:task-groups (:params router)])

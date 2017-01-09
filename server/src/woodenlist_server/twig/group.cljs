@@ -4,8 +4,8 @@
 (def twig-group
   (create-twig
    :group
-   (fn [task-group]
+   (fn [task-group show-done?]
      (-> task-group
          (dissoc :admins)
          (dissoc :users)
-         (update :done-tasks (fn [tasks] (if (:show-done? task-group) tasks nil)))))))
+         (update :done-tasks (fn [tasks] (if show-done? tasks nil)))))))

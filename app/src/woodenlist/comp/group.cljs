@@ -13,7 +13,7 @@
 (def style-icon {:cursor :pointer})
 
 (defn on-toggle-hidden [group-id]
-  (fn [e dispatch!] (dispatch! :task-group/toggle-hidden group-id)))
+  (fn [e dispatch!] (dispatch! :session/toggle-hidden group-id)))
 
 (defn on-edit-group [group-id]
   (fn [e dispatch!] (dispatch! :router/change {:name :group-editor, :params group-id})))
@@ -32,7 +32,7 @@
 (defn on-group-manage [group-id]
   (fn [e dispatch!] (dispatch! :router/change {:name :group-manager, :params group-id})))
 
-(defn render [task-group]
+(defn render [task-group show-done?]
   (fn [state mutate!]
     (div
      {:style (merge ui/row style-container)}
@@ -58,9 +58,7 @@
            {:style ui/clickable-text, :event {:click (on-toggle-hidden (:id task-group))}}
            (comp-text "Toggle" nil)))
          (if (empty? done-tasks)
-           (div
-            {:style style-empty}
-            (comp-text (if (:show-done? task-group) "No tasks" "Hidden") nil))
+           (div {:style style-empty} (comp-text (if show-done? "No tasks" "Hidden") nil))
            (div
             {}
             (->> (vals done-tasks)
