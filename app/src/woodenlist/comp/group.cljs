@@ -15,7 +15,7 @@
 (defn on-toggle-hidden [group-id]
   (fn [e dispatch!] (dispatch! :session/toggle-hidden group-id)))
 
-(def style-draft {:margin-left 48})
+(def style-draft {})
 
 (defn on-edit-group [group-id]
   (fn [e dispatch!] (dispatch! :router/change {:name :group-editor, :params group-id})))

@@ -3,7 +3,7 @@
   (:require [hsl.core :refer [hsl]]
             [respo-ui.style :as ui]
             [respo-ui.style.colors :as colors]
-            [respo.alias :refer [create-comp div span img]]
+            [respo.alias :refer [create-comp div span img input]]
             [respo.comp.debug :refer [comp-debug]]
             [respo.comp.text :refer [comp-text]]
             [respo.comp.space :refer [comp-space]]
@@ -26,7 +26,12 @@
         (div
          {:style (merge style-avatar {:background-image (str "url(" (:avatar user) ")")})}))
        (div {} (comp-text "Name:" nil) (comp-space 8 nil) (comp-text (:name user) nil))
-       (div {} (comp-text "Id:" nil) (comp-space 8 nil) (comp-text (:id user) nil))
+       (div
+        {}
+        (comp-text "Id:" nil)
+        (comp-space 8 nil)
+        (input {:style ui/input, :attrs {:value (:id user)}}))
+       (comp-space nil 8)
        (div
         {:style ui/row}
         (comp-text "Groups:" nil)

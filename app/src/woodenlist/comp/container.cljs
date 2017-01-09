@@ -35,7 +35,7 @@
   (fn [state mutate!]
     (div
      {:style (merge ui/global ui/fullscreen ui/column style-container)}
-     (comp-header (:logged-in? store))
+     (comp-header (:logged-in? store) (:statistics store))
      (div
       {:style (merge ui/fullscreen style-body)}
       (comp-space nil 80)
@@ -54,7 +54,7 @@
             (div {} (comp-text (str "404 page: " (pr-str router)) nil))))
         (comp-login))
       (comp-space nil 120))
-     (comment comp-debug (:router store) style-debugger)
+     (comp-debug (:statistics store) style-debugger)
      (comp-msg-list (get-in store [:session :notifications]) :session/remove-notification))))
 
 (def comp-container (create-comp :container render))

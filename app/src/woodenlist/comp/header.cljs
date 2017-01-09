@@ -27,7 +27,7 @@
 (defn on-home [e dispatch!]
   (dispatch! :router/change {:router nil, :name :portal, :params nil}))
 
-(def style-smaller {:font-size 24})
+(def style-smaller {:font-size 20})
 
 (def style-logo
   {:font-size 32,
@@ -40,7 +40,7 @@
 
 (defn on-people [e dispatch!] (dispatch! :router/change {:name :people, :params nil}))
 
-(defn render [logged-in?]
+(defn render [logged-in? statistics]
   (fn [state mutate!]
     (div
      {:style (merge ui/row-center style-header)}
@@ -52,7 +52,9 @@
        (comp-text "Groups" nil))
       (div
        {:style (merge style-logo style-smaller), :event {:click on-people}}
-       (comp-text "People" nil)))
+       (comp-text
+        (str "People(" (:sessions-count statistics) "/" (:users-count statistics) ")")
+        nil)))
      (div
       {:style style-pointer, :event {:click on-profile}}
       (comp-text (if logged-in? "Me" "Guest") nil)))))

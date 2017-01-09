@@ -32,10 +32,14 @@
       {}
       (div
        {:style (merge style-avatar {:background-image (str "url(" (:avatar user) ")")})}))
-     (comp-space nil 16)
+     (comp-space nil 32)
      (div {:style ui/flex} (comp-text (str "Hello! " (:name user)) nil))
-     (div {} (comp-text "User id:" nil) (comp-space 8 nil) (comp-text (:id user) nil))
-     (comp-space nil 16)
+     (div
+      {}
+      (comp-text "User id:" nil)
+      (comp-space 8 nil)
+      (input {:style ui/input, :attrs {:value (:id user)}} nil))
+     (comp-space nil 32)
      (div
       {}
       (a {:style style-trigger, :event {:click on-log-out}} (comp-text "Log out" nil))))))

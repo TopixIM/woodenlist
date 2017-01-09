@@ -70,6 +70,8 @@
                               (into {}))
                        nil)),
             :logged-in? true,
+            :statistics {:users-count (count (:users db)),
+                         :sessions-count (count (:sessions db))},
             :user (twig-user user),
             :session session})
          {:logged-in? false, :session session})))))
