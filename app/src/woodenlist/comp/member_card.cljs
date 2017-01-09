@@ -19,6 +19,7 @@
    :box-shadow (str "0 0 1px " colors/warm),
    :color colors/texture-light,
    :font-size 16,
+   :background-color :white,
    :padding "0 16px",
    :margin-right 16,
    :margin-bottom 16,

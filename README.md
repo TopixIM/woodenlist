@@ -1,8 +1,8 @@
 
-[WIP] Woodenlist
+Woodenlist: a realtime todolist
 ------
 
-A realtime Todolist.
+Demo http://wood.cumulo.org/
 
 Background image https://alpha.wallhaven.cc/wallpaper/440209
 
@@ -27,10 +27,11 @@ cd target/
 node main.js
 ```
 
-For more details, read the docs of the Workflow:
+For more details, read the docs of Cumulo Workflow:
 
 https://github.com/Cumulo/cumulo-workflow
 
 ### License
 
 MIT
+
