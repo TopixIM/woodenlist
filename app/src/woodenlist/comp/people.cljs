@@ -11,6 +11,8 @@
 
 (def style-title {:font-size 20, :font-weight 100, :font-family "Josefin Sans"})
 
+(def style-list {:flex-wrap :wrap})
+
 (defn render [members]
   (fn [state mutate!]
     (div
@@ -18,7 +20,7 @@
      (div {:style style-title} (comp-text "People" nil))
      (comp-space nil 16)
      (div
-      {:style ui/row}
+      {:style (merge ui/row style-list)}
       (->> (vals members) (map (fn [user] [(:id user) (comp-member-card user)])))))))
 
 (def comp-people (create-comp :people render))

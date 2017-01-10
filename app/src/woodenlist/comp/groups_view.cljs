@@ -10,6 +10,8 @@
 
 (def style-title {:font-size 20, :font-weight 100, :font-family "Josefin Sans"})
 
+(def style-list {:flex-wrap :wrap})
+
 (def style-group
   {:background-color colors/motif-dark, :padding 8, :margin-right 8, :margin-bottom 8})
 
@@ -20,7 +22,7 @@
      (div {:style style-title} (comp-text "All Groups" nil))
      (comp-space nil 16)
      (div
-      {:style ui/row}
+      {:style (merge ui/row style-list)}
       (->> (vals groups)
            (map
             (fn [task-group]
