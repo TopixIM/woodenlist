@@ -8,7 +8,7 @@
 
 (defn dispatch! [op op-data] (send! op op-data))
 
-(defonce store-ref (atom {}))
+(defonce store-ref (atom nil))
 
 (defonce states-ref (atom {}))
 
@@ -27,7 +27,7 @@
           (do
            (println "Found login information:" raw)
            (dispatch! :user/log-in (read-string raw)))))),
-    :on-close! (fn [event] (.error js/console "Lost connection!")),
+    :on-close! (fn [event] (reset! store-ref nil) (.error js/console "Lost connection!")),
     :url (str "ws://" (.-hostname js/location) ":5021")})
   (add-watch store-ref :changes render-app!)
   (add-watch states-ref :changes render-app!)

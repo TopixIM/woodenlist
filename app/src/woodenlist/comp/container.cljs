@@ -18,7 +18,8 @@
             [woodenlist.comp.group-manager :refer [comp-group-manager]]
             [woodenlist.comp.person :refer [comp-person]]
             [woodenlist.comp.groups-view :refer [comp-groups-view]]
-            [woodenlist.comp.people :refer [comp-people]]))
+            [woodenlist.comp.people :refer [comp-people]]
+            [woodenlist.comp.no-connection :refer [comp-no-connection]]))
 
 (def style-body {:overflow :auto, :padding "16px 200px"})
 
@@ -33,28 +34,32 @@
 
 (defn render [store]
   (fn [state mutate!]
-    (div
-     {:style (merge ui/global ui/fullscreen ui/column style-container)}
-     (comp-header (:logged-in? store) (:statistics store))
-     (div
-      {:style (merge ui/fullscreen style-body)}
-      (comp-space nil 80)
-      (if (:logged-in? store)
-        (let [router (:router store)]
-          (case (:name router)
-            :profile (comp-profile (:user store))
-            :portal (comp-portal (:data router))
-            :group (comp-group (:data router) (get-in store [:session :show-done?]))
-            :group-editor (comp-group-editor (:data router))
-            :task-editor (comp-task-editor (:data router))
-            :group-manager (comp-group-manager (:data router) (:user store))
-            :person (comp-person (:data router))
-            :groups (comp-groups-view (:data router))
-            :people (comp-people (:data router))
-            (div {} (comp-text (str "404 page: " (pr-str router)) nil))))
-        (comp-login))
-      (comp-space nil 120))
-     (comp-debug (:statistics store) style-debugger)
-     (comp-msg-list (get-in store [:session :notifications]) :session/remove-notification))))
+    (if (nil? store)
+      (div
+       {:style (merge ui/global ui/fullscreen ui/column style-container)}
+       (comp-no-connection))
+      (div
+       {:style (merge ui/global ui/fullscreen ui/column style-container)}
+       (comp-header (:logged-in? store) (:statistics store))
+       (div
+        {:style (merge ui/fullscreen style-body)}
+        (comp-space nil 80)
+        (if (:logged-in? store)
+          (let [router (:router store)]
+            (case (:name router)
+              :profile (comp-profile (:user store))
+              :portal (comp-portal (:data router))
+              :group (comp-group (:data router) (get-in store [:session :show-done?]))
+              :group-editor (comp-group-editor (:data router))
+              :task-editor (comp-task-editor (:data router))
+              :group-manager (comp-group-manager (:data router) (:user store))
+              :person (comp-person (:data router))
+              :groups (comp-groups-view (:data router))
+              :people (comp-people (:data router))
+              (div {} (comp-text (str "404 page: " (pr-str router)) nil))))
+          (comp-login))
+        (comp-space nil 120))
+       (comp-debug (:statistics store) style-debugger)
+       (comp-msg-list (get-in store [:session :notifications]) :session/remove-notification)))))
 
 (def comp-container (create-comp :container render))
