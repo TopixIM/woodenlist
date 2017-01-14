@@ -21,7 +21,7 @@
 (defonce reader-db-ref (atom @writer-db-ref))
 
 (defn persist-db! []
-  (let [raw (pr-str @writer-db-ref), fs (js/require "fs")]
+  (let [raw (pr-str (assoc @writer-db-ref :sessions {})), fs (js/require "fs")]
     (println "Writing DB to storage.")
     (fs.writeFileSync (:storage-key schema/configs) raw)))
 
