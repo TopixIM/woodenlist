@@ -5,26 +5,22 @@
             [respo-ui.style.colors :as colors]
             [respo.alias :refer [create-comp div span]]
             [respo.comp.debug :refer [comp-debug]]
-            [respo.comp.text :refer [comp-code comp-text]]
-            [woodenlist.comp.group-card :refer [comp-group-card]]))
+            [respo.comp.text :refer [comp-text]]
+            [respo.comp.space :refer [comp-space]]
+            [woodenlist.comp.group-card :refer [comp-group-card]]
+            [woodenlist.comp.creator :refer [comp-creator]]))
 
-(def style-trigger
-  {:color colors/motif, :font-size 40, :cursor :pointer, :display :inline-block})
-
-(def style-group-list {:flex-wrap :wrap, :cursor :pointer, :display :inline-flex})
-
-(defn on-create [e dispatch!] (dispatch! :task-group/create "New Group"))
+(def style-group-list {:flex-wrap :wrap, :cursor :pointer})
 
 (defn render [task-groups]
   (fn [state mutate!]
     (div
      {}
+     (comp-creator)
+     (comp-space nil 16)
      (div
       {:style (merge ui/row style-group-list)}
       (->> (vals task-groups)
-           (map (fn [task-group] [(:id task-group) (comp-group-card task-group)]))))
-     (div
-      {:style (merge ui/center style-trigger), :event {:click on-create}}
-      (span {:attrs {:class-name "icon ion-md-add-circle"}})))))
+           (map (fn [task-group] [(:id task-group) (comp-group-card task-group)])))))))
 
 (def comp-portal (create-comp :portal render))
