@@ -13,6 +13,7 @@
     :user/log-in (user/log-in db op-data session-id op-id op-time)
     :user/sign-up (user/sign-up db op-data session-id op-id op-time)
     :user/log-out (user/log-out db op-data session-id op-id op-time)
+    :user/avatar (user/set-avatar db op-data session-id op-id op-time)
     :session/remove-notification
       (session/remove-notification db op-data session-id op-id op-time)
     :router/change (router/change db op-data session-id op-id op-time)

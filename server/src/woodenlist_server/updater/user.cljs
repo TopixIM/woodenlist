@@ -21,6 +21,10 @@
            [:users op-id]
            {:password password, :name username, :nickname username, :id op-id, :avatar nil})))))
 
+(defn set-avatar [db op-data session-id op-id op-time]
+  (let [user-id (get-in db [:sessions session-id :user-id])]
+    (if (some? user-id) (assoc-in db [:users user-id :avatar] op-data) db)))
+
 (defn log-in [db op-data session-id op-id op-time]
   (let [[username password] op-data
         maybe-user (find-first

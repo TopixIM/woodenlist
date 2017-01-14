@@ -19,7 +19,8 @@
             [woodenlist.comp.person :refer [comp-person]]
             [woodenlist.comp.groups-view :refer [comp-groups-view]]
             [woodenlist.comp.people :refer [comp-people]]
-            [woodenlist.comp.no-connection :refer [comp-no-connection]]))
+            [woodenlist.comp.no-connection :refer [comp-no-connection]]
+            [woodenlist.comp.avatar-editor :refer [comp-avatar-editor]]))
 
 (def style-body {:overflow :auto, :padding "16px 200px"})
 
@@ -40,7 +41,7 @@
        (comp-no-connection))
       (div
        {:style (merge ui/global ui/fullscreen ui/column style-container)}
-       (comp-header (:logged-in? store) (:statistics store))
+       (comp-header (:logged-in? store) (get-in store [:user :avatar]) (:statistics store))
        (div
         {:style (merge ui/fullscreen style-body)}
         (comp-space nil 80)
@@ -56,6 +57,7 @@
               :person (comp-person (:data router))
               :groups (comp-groups-view (:data router))
               :people (comp-people (:data router))
+              :edit-avatar (comp-avatar-editor (get-in store [:user :avatar]))
               (div {} (comp-text (str "404 page: " (pr-str router)) nil))))
           (comp-login))
         (comp-space nil 120))

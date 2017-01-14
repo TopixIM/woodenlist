@@ -38,9 +38,12 @@
 
 (def style-pointer {:cursor "pointer"})
 
+(def style-avatar
+  {:width 32, :cursor :pointer, :border-radius "50%", :background-size :cover, :height 32})
+
 (defn on-people [e dispatch!] (dispatch! :router/change {:name :people, :params nil}))
 
-(defn render [logged-in? statistics]
+(defn render [logged-in? avatar statistics]
   (fn [state mutate!]
     (div
      {:style (merge ui/row-center style-header)}
@@ -55,8 +58,10 @@
        (comp-text
         (str "People(" (:sessions-count statistics) "/" (:users-count statistics) ")")
         nil)))
-     (div
-      {:style style-pointer, :event {:click on-profile}}
-      (comp-text (if logged-in? "Me" "Guest") nil)))))
+     (if logged-in?
+       (div
+        {:style (merge style-avatar {:background-image (str "url(" avatar ")")}),
+         :event {:click on-profile}})
+       (div {:style style-pointer} (comp-text "Guest" nil))))))
 
 (def comp-header (create-comp :header render))

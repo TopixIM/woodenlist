@@ -17,7 +17,7 @@
     (div
      {}
      (comp-creator)
-     (comp-space nil 16)
+     (comp-space nil 32)
      (div
       {:style (merge ui/row style-group-list)}
       (->> (vals task-groups)
