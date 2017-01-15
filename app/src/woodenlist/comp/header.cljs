@@ -8,6 +8,8 @@
             [respo.comp.text :refer [comp-code comp-text]]
             [respo.comp.space :refer [comp-space]]))
 
+(defn on-messages [e dispatch!] (dispatch! :router/change {:name :messages, :params nil}))
+
 (defn on-profile [e dispatch!]
   (dispatch! :router/change {:router nil, :name :profile, :params nil}))
 
@@ -57,7 +59,10 @@
        {:style (merge style-logo style-smaller), :event {:click on-people}}
        (comp-text
         (str "People(" (:sessions-count statistics) "/" (:users-count statistics) ")")
-        nil)))
+        nil))
+      (div
+       {:style (merge style-logo style-smaller), :event {:click on-messages}}
+       (comp-text "Messages" nil)))
      (if logged-in?
        (div
         {:style (merge style-avatar {:background-image (str "url(" avatar ")")}),

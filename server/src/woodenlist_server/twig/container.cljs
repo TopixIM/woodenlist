@@ -3,7 +3,8 @@
   (:require [recollect.bunch :refer [create-twig]]
             [woodenlist-server.twig.user :refer [twig-user]]
             [woodenlist-server.twig.group :refer [twig-group]]
-            [woodenlist-server.twig.group-brief :refer [twig-group-brief]]))
+            [woodenlist-server.twig.group-brief :refer [twig-group-brief]]
+            [woodenlist-server.twig.core :refer [twig-message]]))
 
 (def twig-container
   (create-twig
@@ -67,6 +68,13 @@
                        :people
                          (->> (vals (:users db))
                               (map (fn [member] [(:id member) (twig-user member)]))
+                              (into {}))
+                       :messages
+                         (->> (vals (:messages db))
+                              (map
+                               (fn [message]
+                                 [(:id message)
+                                  (twig-message message (get-in db [:users user-id]))]))
                               (into {}))
                        nil)),
             :logged-in? true,

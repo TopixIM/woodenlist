@@ -1,12 +1,14 @@
 
 (ns woodenlist-server.schema )
 
+(def message {:time nil, :id nil, :author-id nil, :text nil})
+
 (def configs {:port 5021, :storage-key "/tmp/woodenlist-storage.edn"})
 
 (def user
   {:involved-groups #{}, :password nil, :name nil, :nickname nil, :id nil, :avatar nil})
 
-(def database {:task-groups {}, :sessions {}, :users {}})
+(def database {:task-groups {}, :messages {}, :sessions {}, :users {}})
 
 (def task
   {:group-id nil, :done? false, :updated-time nil, :id nil, :created-time nil, :text nil})

@@ -20,7 +20,8 @@
             [woodenlist.comp.groups-view :refer [comp-groups-view]]
             [woodenlist.comp.people :refer [comp-people]]
             [woodenlist.comp.no-connection :refer [comp-no-connection]]
-            [woodenlist.comp.avatar-editor :refer [comp-avatar-editor]]))
+            [woodenlist.comp.avatar-editor :refer [comp-avatar-editor]]
+            [woodenlist.comp.message-list :refer [comp-message-list]]))
 
 (def style-body {:overflow :auto, :padding "16px 200px"})
 
@@ -58,10 +59,11 @@
               :groups (comp-groups-view (:data router))
               :people (comp-people (:data router))
               :edit-avatar (comp-avatar-editor (get-in store [:user :avatar]))
+              :messages (comp-message-list (:data router))
               (div {} (comp-text (str "404 page: " (pr-str router)) nil))))
           (comp-login))
         (comp-space nil 120))
-       (comp-debug (:statistics store) style-debugger)
+       (comment comp-debug (:router store) style-debugger)
        (comp-msg-list (get-in store [:session :notifications]) :session/remove-notification)))))
 
 (def comp-container (create-comp :container render))

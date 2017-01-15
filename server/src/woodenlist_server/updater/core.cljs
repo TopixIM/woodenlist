@@ -4,7 +4,8 @@
             [woodenlist-server.updater.user :as user]
             [woodenlist-server.updater.router :as router]
             [woodenlist-server.updater.task-group :as task-group]
-            [woodenlist-server.updater.task :as task]))
+            [woodenlist-server.updater.task :as task]
+            [woodenlist-server.updater.message :as message]))
 
 (defn updater [db op op-data session-id op-id op-time]
   (case op
@@ -28,4 +29,5 @@
     :task/toggle (task/toggle db op-data session-id op-id op-time)
     :task/edit (task/edit db op-data session-id op-id op-time)
     :task/delete (task/delete db op-data session-id op-id op-time)
+    :message/create (message/create db op-data session-id op-id op-time)
     db))
