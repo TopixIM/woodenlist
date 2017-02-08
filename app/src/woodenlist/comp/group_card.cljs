@@ -10,14 +10,14 @@
             [respo.comp.text :refer [comp-code comp-text]]))
 
 (def style-container
-  {:line-height "40px",
-   :min-width 80,
-   :color :white,
-   :background-color colors/motif,
+  {:background-color colors/motif,
+   :line-height "40px",
    :cursor :pointer,
-   :padding 8,
+   :color :white,
    :margin-right 16,
-   :margin-bottom 16})
+   :margin-bottom 16,
+   :padding 8,
+   :min-width 80})
 
 (defn on-route [group-id]
   (fn [e dispatch!] (dispatch! :router/change {:name :group, :params group-id})))

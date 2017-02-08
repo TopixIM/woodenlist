@@ -8,28 +8,28 @@
             [respo.comp.space :refer [comp-space]]
             [respo.comp.text :refer [comp-code comp-text]]))
 
-(def style-container {:align-items :center, :color colors/texture, :margin-top 8})
-
 (def style-done
-  {:background-color colors/attractive, :width 40, :cursor :pointer, :height 40})
+  {:width 40, :height 40, :cursor :pointer, :background-color colors/attractive})
 
 (defn on-toggle [group-id task-id done?]
   (fn [e dispatch!]
-    (dispatch! :task/toggle {:task-id task-id, :group-id group-id, :done? done?})))
-
-(def style-text
-  {:line-height "40px",
-   :min-width 400,
-   :background-color colors/paper,
-   :cursor :pointer,
-   :padding "0 8px",
-   :height 40})
+    (dispatch! :task/toggle {:group-id group-id, :task-id task-id, :done? done?})))
 
 (defn on-edit [group-id task-id]
   (fn [e dispatch!]
     (dispatch!
      :router/change
-     {:name :task-editor, :params {:task-id task-id, :group-id group-id}})))
+     {:name :task-editor, :params {:group-id group-id, :task-id task-id}})))
+
+(def style-text
+  {:min-width 400,
+   :background-color colors/paper,
+   :height 40,
+   :line-height "40px",
+   :padding "0 8px",
+   :cursor :pointer})
+
+(def style-container {:align-items :center, :margin-top 8, :color colors/texture})
 
 (defn render [task]
   (fn [state mutate!]
@@ -40,7 +40,7 @@
        :event {:click (on-toggle (:group-id task) (:id task) (:done? task))}})
      (comp-space 8 nil)
      (div
-      {:style style-text, :event {:click (on-edit (:group-id task) (:id task))}}
+      {:event {:click (on-edit (:group-id task) (:id task))}, :style style-text}
       (comp-text (:text task) nil)))))
 
 (def comp-task (create-comp :task render))

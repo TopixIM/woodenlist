@@ -1,4 +1,4 @@
 
 (ns woodenlist.schema )
 
-(def configs {:port 5021, :storage-key "woodenlist-login"})
+(def configs {:storage-key "woodenlist-login", :port 5021})

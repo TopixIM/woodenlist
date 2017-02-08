@@ -7,24 +7,24 @@
             [respo.comp.debug :refer [comp-debug]]
             [respo.comp.text :refer [comp-code comp-text]]))
 
-(defn on-input [mutate!] (fn [e dispach!] (mutate! (:value e))))
+(defn init-state [& args] "")
 
 (defn update-state [state text] text)
 
 (def style-draft {:width 400})
 
-(defn init-state [& args] "")
-
 (defn on-keydown [mutate! text group-id]
   (fn [e dispatch!]
     (if (= 13 (:key-code e))
-      (do (mutate! "") (dispatch! :task/create {:group-id group-id, :text text})))))
+      (do (mutate! "") (dispatch! :task/create {:text text, :group-id group-id})))))
+
+(defn on-input [mutate!] (fn [e dispach!] (mutate! (:value e))))
 
 (defn render [group-id]
   (fn [state mutate!]
     (input
      {:style (merge ui/input style-draft),
-      :event {:keydown (on-keydown mutate! state group-id), :input (on-input mutate!)},
-      :attrs {:placeholder "Add task", :value state}})))
+      :attrs {:value state, :placeholder "Add task"},
+      :event {:input (on-input mutate!), :keydown (on-keydown mutate! state group-id)}})))
 
 (def comp-task-draft (create-comp :task-draft init-state update-state render))

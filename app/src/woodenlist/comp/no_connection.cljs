@@ -8,7 +8,7 @@
             [respo.comp.text :refer [comp-text]]
             [respo.comp.space :refer [comp-space]]))
 
-(def style-container {:font-size 40, :font-weight 100, :font-family "Josefin Sans"})
+(def style-container {:font-family "Josefin Sans", :font-size 40, :font-weight 100})
 
 (defn render []
   (fn [state mutate!]

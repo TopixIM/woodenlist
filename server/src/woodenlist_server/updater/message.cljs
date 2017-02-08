@@ -16,7 +16,7 @@
          [:messages op-id]
          (merge
           schema/message
-          {:time op-time, :id op-id, :author-id user-id, :text op-data}))
+          {:id op-id, :text op-data, :author-id user-id, :time op-time}))
         (update
          :messages
          (fn [messages] (if (> (count messages) 10) (gc-messages-map messages 1) messages))))))

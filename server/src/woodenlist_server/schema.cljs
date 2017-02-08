@@ -1,36 +1,36 @@
 
 (ns woodenlist-server.schema )
 
-(def message {:time nil, :id nil, :author-id nil, :text nil})
+(def message {:id nil, :author-id nil, :text nil, :time nil})
 
-(def configs {:port 5021, :storage-key "/tmp/woodenlist-storage.edn"})
+(def configs {:storage-key "/tmp/woodenlist-storage.edn", :port 5021})
 
 (def user
-  {:involved-groups #{}, :password nil, :name nil, :nickname nil, :id nil, :avatar nil})
+  {:name nil, :id nil, :nickname nil, :avatar nil, :password nil, :involved-groups #{}})
 
-(def database {:task-groups {}, :messages {}, :sessions {}, :users {}})
+(def database {:sessions {}, :users {}, :task-groups {}, :messages {}})
 
 (def task
-  {:group-id nil, :done? false, :updated-time nil, :id nil, :created-time nil, :text nil})
+  {:id nil, :group-id nil, :text nil, :done? false, :created-time nil, :updated-time nil})
 
-(def router {:router nil, :name nil, :title nil, :data {}})
+(def router {:name nil, :title nil, :data {}, :router nil})
 
 (def session
-  {:show-done? false,
-   :router {:router nil, :name :portal, :data nil},
+  {:user-id nil,
+   :id nil,
    :nickname nil,
-   :user-id nil,
-   :notifications [],
-   :id nil})
+   :router {:name :portal, :data nil, :router nil},
+   :show-done? false,
+   :notifications []})
 
 (def notification {:id nil, :kind nil, :text nil})
 
 (def task-group
-  {:show-done? false,
-   :admins #{},
+  {:id nil,
    :name nil,
+   :users #{},
+   :admins #{},
    :tasks {},
-   :id nil,
-   :done-tasks {},
    :order :none,
-   :users #{}})
+   :done-tasks {},
+   :show-done? false})

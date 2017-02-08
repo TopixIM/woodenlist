@@ -8,19 +8,19 @@
             [respo.comp.text :refer [comp-code comp-text]]
             [respo.comp.space :refer [comp-space]]))
 
-(defn update-state [state new-text] new-text)
-
 (def style-trigger
   {:color colors/motif,
-   :vertical-align :center,
-   :font-size 32,
    :cursor :pointer,
-   :display :inline-block})
+   :font-size 32,
+   :display :inline-block,
+   :vertical-align :center})
 
 (defn init-state [] "")
 
 (defn on-create [text mutate!]
   (fn [e dispatch!] (dispatch! :task-group/create text) (mutate! "")))
+
+(defn update-state [state new-text] new-text)
 
 (def comp-creator
   (create-comp
@@ -34,9 +34,9 @@
         (div
          {}
          (input
-          {:style ui/input,
+          {:attrs {:value state, :placeholder "Group name"},
            :event {:input (fn [e dispatch!] (mutate! (:value e)))},
-           :attrs {:placeholder "Group name", :value state}})
+           :style ui/input})
          (comp-space 8 nil)
          (div
           {:style (merge ui/center style-trigger),

@@ -9,9 +9,9 @@
             [respo.comp.space :refer [comp-space]]
             [woodenlist.comp.member-card :refer [comp-member-card]]))
 
-(def style-title {:font-size 20, :font-weight 100, :font-family "Josefin Sans"})
-
 (def style-list {:flex-wrap :wrap})
+
+(def style-title {:font-family "Josefin Sans", :font-size 20, :font-weight 100})
 
 (defn render [members]
   (fn [state mutate!]

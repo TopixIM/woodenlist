@@ -8,13 +8,13 @@
             [respo.comp.text :refer [comp-text]]
             [respo.comp.space :refer [comp-space]]))
 
-(defn update-state [state text] text)
-
 (def style-url {:width 600})
 
 (defn init-state [] "")
 
 (defn on-submit [url mutate!] (fn [e dispatch!] (dispatch! :user/avatar url) (mutate! "")))
+
+(defn update-state [state text] text)
 
 (def comp-avatar-editor
   (create-comp
@@ -30,8 +30,8 @@
          {}
          (input
           {:style (merge ui/input style-url),
-           :event {:input (fn [e dispatch!] (mutate! (:value e)))},
-           :attrs {:placeholder (or avatar "URL for avatar"), :value state, :type "url"}})
+           :attrs {:value state, :placeholder (or avatar "URL for avatar"), :type "url"},
+           :event {:input (fn [e dispatch!] (mutate! (:value e)))}})
          (comp-space 8 nil)
          (button
           {:style ui/button, :event {:click (on-submit state mutate!)}}

@@ -25,7 +25,7 @@
 (def style-container {:width "100%"})
 
 (def style-empty
-  {:color colors/texture-light, :font-size 20, :font-weight 100, :font-family "Josefin Sans"})
+  {:font-size 20, :font-weight 100, :font-family "Josefin Sans", :color colors/texture-light})
 
 (def style-sidebar {:width 320})
 
@@ -74,13 +74,13 @@
        (comp-text (:name task-group) nil)
        (comp-space 8 nil)
        (span
-        {:style style-icon,
-         :event {:click (on-edit-group (:id task-group))},
-         :attrs {:class-name "icon ion-md-create"}})
+        {:attrs {:class-name "icon ion-md-create"},
+         :style style-icon,
+         :event {:click (on-edit-group (:id task-group))}})
        (comp-space 8 nil)
        (span
-        {:style style-icon,
-         :event {:click (on-group-manage (:id task-group))},
-         :attrs {:class-name "icon ion-md-people"}}))))))
+        {:attrs {:class-name "icon ion-md-people"},
+         :style style-icon,
+         :event {:click (on-group-manage (:id task-group))}}))))))
 
 (def comp-group (create-comp :group render))

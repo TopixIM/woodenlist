@@ -8,7 +8,7 @@
             [respo.comp.text :refer [comp-text]]
             [respo.comp.space :refer [comp-space]]))
 
-(def style-avatar {:width 32, :border-radius "50%", :background-size "cover", :height 32})
+(def style-avatar {:width 32, :height 32, :border-radius "50%", :background-size "cover"})
 
 (def style-message {:margin-bottom 8})
 

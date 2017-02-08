@@ -12,16 +12,16 @@
 
 (defn on-input [mutate!] (fn [e dispatch!] (mutate! (:value e))))
 
-(defn update-state [state text] text)
+(defn on-delete [group-id] (fn [e dispatch!] (dispatch! :task-group/delete group-id)))
 
 (defn init-state [& args] "")
+
+(defn update-state [state text] text)
 
 (defn on-rename [group-id state mutate!]
   (fn [e dispatch!]
     (if (not (string/blank? state))
       (do (dispatch! :task-group/rename {:id group-id, :text state}) (mutate! "")))))
-
-(defn on-delete [group-id] (fn [e dispatch!] (dispatch! :task-group/delete group-id)))
 
 (defn render [task-group]
   (fn [state mutate!]
@@ -32,8 +32,8 @@
       {}
       (input
        {:style ui/input,
-        :event {:input (on-input mutate!)},
-        :attrs {:placeholder "Group name", :value state}})
+        :attrs {:value state, :placeholder "Group name"},
+        :event {:input (on-input mutate!)}})
       (comp-space 8 nil)
       (button
        {:style ui/button, :event {:click (on-rename (:id task-group) state mutate!)}}

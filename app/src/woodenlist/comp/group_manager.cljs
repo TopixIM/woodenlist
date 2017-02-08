@@ -46,9 +46,9 @@
         (comp-text "Add user:")
         (comp-space 8 nil)
         (input
-         {:style ui/input,
-          :event {:input (on-input mutate!)},
-          :attrs {:placeholder "User id", :value state}})
+         {:attrs {:value state, :placeholder "User id"},
+          :style ui/input,
+          :event {:input (on-input mutate!)}})
         (comp-space 8 nil)
         (button
          {:style ui/button, :event {:click (on-add-member (:id task-group) state mutate!)}}

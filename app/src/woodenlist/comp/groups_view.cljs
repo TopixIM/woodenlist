@@ -8,12 +8,12 @@
             [respo.comp.text :refer [comp-code comp-text]]
             [respo.comp.space :refer [comp-space]]))
 
-(def style-title {:font-size 20, :font-weight 100, :font-family "Josefin Sans"})
+(def style-group
+  {:background-color colors/motif-dark, :padding 8, :margin-right 8, :margin-bottom 8})
 
 (def style-list {:flex-wrap :wrap})
 
-(def style-group
-  {:background-color colors/motif-dark, :padding 8, :margin-right 8, :margin-bottom 8})
+(def style-title {:font-family "Josefin Sans", :font-size 20, :font-weight 100})
 
 (defn render [groups]
   (fn [state mutate!]

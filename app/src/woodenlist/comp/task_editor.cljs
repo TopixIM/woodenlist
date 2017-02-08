@@ -10,21 +10,19 @@
             [respo.comp.space :refer [comp-space]]
             [woodenlist.comp.back :refer [comp-back]]))
 
-(defn on-input [mutate!] (fn [e dispatch!] (mutate! (:value e))))
-
-(defn update-state [state text] text)
+(defn on-delete [group-id task-id]
+  (fn [e dispatch!] (dispatch! :task/delete {:group-id group-id, :task-id task-id})))
 
 (defn init-state [& args] "")
-
-(defn on-delete [group-id task-id]
-  (fn [e dispatch!] (dispatch! :task/delete {:task-id task-id, :group-id group-id})))
 
 (defn on-submit [group-id task-id state mutate!]
   (fn [e dispatch!]
     (if (not (string/blank? state))
       (do
        (mutate! "")
-       (dispatch! :task/edit {:task-id task-id, :group-id group-id, :text state})))))
+       (dispatch! :task/edit {:group-id group-id, :task-id task-id, :text state})))))
+
+(defn on-input [mutate!] (fn [e dispatch!] (mutate! (:value e))))
 
 (defn render [task]
   (fn [state mutate!]
@@ -35,8 +33,8 @@
       {}
       (input
        {:style ui/input,
-        :event {:input (on-input mutate!)},
-        :attrs {:placeholder "Task content", :value state}})
+        :attrs {:value state, :placeholder "Task content"},
+        :event {:input (on-input mutate!)}})
       (comp-space 8 nil)
       (button
        {:style ui/button,
@@ -49,5 +47,7 @@
        (comp-text "Delete" nil))
       (comp-space nil 120)
       (div {} (comp-back (:group-id task) nil))))))
+
+(defn update-state [state text] text)
 
 (def comp-task-editor (create-comp :task-editor init-state update-state render))

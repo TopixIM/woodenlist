@@ -13,7 +13,10 @@
      (let [user-id (:user-id session), router (:router session)]
        (if (some? user-id)
          (let [user (get-in db [:users user-id])]
-           {:router (assoc
+           {:session session,
+            :logged-in? true,
+            :user (twig-user user),
+            :router (assoc
                      router
                      :data
                      (case (:name router)
@@ -51,14 +54,14 @@
                             [:task-groups (:group-id params) :tasks (:task-id params)]))
                        :person
                          (let [member (get-in db [:users (:params router)])]
-                           {:groups (->> (:involved-groups member)
+                           {:user (twig-user member),
+                            :groups (->> (:involved-groups member)
                                          (map
                                           (fn [group-id]
                                             [group-id
                                              (twig-group-brief
                                               (get-in db [:task-groups group-id]))]))
-                                         (into {})),
-                            :user (twig-user member)})
+                                         (into {}))})
                        :groups
                          (->> (vals (:task-groups db))
                               (map
@@ -77,9 +80,6 @@
                                   (twig-message message (get-in db [:users user-id]))]))
                               (into {}))
                        nil)),
-            :logged-in? true,
-            :statistics {:users-count (count (:users db)),
-                         :sessions-count (count (:sessions db))},
-            :user (twig-user user),
-            :session session})
-         {:logged-in? false, :session session})))))
+            :statistics {:sessions-count (count (:sessions db)),
+                         :users-count (count (:users db))}})
+         {:session session, :logged-in? false})))))

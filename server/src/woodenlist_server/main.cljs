@@ -20,6 +20,8 @@
 
 (defonce reader-db-ref (atom @writer-db-ref))
 
+(defn on-jsload! [] (println "Code updated.") (render-clients! @reader-db-ref))
+
 (defn persist-db! []
   (let [raw (pr-str (assoc @writer-db-ref :sessions {})), fs (js/require "fs")]
     (println "Writing DB to storage.")
@@ -53,7 +55,5 @@
 
 (defn rm-caches! []
   (.execSync (js/require "child_process") "rm .lumo_cache/woodenlist_server*"))
-
-(defn on-jsload! [] (println "Code updated.") (render-clients! @reader-db-ref))
 
 (set! *main-cli-fn* -main)

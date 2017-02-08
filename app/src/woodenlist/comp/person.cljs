@@ -11,10 +11,10 @@
 
 (def style-avatar
   {:width 80,
+   :height 80,
    :background-image colors/paper,
-   :border-radius "50%",
    :background-size :cover,
-   :height 80})
+   :border-radius "50%"})
 
 (defn render [router-data]
   (fn [state mutate!]

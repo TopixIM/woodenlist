@@ -9,12 +9,12 @@
             [respo.comp.text :refer [comp-code comp-text]]))
 
 (def style-container
-  {:color colors/texture-light,
-   :background-color colors/paper,
-   :width 80,
-   :cursor :pointer,
+  {:background-color colors/paper,
+   :color colors/texture-light,
    :display :inline-flex,
-   :height 32})
+   :width 80,
+   :height 32,
+   :cursor :pointer})
 
 (defn on-back [group-id]
   (fn [e dispatch!] (dispatch! :router/change {:name :group, :params group-id})))

@@ -11,37 +11,37 @@
 (defn on-messages [e dispatch!] (dispatch! :router/change {:name :messages, :params nil}))
 
 (defn on-profile [e dispatch!]
-  (dispatch! :router/change {:router nil, :name :profile, :params nil}))
+  (dispatch! :router/change {:name :profile, :params nil, :router nil}))
 
 (def style-header
-  {:color :white,
-   :font-size 16,
-   :background-color (hsl 0 0 0 0.6),
+  {:height 48,
    :width "100%",
-   :z-index 100,
-   :padding "0 16px",
    :justify-content :space-between,
+   :padding "0 16px",
+   :font-size 16,
+   :color :white,
    :position :absolute,
-   :height 48})
+   :z-index 100,
+   :background-color (hsl 0 0 0 0.6)})
 
 (defn on-groups [e dispatch!] (dispatch! :router/change {:name :groups, :params nil}))
 
 (defn on-home [e dispatch!]
-  (dispatch! :router/change {:router nil, :name :portal, :params nil}))
+  (dispatch! :router/change {:name :portal, :params nil, :router nil}))
 
 (def style-smaller {:font-size 20})
 
 (def style-logo
-  {:font-size 32,
+  {:cursor "pointer",
+   :font-family "Josefin Sans",
+   :font-size 32,
    :font-weight 100,
-   :cursor "pointer",
-   :margin-right 32,
-   :font-family "Josefin Sans"})
+   :margin-right 32})
 
 (def style-pointer {:cursor "pointer"})
 
 (def style-avatar
-  {:width 32, :cursor :pointer, :border-radius "50%", :background-size :cover, :height 32})
+  {:width 32, :height 32, :border-radius "50%", :background-size :cover, :cursor :pointer})
 
 (defn on-people [e dispatch!] (dispatch! :router/change {:name :people, :params nil}))
 
@@ -51,7 +51,7 @@
      {:style (merge ui/row-center style-header)}
      (div
       {:style (merge ui/row {:align-items :center})}
-      (div {:style style-logo, :event {:click on-home}} (comp-text "Woodenlist" nil))
+      (div {:event {:click on-home}, :style style-logo} (comp-text "Woodenlist" nil))
       (div
        {:style (merge style-logo style-smaller), :event {:click on-groups}}
        (comp-text "Groups" nil))

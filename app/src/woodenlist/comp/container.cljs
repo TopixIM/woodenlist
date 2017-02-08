@@ -23,16 +23,16 @@
             [woodenlist.comp.avatar-editor :refer [comp-avatar-editor]]
             [woodenlist.comp.message-list :refer [comp-message-list]]))
 
-(def style-body {:overflow :auto, :padding "16px 200px"})
-
 (def style-container
-  {:color colors/paper,
-   :background-color :black,
-   :background-image (str
+  {:background-image (str
                       "url(https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-440209.jpg)"),
-   :background-size :cover})
+   :background-color :black,
+   :background-size :cover,
+   :color colors/paper})
 
-(def style-debugger {:bottom 0, :max-width "100%", :left 0})
+(def style-debugger {:bottom 0, :left 0, :max-width "100%"})
+
+(def style-body {:overflow :auto, :padding "16px 200px"})
 
 (defn render [store]
   (fn [state mutate!]

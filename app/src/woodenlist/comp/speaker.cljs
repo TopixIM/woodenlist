@@ -24,12 +24,12 @@
        (div
         {}
         (input
-         {:style (merge ui/input style-input),
-          :event {:keydown (fn [e dispatch!]
+         {:attrs {:value state, :placeholder "Message to leave..."},
+          :event {:input (fn [e dispatch!] (mutate! (:value e))),
+                  :keydown (fn [e dispatch!]
                     (if (= 13 (:key-code e))
-                      (do (dispatch! :message/create state) (mutate! "")))),
-                  :input (fn [e dispatch!] (mutate! (:value e)))},
-          :attrs {:placeholder "Message to leave...", :value state}})
+                      (do (dispatch! :message/create state) (mutate! ""))))},
+          :style (merge ui/input style-input)})
         (comp-space 8 nil)
         (button
          {:style ui/button,
