@@ -18,6 +18,12 @@
              (assoc-in [:done-tasks task-id] task)
              (update :tasks (fn [tasks] (dissoc tasks task-id)))))))))
 
+(defn touch [db op-data session-id op-id op-time]
+  (assoc-in
+   db
+   [:task-groups (:group-id op-data) :tasks (:task-id op-data) :updated-time]
+   op-time))
+
 (defn create [db op-data session-id op-id op-time]
   (let [group-id (:group-id op-data), text (:text op-data)]
     (assoc-in

@@ -64,6 +64,10 @@
           (comp-login))
         (comp-space nil 120))
        (comment comp-debug (:router store) style-debugger)
-       (comp-msg-list (get-in store [:session :notifications]) :session/remove-notification)))))
+       (div
+        {:style {:z-index 9990}}
+        (comp-msg-list
+         (get-in store [:session :notifications])
+         :session/remove-notification))))))
 
 (def comp-container (create-comp :container render))

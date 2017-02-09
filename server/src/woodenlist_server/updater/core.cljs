@@ -29,5 +29,6 @@
     :task/toggle (task/toggle db op-data session-id op-id op-time)
     :task/edit (task/edit db op-data session-id op-id op-time)
     :task/delete (task/delete db op-data session-id op-id op-time)
+    :task/touch (task/touch db op-data session-id op-id op-time)
     :message/create (message/create db op-data session-id op-id op-time)
     db))
