@@ -5,3 +5,4 @@
 .lumo_cache/
 
 node_modules
+tasks/class-path.sh
