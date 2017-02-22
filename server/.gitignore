@@ -5,3 +5,4 @@
 /figwheel_server.log
 /node_modules/
 /.lumo_cache/
+tasks/class-path.sh
