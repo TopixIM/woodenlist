@@ -3,8 +3,10 @@
   :source-paths #{"src"}
   :dependencies '[[org.clojure/clojure       "1.8.0"       :scope "test"]
                   [org.clojure/clojurescript "1.9.473"     :scope "test"]
-                  [andare                    "0.4.0"       :scope "test"]
+                  [andare                    "0.5.0"       :scope "test"]
                   [adzerk/boot-cljs          "1.7.228-1"   :scope "test"]
+                  [fipp                      "0.6.9"       :scope "test"]
+                  [cumulo/shallow-diff       "0.1.2"       :scope "test"]
                   [cirru/boot-stack-server   "0.1.30"      :scope "test"]
                   [mvc-works/hsl             "0.1.2"       :scope "test"]
                   [cumulo/recollect          "0.1.5"]])

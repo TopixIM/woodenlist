@@ -24,11 +24,11 @@
             [woodenlist.comp.message-list :refer [comp-message-list]]))
 
 (def style-container
-  {:background-image (str
-                      "url(https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-440209.jpg)"),
+  {:background-image (str "url(dark-lamp.jpg)"),
    :background-color :black,
    :background-size :cover,
-   :color colors/paper})
+   :color colors/paper,
+   :background-position :center})
 
 (def style-debugger {:bottom 0, :left 0, :max-width "100%"})
 
