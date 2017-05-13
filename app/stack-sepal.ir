@@ -1,6 +1,6 @@
-{:package "woodenlist",
+{:package "client",
  :files {"comp.message-list" {:ns ["ns"
-                                   "woodenlist.comp.message-list"
+                                   "client.comp.message-list"
                                    [":require"
                                     ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                     ["[]" "respo-ui.style" ":as" "ui"]
@@ -9,8 +9,8 @@
                                     ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
                                     ["[]" "respo.comp.text" ":refer" ["[]" "comp-text"]]
                                     ["[]" "respo.comp.space" ":refer" ["[]" "comp-space"]]
-                                    ["[]" "woodenlist.comp.speaker" ":refer" ["[]" "comp-speaker"]]
-                                    ["[]" "woodenlist.comp.message" ":refer" ["[]" "comp-message"]]]],
+                                    ["[]" "client.comp.speaker" ":refer" ["[]" "comp-speaker"]]
+                                    ["[]" "client.comp.message" ":refer" ["[]" "comp-message"]]]],
                               :defs {"comp-message-list" ["def"
                                                           "comp-message-list"
                                                           ["create-comp"
@@ -39,7 +39,7 @@
                                                               ["comp-speaker"]]]]]]},
                               :procs []},
          "comp.people" {:ns ["ns"
-                             "woodenlist.comp.people"
+                             "client.comp.people"
                              [":require"
                               ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                               ["[]" "respo-ui.style" ":as" "ui"]
@@ -48,7 +48,7 @@
                               ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
                               ["[]" "respo.comp.text" ":refer" ["[]" "comp-text"]]
                               ["[]" "respo.comp.space" ":refer" ["[]" "comp-space"]]
-                              ["[]" "woodenlist.comp.member-card" ":refer" ["[]" "comp-member-card"]]]],
+                              ["[]" "client.comp.member-card" ":refer" ["[]" "comp-member-card"]]]],
                         :defs {"style-list" ["def" "style-list" ["{}" [":flex-wrap" ":wrap"]]],
                                "style-title" ["def"
                                               "style-title"
@@ -73,7 +73,7 @@
                                "comp-people" ["def" "comp-people" ["create-comp" ":people" "render"]]},
                         :procs []},
          "comp.portal" {:ns ["ns"
-                             "woodenlist.comp.portal"
+                             "client.comp.portal"
                              [":require"
                               ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                               ["[]" "respo-ui.style" ":as" "ui"]
@@ -82,8 +82,8 @@
                               ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
                               ["[]" "respo.comp.text" ":refer" ["[]" "comp-text"]]
                               ["[]" "respo.comp.space" ":refer" ["[]" "comp-space"]]
-                              ["[]" "woodenlist.comp.group-card" ":refer" ["[]" "comp-group-card"]]
-                              ["[]" "woodenlist.comp.creator" ":refer" ["[]" "comp-creator"]]]],
+                              ["[]" "client.comp.group-card" ":refer" ["[]" "comp-group-card"]]
+                              ["[]" "client.comp.creator" ":refer" ["[]" "comp-creator"]]]],
                         :defs {"style-group-list" ["def"
                                                    "style-group-list"
                                                    ["{}" [":flex-wrap" ":wrap"] [":cursor" ":pointer"]]],
@@ -107,7 +107,7 @@
                                                ["[]" [":id" "task-group"] ["comp-group-card" "task-group"]]]]]]]]]},
                         :procs []},
          "comp.member-card" {:ns ["ns"
-                                  "woodenlist.comp.member-card"
+                                  "client.comp.member-card"
                                   [":require"
                                    ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                    ["[]" "respo-ui.style" ":as" "ui"]
@@ -202,7 +202,7 @@
                                                         ["create-comp" ":member-card" "render"]]},
                              :procs []},
          "comp.profile" {:ns ["ns"
-                              "woodenlist.comp.profile"
+                              "client.comp.profile"
                               [":require"
                                ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                ["[]" "respo-ui.style" ":as" "ui"]
@@ -211,7 +211,7 @@
                                ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
                                ["[]" "respo.comp.text" ":refer" ["[]" "comp-code" "comp-text"]]
                                ["[]" "respo.comp.space" ":refer" ["[]" "comp-space"]]
-                               ["[]" "woodenlist.schema" ":as" "schema"]]],
+                               ["[]" "client.schema" ":as" "schema"]]],
                          :defs {"on-change-avatar" ["defn"
                                                     "on-change-avatar"
                                                     ["e" "dispatch!"]
@@ -307,7 +307,7 @@
                                               ["comp-text" "|Log out" "nil"]]]]]]},
                          :procs []},
          "comp.group-card" {:ns ["ns"
-                                 "woodenlist.comp.group-card"
+                                 "client.comp.group-card"
                                  [":require"
                                   ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                   ["[]" "clojure.string" ":as" "string"]
@@ -349,7 +349,7 @@
                                                ["comp-text" [":name" "task-group"] "nil"]]]]},
                             :procs []},
          "comp.task-editor" {:ns ["ns"
-                                  "woodenlist.comp.task-editor"
+                                  "client.comp.task-editor"
                                   [":require"
                                    ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                    ["[]" "clojure.string" ":as" "string"]
@@ -359,7 +359,7 @@
                                    ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
                                    ["[]" "respo.comp.text" ":refer" ["[]" "comp-code" "comp-text"]]
                                    ["[]" "respo.comp.space" ":refer" ["[]" "comp-space"]]
-                                   ["[]" "woodenlist.comp.back" ":refer" ["[]" "comp-back"]]]],
+                                   ["[]" "client.comp.back" ":refer" ["[]" "comp-back"]]]],
                              :defs {"on-delete" ["defn"
                                                  "on-delete"
                                                  ["group-id" "task-id"]
@@ -438,7 +438,7 @@
                                     "update-state" ["defn" "update-state" ["state" "text"] "text"]},
                              :procs []},
          "comp.creator" {:ns ["ns"
-                              "woodenlist.comp.creator"
+                              "client.comp.creator"
                               [":require"
                                ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                ["[]" "respo-ui.style" ":as" "ui"]
@@ -496,7 +496,7 @@
                                 "update-state" ["defn" "update-state" ["state" "new-text"] "new-text"]},
                          :procs []},
          "comp.task" {:ns ["ns"
-                           "woodenlist.comp.task"
+                           "client.comp.task"
                            [":require"
                             ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                             ["[]" "respo-ui.style" ":as" "ui"]
@@ -592,7 +592,7 @@
                                            [":params" ["{}" [":group-id" "group-id"] [":task-id" "task-id"]]]]]]]},
                       :procs []},
          "comp.back" {:ns ["ns"
-                           "woodenlist.comp.back"
+                           "client.comp.back"
                            [":require"
                             ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                             ["[]" "respo-ui.style" ":as" "ui"]
@@ -628,11 +628,11 @@
                                          ["e" "dispatch!"]
                                          ["dispatch!" ":router/change" ["{}" [":name" ":group"] [":params" "group-id"]]]]]},
                       :procs []},
-         "schema" {:ns ["ns" "woodenlist.schema"],
+         "schema" {:ns ["ns" "client.schema"],
                    :defs {"configs" ["def" "configs" ["{}" [":storage-key" "|woodenlist-login"] [":port" "5021"]]]},
                    :procs []},
          "comp.speaker" {:ns ["ns"
-                              "woodenlist.comp.speaker"
+                              "client.comp.speaker"
                               [":require"
                                ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                ["[]" "respo-ui.style" ":as" "ui"]
@@ -686,7 +686,7 @@
                                 "init-state" ["defn" "init-state" [] "|"]},
                          :procs []},
          "comp.container" {:ns ["ns"
-                                "woodenlist.comp.container"
+                                "client.comp.container"
                                 [":require"
                                  ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                  ["[]" "respo-ui.style" ":as" "ui"]
@@ -695,21 +695,21 @@
                                  ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
                                  ["[]" "respo.comp.text" ":refer" ["[]" "comp-text"]]
                                  ["[]" "respo.comp.space" ":refer" ["[]" "comp-space"]]
-                                 ["[]" "woodenlist.comp.header" ":refer" ["[]" "comp-header"]]
-                                 ["[]" "woodenlist.comp.profile" ":refer" ["[]" "comp-profile"]]
-                                 ["[]" "woodenlist.comp.login" ":refer" ["[]" "comp-login"]]
+                                 ["[]" "client.comp.header" ":refer" ["[]" "comp-header"]]
+                                 ["[]" "client.comp.profile" ":refer" ["[]" "comp-profile"]]
+                                 ["[]" "client.comp.login" ":refer" ["[]" "comp-login"]]
                                  ["[]" "respo-message.comp.msg-list" ":refer" ["[]" "comp-msg-list"]]
-                                 ["[]" "woodenlist.comp.portal" ":refer" ["[]" "comp-portal"]]
-                                 ["[]" "woodenlist.comp.group" ":refer" ["[]" "comp-group"]]
-                                 ["[]" "woodenlist.comp.group-editor" ":refer" ["[]" "comp-group-editor"]]
-                                 ["[]" "woodenlist.comp.task-editor" ":refer" ["[]" "comp-task-editor"]]
-                                 ["[]" "woodenlist.comp.group-manager" ":refer" ["[]" "comp-group-manager"]]
-                                 ["[]" "woodenlist.comp.person" ":refer" ["[]" "comp-person"]]
-                                 ["[]" "woodenlist.comp.groups-view" ":refer" ["[]" "comp-groups-view"]]
-                                 ["[]" "woodenlist.comp.people" ":refer" ["[]" "comp-people"]]
-                                 ["[]" "woodenlist.comp.no-connection" ":refer" ["[]" "comp-no-connection"]]
-                                 ["[]" "woodenlist.comp.avatar-editor" ":refer" ["[]" "comp-avatar-editor"]]
-                                 ["[]" "woodenlist.comp.message-list" ":refer" ["[]" "comp-message-list"]]]],
+                                 ["[]" "client.comp.portal" ":refer" ["[]" "comp-portal"]]
+                                 ["[]" "client.comp.group" ":refer" ["[]" "comp-group"]]
+                                 ["[]" "client.comp.group-editor" ":refer" ["[]" "comp-group-editor"]]
+                                 ["[]" "client.comp.task-editor" ":refer" ["[]" "comp-task-editor"]]
+                                 ["[]" "client.comp.group-manager" ":refer" ["[]" "comp-group-manager"]]
+                                 ["[]" "client.comp.person" ":refer" ["[]" "comp-person"]]
+                                 ["[]" "client.comp.groups-view" ":refer" ["[]" "comp-groups-view"]]
+                                 ["[]" "client.comp.people" ":refer" ["[]" "comp-people"]]
+                                 ["[]" "client.comp.no-connection" ":refer" ["[]" "comp-no-connection"]]
+                                 ["[]" "client.comp.avatar-editor" ":refer" ["[]" "comp-avatar-editor"]]
+                                 ["[]" "client.comp.message-list" ":refer" ["[]" "comp-message-list"]]]],
                            :defs {"render" ["defn"
                                             "render"
                                             ["store"]
@@ -783,7 +783,7 @@
                                                 ["{}" [":overflow" ":auto"] [":padding" "|16px 200px"]]]},
                            :procs []},
          "comp.groups-view" {:ns ["ns"
-                                  "woodenlist.comp.groups-view"
+                                  "client.comp.groups-view"
                                   [":require"
                                    ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                    ["[]" "respo-ui.style" ":as" "ui"]
@@ -834,7 +834,7 @@
                                                     [":font-weight" "100"]]]},
                              :procs []},
          "comp.avatar-editor" {:ns ["ns"
-                                    "woodenlist.comp.avatar-editor"
+                                    "client.comp.avatar-editor"
                                     [":require"
                                      ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                      ["[]" "respo-ui.style" ":as" "ui"]
@@ -894,13 +894,13 @@
                                       "update-state" ["defn" "update-state" ["state" "text"] "text"]},
                                :procs []},
          "main" {:ns ["ns"
-                      "woodenlist.main"
+                      "client.main"
                       [":require"
                        ["[]" "respo.core" ":refer" ["[]" "render!" "clear-cache!"]]
-                       ["[]" "woodenlist.comp.container" ":refer" ["[]" "comp-container"]]
+                       ["[]" "client.comp.container" ":refer" ["[]" "comp-container"]]
                        ["[]" "cljs.reader" ":refer" ["[]" "read-string"]]
-                       ["[]" "woodenlist.network" ":refer" ["[]" "send!" "setup-socket!"]]
-                       ["[]" "woodenlist.schema" ":as" "schema"]]],
+                       ["[]" "client.network" ":refer" ["[]" "send!" "setup-socket!"]]
+                       ["[]" "client.schema" ":as" "schema"]]],
                  :defs {"dispatch!" ["defn" "dispatch!" ["op" "op-data"] ["send!" "op" "op-data"]],
                         "on-jsload!" ["defn"
                                       "on-jsload!"
@@ -945,7 +945,7 @@
                         "states-ref" ["defonce" "states-ref" ["atom" ["{}"]]]},
                  :procs [["set!" "js/window.onload" "-main"]]},
          "network" {:ns ["ns"
-                         "woodenlist.network"
+                         "client.network"
                          [":require-macros" ["[]" "cljs.core.async.macros" ":refer" ["[]" "go"]]]
                          [":require"
                           ["[]" "cljs.reader" ":as" "reader"]
@@ -979,14 +979,14 @@
                                              ["go" ["loop" ["[]"] [".send" "ws" ["pr-str" ["<!" "sender"]]] ["recur"]]]]]},
                     :procs []},
          "comp.login" {:ns ["ns"
-                            "woodenlist.comp.login"
+                            "client.comp.login"
                             [":require"
                              ["[]" "respo.alias" ":refer" ["[]" "create-comp" "div" "input" "button"]]
                              ["[]" "respo.comp.text" ":refer" ["[]" "comp-text"]]
                              ["[]" "respo.comp.space" ":refer" ["[]" "comp-space"]]
                              ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
                              ["[]" "respo-ui.style" ":as" "ui"]
-                             ["[]" "woodenlist.schema" ":as" "schema"]]],
+                             ["[]" "client.schema" ":as" "schema"]]],
                        :defs {"update-state" ["defn" "update-state" ["state" "k" "v"] ["assoc" "state" "k" "v"]],
                               "on-toggle" ["defn"
                                            "on-toggle"
@@ -1089,7 +1089,7 @@
                                               [":font-family" "|Josefin Sans"]]]},
                        :procs []},
          "comp.message" {:ns ["ns"
-                              "woodenlist.comp.message"
+                              "client.comp.message"
                               [":require"
                                ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                ["[]" "respo-ui.style" ":as" "ui"]
@@ -1131,7 +1131,7 @@
                                 "style-message" ["def" "style-message" ["{}" [":margin-bottom" "8"]]]},
                          :procs []},
          "comp.group" {:ns ["ns"
-                            "woodenlist.comp.group"
+                            "client.comp.group"
                             [":require"
                              ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                              ["[]" "respo-ui.style" ":as" "ui"]
@@ -1140,8 +1140,8 @@
                              ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
                              ["[]" "respo.comp.space" ":refer" ["[]" "comp-space"]]
                              ["[]" "respo.comp.text" ":refer" ["[]" "comp-code" "comp-text"]]
-                             ["[]" "woodenlist.comp.task-draft" ":refer" ["[]" "comp-task-draft"]]
-                             ["[]" "woodenlist.comp.task" ":refer" ["[]" "comp-task"]]]],
+                             ["[]" "client.comp.task-draft" ":refer" ["[]" "comp-task-draft"]]
+                             ["[]" "client.comp.task" ":refer" ["[]" "comp-task"]]]],
                        :defs {"style-icon" ["def" "style-icon" ["{}" [":cursor" ":pointer"]]],
                               "on-toggle-hidden" ["defn"
                                                   "on-toggle-hidden"
@@ -1256,7 +1256,7 @@
                                                    ["{}" [":name" ":group-manager"] [":params" "group-id"]]]]]},
                        :procs []},
          "comp.header" {:ns ["ns"
-                             "woodenlist.comp.header"
+                             "client.comp.header"
                              [":require"
                               ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                               ["[]" "respo-ui.style" ":as" "ui"]
@@ -1368,7 +1368,7 @@
                                             ["dispatch!" ":router/change" ["{}" [":name" ":people"] [":params" "nil"]]]]},
                         :procs []},
          "comp.person" {:ns ["ns"
-                             "woodenlist.comp.person"
+                             "client.comp.person"
                              [":require"
                               ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                               ["[]" "respo-ui.style" ":as" "ui"]
@@ -1377,7 +1377,7 @@
                               ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
                               ["[]" "respo.comp.text" ":refer" ["[]" "comp-text"]]
                               ["[]" "respo.comp.space" ":refer" ["[]" "comp-space"]]
-                              ["[]" "woodenlist.comp.group-card" ":refer" ["[]" "comp-group-card"]]]],
+                              ["[]" "client.comp.group-card" ":refer" ["[]" "comp-group-card"]]]],
                         :defs {"render" ["defn"
                                          "render"
                                          ["router-data"]
@@ -1433,7 +1433,7 @@
                                                 [":border-radius" "|50%"]]]},
                         :procs []},
          "comp.task-draft" {:ns ["ns"
-                                 "woodenlist.comp.task-draft"
+                                 "client.comp.task-draft"
                                  [":require"
                                   ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                   ["[]" "respo-ui.style" ":as" "ui"]
@@ -1478,7 +1478,7 @@
                                                   [":keydown" ["on-keydown" "mutate!" "state" "group-id"]]]]]]]]},
                             :procs []},
          "comp.group-manager" {:ns ["ns"
-                                    "woodenlist.comp.group-manager"
+                                    "client.comp.group-manager"
                                     [":require"
                                      ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                      ["[]" "clojure.string" ":as" "string"]
@@ -1488,8 +1488,8 @@
                                      ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
                                      ["[]" "respo.comp.space" ":refer" ["[]" "comp-space"]]
                                      ["[]" "respo.comp.text" ":refer" ["[]" "comp-code" "comp-text"]]
-                                     ["[]" "woodenlist.comp.member-card" ":refer" ["[]" "comp-member-card"]]
-                                     ["[]" "woodenlist.comp.back" ":refer" ["[]" "comp-back"]]]],
+                                     ["[]" "client.comp.member-card" ":refer" ["[]" "comp-member-card"]]
+                                     ["[]" "client.comp.back" ":refer" ["[]" "comp-back"]]]],
                                :defs {"on-input" ["defn"
                                                   "on-input"
                                                   ["mutate!"]
@@ -1598,7 +1598,7 @@
                                                              "render"]]},
                                :procs []},
          "comp.no-connection" {:ns ["ns"
-                                    "woodenlist.comp.no-connection"
+                                    "client.comp.no-connection"
                                     [":require"
                                      ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                      ["[]" "respo-ui.style" ":as" "ui"]
@@ -1627,7 +1627,7 @@
                                                           [":font-weight" "100"]]]},
                                :procs []},
          "comp.group-editor" {:ns ["ns"
-                                   "woodenlist.comp.group-editor"
+                                   "client.comp.group-editor"
                                    [":require"
                                     ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
                                     ["[]" "clojure.string" ":as" "string"]
@@ -1637,7 +1637,7 @@
                                     ["[]" "respo.comp.debug" ":refer" ["[]" "comp-debug"]]
                                     ["[]" "respo.comp.space" ":refer" ["[]" "comp-space"]]
                                     ["[]" "respo.comp.text" ":refer" ["[]" "comp-code" "comp-text"]]
-                                    ["[]" "woodenlist.comp.back" ":refer" ["[]" "comp-back"]]]],
+                                    ["[]" "client.comp.back" ":refer" ["[]" "comp-back"]]]],
                               :defs {"on-input" ["defn"
                                                  "on-input"
                                                  ["mutate!"]

@@ -3,13 +3,10 @@
   :asset-paths #{"assets/"}
   :resource-paths #{"polyfill" "src"}
   :dependencies '[[org.clojure/clojure       "1.8.0"       :scope "test"]
-                  [org.clojure/clojurescript "1.9.473"     :scope "test"]
+                  [org.clojure/clojurescript "1.9.542"     :scope "test"]
                   [andare                    "0.5.0"       :scope "test"]
                   [adzerk/boot-cljs          "1.7.228-1"   :scope "test"]
                   [adzerk/boot-reload        "0.4.13"      :scope "test"]
-                  [cirru/boot-stack-server   "0.1.30"      :scope "test"]
-                  [fipp                      "0.6.9"       :scope "test"]
-                  [cumulo/shallow-diff       "0.1.2"       :scope "test"]
                   [mvc-works/hsl             "0.1.2"]
                   [respo                     "0.3.38"]
                   [respo/ui                  "0.1.6"]
@@ -32,7 +29,7 @@
 (deftask dev []
   (comp
     (watch)
-    (reload :on-jsload 'woodenlist.main/on-jsload!
+    (reload :on-jsload 'client.main/on-jsload!
             :cljs-asset-path ".")
     (cljs :compiler-options {:language-in :ecmascript5})
     (target :no-clean true)))

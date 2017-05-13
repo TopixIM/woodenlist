@@ -1,18 +1,19 @@
-{:package "woodenlist-server",
- :files {"updater.router" {:ns ["ns" "woodenlist-server.updater.router"],
+{:package "server",
+ :options {:port 7011}
+ :files {"updater.router" {:ns ["ns" "server.updater.router"],
                            :defs {"change" ["defn"
                                             "change"
                                             ["db" "op-data" "session-id" "op-id" "op-time"]
                                             ["assoc-in" "db" ["[]" ":sessions" "session-id" ":router"] "op-data"]]},
                            :procs []},
          "twig.container" {:ns ["ns"
-                                "woodenlist-server.twig.container"
+                                "server.twig.container"
                                 [":require"
                                  ["[]" "recollect.bunch" ":refer" ["[]" "create-twig"]]
-                                 ["[]" "woodenlist-server.twig.user" ":refer" ["[]" "twig-user"]]
-                                 ["[]" "woodenlist-server.twig.group" ":refer" ["[]" "twig-group"]]
-                                 ["[]" "woodenlist-server.twig.group-brief" ":refer" ["[]" "twig-group-brief"]]
-                                 ["[]" "woodenlist-server.twig.core" ":refer" ["[]" "twig-message"]]]],
+                                 ["[]" "server.twig.user" ":refer" ["[]" "twig-user"]]
+                                 ["[]" "server.twig.group" ":refer" ["[]" "twig-group"]]
+                                 ["[]" "server.twig.group-brief" ":refer" ["[]" "twig-group-brief"]]
+                                 ["[]" "server.twig.core" ":refer" ["[]" "twig-message"]]]],
                            :defs {"twig-container" ["def"
                                                     "twig-container"
                                                     ["create-twig"
@@ -146,8 +147,8 @@
                                                         ["{}" [":session" "session"] [":logged-in?" "false"]]]]]]]},
                            :procs []},
          "updater.task" {:ns ["ns"
-                              "woodenlist-server.updater.task"
-                              [":require" ["[]" "woodenlist-server.schema" ":as" "schema"]]],
+                              "server.updater.task"
+                              [":require" ["[]" "server.schema" ":as" "schema"]]],
                          :defs {"toggle" ["defn"
                                           "toggle"
                                           ["db" "op-data" "session-id" "op-id" "op-time"]
@@ -223,13 +224,13 @@
                                            ["[]" ":task-groups" [":group-id" "op-data"] ":tasks"]
                                            ["fn" ["cursor"] ["dissoc" "cursor" [":task-id" "op-data"]]]]]},
                          :procs []},
-         "util" {:ns ["ns" "woodenlist-server.util"],
+         "util" {:ns ["ns" "server.util"],
                  :defs {"find-first" ["defn"
                                       "find-first"
                                       ["f" "xs"]
                                       ["reduce" ["fn" ["_" "x"] ["when" ["f" "x"] ["reduced" "x"]]] "nil" "xs"]]},
                  :procs []},
-         "schema" {:ns ["ns" "woodenlist-server.schema"],
+         "schema" {:ns ["ns" "server.schema"],
                    :defs {"message" ["def"
                                      "message"
                                      ["{}" [":id" "nil"] [":author-id" "nil"] [":text" "nil"] [":time" "nil"]]],
@@ -287,8 +288,8 @@
                                          [":show-done?" "false"]]]},
                    :procs []},
          "updater.user" {:ns ["ns"
-                              "woodenlist-server.updater.user"
-                              [":require" ["[]" "woodenlist-server.util" ":refer" ["[]" "find-first"]]]],
+                              "server.updater.user"
+                              [":require" ["[]" "server.util" ":refer" ["[]" "find-first"]]]],
                          :defs {"sign-up" ["defn"
                                            "sign-up"
                                            ["db" "op-data" "session-id" "op-id" "op-time"]
@@ -378,8 +379,8 @@
                                            ["assoc-in" "db" ["[]" ":sessions" "session-id" ":user-id"] "nil"]]},
                          :procs []},
          "updater.session" {:ns ["ns"
-                                 "woodenlist-server.updater.session"
-                                 [":require" ["[]" "woodenlist-server.schema" ":as" "schema"]]],
+                                 "server.updater.session"
+                                 [":require" ["[]" "server.schema" ":as" "schema"]]],
                             :defs {"connect" ["defn"
                                               "connect"
                                               ["db" "op-data" "session-id" "op-id" "op-time"]
@@ -412,13 +413,13 @@
                                                             ["subvec" "notifications" "0" "op-data"]]]]},
                             :procs []},
          "main" {:ns ["ns"
-                      "woodenlist-server.main"
+                      "server.main"
                       [":require"
                        ["[]" "cljs.nodejs" ":as" "nodejs"]
                        ["[]" "cljs.reader" ":refer" ["[]" "read-string"]]
-                       ["[]" "woodenlist-server.schema" ":as" "schema"]
-                       ["[]" "woodenlist-server.network" ":refer" ["[]" "run-server!" "render-clients!"]]
-                       ["[]" "woodenlist-server.updater.core" ":refer" ["[]" "updater"]]
+                       ["[]" "server.schema" ":as" "schema"]
+                       ["[]" "server.network" ":refer" ["[]" "run-server!" "render-clients!"]]
+                       ["[]" "server.updater.core" ":refer" ["[]" "updater"]]
                        ["[]" "cljs.core.async" ":refer" ["[]" "<!"]]]
                       [":require-macros" ["[]" "cljs.core.async.macros" ":refer" ["[]" "go-loop"]]]],
                  :defs {"on-jsload!" ["defn"
@@ -490,12 +491,12 @@
                                       [".execSync" ["js/require" "|child_process"] "|rm .lumo_cache/woodenlist_server*"]]},
                  :procs [["set!" "*main-cli-fn*" "-main"]]},
          "network" {:ns ["ns"
-                         "woodenlist-server.network"
+                         "server.network"
                          [":require"
                           ["[]" "cljs.nodejs" ":as" "nodejs"]
                           ["[]" "cljs.reader" ":as" "reader"]
                           ["[]" "cljs.core.async" ":refer" ["[]" "chan" ">!"]]
-                          ["[]" "woodenlist-server.twig.container" ":refer" ["[]" "twig-container"]]
+                          ["[]" "server.twig.container" ":refer" ["[]" "twig-container"]]
                           ["[]" "recollect.diff" ":refer" ["[]" "diff-bunch"]]
                           ["[]" "recollect.bunch" ":refer" ["[]" "render-bunch"]]]
                          [":require-macros" ["[]" "cljs.core.async.macros" ":refer" ["[]" "go"]]]],
@@ -562,7 +563,7 @@
                            "ws" ["def" "ws" ["js/require" "|uws"]]},
                     :procs []},
          "twig.group" {:ns ["ns"
-                            "woodenlist-server.twig.group"
+                            "server.twig.group"
                             [":require" ["[]" "recollect.bunch" ":refer" ["[]" "create-twig"]]]],
                        :defs {"twig-group" ["def"
                                             "twig-group"
@@ -579,7 +580,7 @@
                                                 ["fn" ["tasks"] ["if" "show-done?" "tasks" "nil"]]]]]]]},
                        :procs []},
          "twig.user" {:ns ["ns"
-                           "woodenlist-server.twig.user"
+                           "server.twig.user"
                            [":require" ["[]" "recollect.bunch" ":refer" ["[]" "create-twig"]]]],
                       :defs {"twig-user" ["def"
                                           "twig-user"
@@ -599,14 +600,14 @@
                                                 "|http://tva4.sinaimg.cn/crop.0.0.512.512.180/61b454d3jw8el60qqair7j20e80e874r.jpg"]]]]]]]},
                       :procs []},
          "updater.core" {:ns ["ns"
-                              "woodenlist-server.updater.core"
+                              "server.updater.core"
                               [":require"
-                               ["[]" "woodenlist-server.updater.session" ":as" "session"]
-                               ["[]" "woodenlist-server.updater.user" ":as" "user"]
-                               ["[]" "woodenlist-server.updater.router" ":as" "router"]
-                               ["[]" "woodenlist-server.updater.task-group" ":as" "task-group"]
-                               ["[]" "woodenlist-server.updater.task" ":as" "task"]
-                               ["[]" "woodenlist-server.updater.message" ":as" "message"]]],
+                               ["[]" "server.updater.session" ":as" "session"]
+                               ["[]" "server.updater.user" ":as" "user"]
+                               ["[]" "server.updater.router" ":as" "router"]
+                               ["[]" "server.updater.task-group" ":as" "task-group"]
+                               ["[]" "server.updater.task" ":as" "task"]
+                               ["[]" "server.updater.message" ":as" "message"]]],
                          :defs {"updater" ["defn"
                                            "updater"
                                            ["db" "op" "op-data" "session-id" "op-id" "op-time"]
@@ -660,8 +661,8 @@
                                             "db"]]},
                          :procs []},
          "updater.message" {:ns ["ns"
-                                 "woodenlist-server.updater.message"
-                                 [":require" ["[]" "woodenlist-server.schema" ":as" "schema"]]],
+                                 "server.updater.message"
+                                 [":require" ["[]" "server.schema" ":as" "schema"]]],
                             :defs {"create" ["defn"
                                              "create"
                                              ["db" "op-data" "session-id" "op-id" "op-time"]
@@ -704,8 +705,8 @@
                                                         ["into" ["{}"]]]]]},
                             :procs []},
          "updater.task-group" {:ns ["ns"
-                                    "woodenlist-server.updater.task-group"
-                                    [":require" ["[]" "woodenlist-server.schema" ":as" "schema"]]],
+                                    "server.updater.task-group"
+                                    [":require" ["[]" "server.schema" ":as" "schema"]]],
                                :defs {"rename" ["defn"
                                                 "rename"
                                                 ["db" "op-data" "session-id" "op-id" "op-time"]
@@ -812,7 +813,7 @@
                                                          ["fn" ["groups"] ["disj" "groups" [":group-id" "op-data"]]]]]]},
                                :procs []},
          "twig.group-brief" {:ns ["ns"
-                                  "woodenlist-server.twig.group-brief"
+                                  "server.twig.group-brief"
                                   [":require" ["[]" "recollect.bunch" ":refer" ["[]" "create-twig"]]]],
                              :defs {"twig.group-brief" ["def"
                                                         "twig-group-brief"
@@ -828,10 +829,10 @@
                                                            ["dissoc" ":users"]]]]]},
                              :procs []},
          "twig.core" {:ns ["ns"
-                           "woodenlist-server.twig.core"
+                           "server.twig.core"
                            [":require"
                             ["[]" "recollect.bunch" ":refer" ["[]" "create-twig"]]
-                            ["[]" "woodenlist-server.twig.user" ":refer" ["[]" "twig-user"]]]],
+                            ["[]" "server.twig.user" ":refer" ["[]" "twig-user"]]]],
                       :defs {"twig-message" ["def"
                                              "twig-message"
                                              ["create-twig"
