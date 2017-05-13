@@ -53,7 +53,4 @@
   (.on js/process "exit" (fn [code] (println "Exit:" code) (persist-db!)))
   (println "Server started."))
 
-(defn rm-caches! []
-  (.execSync (js/require "child_process") "rm .lumo_cache/woodenlist_server*"))
-
 (set! *main-cli-fn* -main)
