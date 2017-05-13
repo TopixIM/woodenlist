@@ -1,5 +1,5 @@
 {:package "server",
- :options {:port 7011}
+ :options {:port 7011},
  :files {"updater.router" {:ns ["ns" "server.updater.router"],
                            :defs {"change" ["defn"
                                             "change"
@@ -146,9 +146,7 @@
                                                             [":users-count" ["count" [":users" "db"]]]]]]]
                                                         ["{}" [":session" "session"] [":logged-in?" "false"]]]]]]]},
                            :procs []},
-         "updater.task" {:ns ["ns"
-                              "server.updater.task"
-                              [":require" ["[]" "server.schema" ":as" "schema"]]],
+         "updater.task" {:ns ["ns" "server.updater.task" [":require" ["[]" "server.schema" ":as" "schema"]]],
                          :defs {"toggle" ["defn"
                                           "toggle"
                                           ["db" "op-data" "session-id" "op-id" "op-time"]
@@ -287,9 +285,7 @@
                                          [":done-tasks" ["{}"]]
                                          [":show-done?" "false"]]]},
                    :procs []},
-         "updater.user" {:ns ["ns"
-                              "server.updater.user"
-                              [":require" ["[]" "server.util" ":refer" ["[]" "find-first"]]]],
+         "updater.user" {:ns ["ns" "server.updater.user" [":require" ["[]" "server.util" ":refer" ["[]" "find-first"]]]],
                          :defs {"sign-up" ["defn"
                                            "sign-up"
                                            ["db" "op-data" "session-id" "op-id" "op-time"]
@@ -378,9 +374,7 @@
                                            ["db" "op-data" "session-id" "op-id" "op-time"]
                                            ["assoc-in" "db" ["[]" ":sessions" "session-id" ":user-id"] "nil"]]},
                          :procs []},
-         "updater.session" {:ns ["ns"
-                                 "server.updater.session"
-                                 [":require" ["[]" "server.schema" ":as" "schema"]]],
+         "updater.session" {:ns ["ns" "server.updater.session" [":require" ["[]" "server.schema" ":as" "schema"]]],
                             :defs {"connect" ["defn"
                                               "connect"
                                               ["db" "op-data" "session-id" "op-id" "op-time"]
@@ -579,9 +573,7 @@
                                                 ":done-tasks"
                                                 ["fn" ["tasks"] ["if" "show-done?" "tasks" "nil"]]]]]]]},
                        :procs []},
-         "twig.user" {:ns ["ns"
-                           "server.twig.user"
-                           [":require" ["[]" "recollect.bunch" ":refer" ["[]" "create-twig"]]]],
+         "twig.user" {:ns ["ns" "server.twig.user" [":require" ["[]" "recollect.bunch" ":refer" ["[]" "create-twig"]]]],
                       :defs {"twig-user" ["def"
                                           "twig-user"
                                           ["create-twig"
@@ -660,9 +652,7 @@
                                              ["message/create" "db" "op-data" "session-id" "op-id" "op-time"]]
                                             "db"]]},
                          :procs []},
-         "updater.message" {:ns ["ns"
-                                 "server.updater.message"
-                                 [":require" ["[]" "server.schema" ":as" "schema"]]],
+         "updater.message" {:ns ["ns" "server.updater.message" [":require" ["[]" "server.schema" ":as" "schema"]]],
                             :defs {"create" ["defn"
                                              "create"
                                              ["db" "op-data" "session-id" "op-id" "op-time"]
@@ -704,9 +694,7 @@
                                                             ["*" "1000" "60" "interval"]]]]]
                                                         ["into" ["{}"]]]]]},
                             :procs []},
-         "updater.task-group" {:ns ["ns"
-                                    "server.updater.task-group"
-                                    [":require" ["[]" "server.schema" ":as" "schema"]]],
+         "updater.task-group" {:ns ["ns" "server.updater.task-group" [":require" ["[]" "server.schema" ":as" "schema"]]],
                                :defs {"rename" ["defn"
                                                 "rename"
                                                 ["db" "op-data" "session-id" "op-id" "op-time"]

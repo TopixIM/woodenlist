@@ -20,10 +20,14 @@
     (.exit js/process 0)))
 
 (defn handle-reload! [ns-path]
-  (println "Trying to reload:" ns-path)
-  (.write client (str "(require '" ns-path " :reload)" \newline))
-  (.write client "(require '[server.main :as main])\n")
-  (.write client "(main/on-jsload!)\n"))
+  (let [segment (-> ns-path
+                    (string/replace "-" "_")
+                    (string/replace "." "_SLASH_"))
+        reload-code (str "(require '" ns-path " :reload)\n"
+                         "(require '[server.main :as main])\n"
+                         "(main/on-jsload!)\n")]
+    (println reload-code)
+    (.write client reload-code)))
 
 (defn handle-path! [filepath]
   (let
