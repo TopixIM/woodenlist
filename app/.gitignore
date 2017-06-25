@@ -1,8 +1,4 @@
 
 /target
-/src/*.*
-/.nrepl-*
-.lumo_cache/
-
-node_modules
-tasks/class-path.sh
+/node_modules
+/dist

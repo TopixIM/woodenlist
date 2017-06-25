@@ -20,7 +20,7 @@
 
 (defonce reader-db-ref (atom @writer-db-ref))
 
-(defn on-jsload! [] (println "Code updated.") (render-clients! @reader-db-ref))
+(defn reload! [] (println "Code updated.") (render-clients! @reader-db-ref))
 
 (defn persist-db! []
   (let [raw (pr-str (assoc @writer-db-ref :sessions {})), fs (js/require "fs")]
@@ -35,8 +35,7 @@
      (render-clients! @reader-db-ref)))
   (js/setTimeout render-loop! 300))
 
-(defn -main []
-  (nodejs/enable-util-print!)
+(defn main! []
   (let [server-ch (run-server! {:port 5021})]
     (go-loop
      []
@@ -53,4 +52,4 @@
   (.on js/process "exit" (fn [code] (println "Exit:" code) (persist-db!)))
   (println "Server started."))
 
-(set! *main-cli-fn* -main)
+(set! *main-cli-fn* main!)

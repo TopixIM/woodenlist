@@ -1,0 +1,1713 @@
+{:package "app",
+ :root {:ns "main", :def "main!"},
+ :files {"comp.message-list" {:ns ["ns"
+                                   "app.comp.message-list"
+                                   [":require-macros"
+                                    ["[]" "respo.macros" ":refer" ["[]" "defcomp" "cursor->" "<>" "div" "span" "img"]]]
+                                   [":require"
+                                    ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                                    ["[]" "respo-ui.style" ":as" "ui"]
+                                    ["[]" "respo-ui.style.colors" ":as" "colors"]
+                                    ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                                    ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                                    ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]
+                                    ["[]" "app.comp.speaker" ":refer" ["[]" "comp-speaker"]]
+                                    ["[]" "app.comp.message" ":refer" ["[]" "comp-message"]]]],
+                              :defs {"comp-message-list" ["defcomp"
+                                                          "comp-message-list"
+                                                          ["states" "messages"]
+                                                          ["div"
+                                                           ["{}"]
+                                                           ["div"
+                                                            ["{}"]
+                                                            ["<>" "span" "|Messages(cleared automatically...)" "nil"]]
+                                                           ["=<" "nil" "16"]
+                                                           ["div"
+                                                            ["{}"]
+                                                            ["->>"
+                                                             ["vals" "messages"]
+                                                             ["sort-by" ":time"]
+                                                             ["map"
+                                                              ["fn"
+                                                               ["message"]
+                                                               ["[]"
+                                                                [":id" "message"]
+                                                                ["div" ["{}"] ["comp-message" "message"]]]]]]]
+                                                           ["cursor->" ":speaker" "comp-speaker" "states"]]]},
+                              :procs []},
+         "comp.people" {:ns ["ns"
+                             "app.comp.people"
+                             [":require-macros" ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "div" "img" "span"]]]
+                             [":require"
+                              ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                              ["[]" "respo-ui.style" ":as" "ui"]
+                              ["[]" "respo-ui.style.colors" ":as" "colors"]
+                              ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                              ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                              ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]
+                              ["[]" "app.comp.member-card" ":refer" ["[]" "comp-member-card"]]]],
+                        :defs {"style-list" ["def" "style-list" ["{}" [":flex-wrap" ":wrap"]]],
+                               "style-title" ["def"
+                                              "style-title"
+                                              ["{}"
+                                               [":font-family" "|Josefin Sans"]
+                                               [":font-size" "20"]
+                                               [":font-weight" "100"]]],
+                               "comp-people" ["defcomp"
+                                              "comp-people"
+                                              ["members"]
+                                              ["div"
+                                               ["{}"]
+                                               ["div" ["{}" [":style" "style-title"]] ["<>" "span" "|People" "nil"]]
+                                               ["=<" "nil" "16"]
+                                               ["div"
+                                                ["{}" [":style" ["merge" "ui/row" "style-list"]]]
+                                                ["->>"
+                                                 ["vals" "members"]
+                                                 ["map"
+                                                  ["fn" ["user"] ["[]" [":id" "user"] ["comp-member-card" "user"]]]]]]]]},
+                        :procs []},
+         "comp.portal" {:ns ["ns"
+                             "app.comp.portal"
+                             [":require-macros"
+                              ["[]" "respo.macros" ":refer" ["[]" "defcomp" "cursor->" "<>" "div" "span"]]]
+                             [":require"
+                              ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                              ["[]" "respo-ui.style" ":as" "ui"]
+                              ["[]" "respo-ui.style.colors" ":as" "colors"]
+                              ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                              ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                              ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]
+                              ["[]" "app.comp.group-card" ":refer" ["[]" "comp-group-card"]]
+                              ["[]" "app.comp.creator" ":refer" ["[]" "comp-creator"]]]],
+                        :defs {"style-group-list" ["def"
+                                                   "style-group-list"
+                                                   ["{}" [":flex-wrap" ":wrap"] [":cursor" ":pointer"]]],
+                               "comp-portal" ["defcomp"
+                                              "comp-portal"
+                                              ["states" "task-groups"]
+                                              ["div"
+                                               ["{}"]
+                                               ["cursor->" ":creator" "comp-creator" "states"]
+                                               ["=<" "nil" "32"]
+                                               ["div"
+                                                ["{}" [":style" ["merge" "ui/row" "style-group-list"]]]
+                                                ["->>"
+                                                 ["vals" "task-groups"]
+                                                 ["map"
+                                                  ["fn"
+                                                   ["task-group"]
+                                                   ["[]" [":id" "task-group"] ["comp-group-card" "task-group"]]]]]]]]},
+                        :procs []},
+         "comp.member-card" {:ns ["ns"
+                                  "app.comp.member-card"
+                                  [":require-macros"
+                                   ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "div" "span" "img"]]]
+                                  [":require"
+                                   ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                                   ["[]" "respo-ui.style" ":as" "ui"]
+                                   ["[]" "respo-ui.style.colors" ":as" "colors"]
+                                   ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                                   ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                                   ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]]],
+                             :defs {"style-avatar" ["def"
+                                                    "style-avatar"
+                                                    ["{}"
+                                                     [":width" "32"]
+                                                     [":height" "32"]
+                                                     [":border-radius" "|50%"]
+                                                     [":cursor" ":pointer"]]],
+                                    "on-change-role" ["defn"
+                                                      "on-change-role"
+                                                      ["group-id" "user-id" "admin?"]
+                                                      ["fn"
+                                                       ["e" "dispatch!"]
+                                                       ["dispatch!"
+                                                        ":task-group/change-role"
+                                                        ["{}"
+                                                         [":group-id" "group-id"]
+                                                         [":user-id" "user-id"]
+                                                         [":admin?" "admin?"]]]]],
+                                    "on-delete" ["defn"
+                                                 "on-delete"
+                                                 ["group-id" "user-id"]
+                                                 ["fn"
+                                                  ["e" "dispatch!"]
+                                                  ["dispatch!"
+                                                   ":task-group/delete-member"
+                                                   ["{}" [":group-id" "group-id"] [":user-id" "user-id"]]]]],
+                                    "style-container" ["def"
+                                                       "style-container"
+                                                       ["{}"
+                                                        [":color" "colors/texture-light"]
+                                                        [":min-width" "120"]
+                                                        [":height" "48"]
+                                                        [":margin-right" "16"]
+                                                        [":margin-bottom" "16"]
+                                                        [":padding" "|0 16px"]
+                                                        [":font-size" "16"]
+                                                        [":box-shadow" ["str" "|0 0 1px " "colors/warm"]]
+                                                        [":align-items" ":center"]
+                                                        [":background-color" ":white"]]],
+                                    "on-view-member" ["defn"
+                                                      "on-view-member"
+                                                      ["user-id"]
+                                                      ["fn"
+                                                       ["e" "dispatch!"]
+                                                       ["dispatch!"
+                                                        ":router/change"
+                                                        ["{}" [":name" ":person"] [":params" "user-id"]]]]],
+                                    "style-icon" ["def" "style-icon" ["{}" [":cursor" ":pointer"]]],
+                                    "comp-member-card" ["defcomp"
+                                                        "comp-member-card"
+                                                        ["member" "admin?" "group-id" "user-id" "by-admin?"]
+                                                        ["div"
+                                                         ["{}" [":style" ["merge" "ui/row" "style-container"]]]
+                                                         ["img"
+                                                          ["{}"
+                                                           [":attrs" ["{}" [":src" [":avatar" "member"]]]]
+                                                           [":style" "style-avatar"]
+                                                           [":event"
+                                                            ["{}" [":click" ["on-view-member" [":id" "member"]]]]]]]
+                                                         ["=<" "8" "nil"]
+                                                         ["<>" "span" [":name" "member"] "nil"]
+                                                         ["=<" "16" "nil"]
+                                                         ["if"
+                                                          ["and" "by-admin?" ["not=" "user-id" [":id" "member"]]]
+                                                          ["div"
+                                                           ["{}"]
+                                                           ["span"
+                                                            ["{}"
+                                                             [":attrs"
+                                                              ["{}" [":class-name" "|icon ion-md-remove-circle"]]]
+                                                             [":event"
+                                                              ["{}"
+                                                               [":click" ["on-delete" "group-id" [":id" "member"]]]]]
+                                                             [":style" "style-icon"]]]
+                                                           ["=<" "16" "nil"]
+                                                           ["span"
+                                                            ["{}"
+                                                             [":attrs" ["{}" [":class-name" "|icon ion-md-build"]]]
+                                                             [":style" "style-icon"]
+                                                             [":event"
+                                                              ["{}"
+                                                               [":click"
+                                                                ["on-change-role" "group-id" [":id" "member"] "admin?"]]]]]]]]]]},
+                             :procs []},
+         "comp.profile" {:ns ["ns"
+                              "app.comp.profile"
+                              [":require-macros"
+                               ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "div" "span" "a" "input"]]]
+                              [":require"
+                               ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                               ["[]" "respo-ui.style" ":as" "ui"]
+                               ["[]" "respo-ui.style.colors" ":as" "colors"]
+                               ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                               ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                               ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]
+                               ["[]" "app.schema" ":as" "schema"]]],
+                         :defs {"on-change-avatar" ["defn"
+                                                    "on-change-avatar"
+                                                    ["e" "dispatch!"]
+                                                    ["dispatch!"
+                                                     ":router/change"
+                                                     ["{}" [":name" ":edit-avatar"] [":params" "nil"]]]],
+                                "on-log-out" ["defn"
+                                              "on-log-out"
+                                              ["e" "dispatch!"]
+                                              ["dispatch!" ":user/log-out" "nil"]
+                                              [".removeItem" "js/localStorage" [":storage-key" "schema/configs"]]],
+                                "style-container" ["def" "style-container" ["{}" [":color" "colors/paper"]]],
+                                "style-avatar" ["def"
+                                                "style-avatar"
+                                                ["{}"
+                                                 [":width" "80"]
+                                                 [":height" "80"]
+                                                 [":border-radius" "|50%"]
+                                                 [":position" ":relative"]
+                                                 [":background-size" ":cover"]]],
+                                "comp-profile" ["defcomp"
+                                                "comp-profile"
+                                                ["user"]
+                                                ["div"
+                                                 ["{}" [":style" "style-container"]]
+                                                 ["div"
+                                                  ["{}"]
+                                                  ["div"
+                                                   ["{}"
+                                                    [":style"
+                                                     ["merge"
+                                                      "style-avatar"
+                                                      ["{}"
+                                                       [":background-image" ["str" "|url(" [":avatar" "user"] "|)"]]]]]]
+                                                   ["div"
+                                                    ["{}"
+                                                     [":style" ["merge" "ui/center" "style-edit"]]
+                                                     [":event" ["{}" [":click" "on-change-avatar"]]]]
+                                                    ["a" ["{}" [":attrs" ["{}" [":class-name" "|icon ion-md-create"]]]]]]]]
+                                                 ["=<" "nil" "32"]
+                                                 ["div"
+                                                  ["{}" [":style" "ui/flex"]]
+                                                  ["<>" "span" ["str" "|Hello! " [":name" "user"]] "nil"]]
+                                                 ["div"
+                                                  ["{}"]
+                                                  ["<>" "span" "|User id:" "nil"]
+                                                  ["=<" "8" "nil"]
+                                                  ["input"
+                                                   ["{}"
+                                                    [":attrs" ["{}" [":value" [":id" "user"]]]]
+                                                    [":style" "ui/input"]]
+                                                   "nil"]]
+                                                 ["=<" "nil" "16"]
+                                                 ["div"
+                                                  ["{}"]
+                                                  ["<>" "span" "|Want to feedback?" "nil"]
+                                                  ["=<" "8" "nil"]
+                                                  ["a"
+                                                   ["{}"
+                                                    [":attrs"
+                                                     ["{}"
+                                                      [":href" "|https://github.com/Cumulo/woodenlist/issues"]
+                                                      [":target" "|_blank"]
+                                                      [":inner-text" "|Add an issue"]]]
+                                                    [":style" "ui/clickable-text"]]]]
+                                                 ["=<" "nil" "32"]
+                                                 ["div"
+                                                  ["{}"]
+                                                  ["a"
+                                                   ["{}"
+                                                    [":style" "style-trigger"]
+                                                    [":event" ["{}" [":click" "on-log-out"]]]]
+                                                   ["<>" "span" "|Log out" "nil"]]]]],
+                                "style-trigger" ["def"
+                                                 "style-trigger"
+                                                 ["{}"
+                                                  [":font-size" "14"]
+                                                  [":cursor" ":pointer"]
+                                                  [":background-color" "colors/motif-light"]
+                                                  [":color" ":white"]
+                                                  [":padding" "|0 8px"]]],
+                                "style-edit" ["def"
+                                              "style-edit"
+                                              ["{}"
+                                               [":position" ":absolute"]
+                                               [":bottom" "0"]
+                                               [":right" "0"]
+                                               [":background-color" "colors/motif"]
+                                               [":border-radius" "|50%"]
+                                               [":width" "24"]
+                                               [":height" "24"]
+                                               [":font-size" "16"]
+                                               [":cursor" ":pointer"]]]},
+                         :procs []},
+         "comp.group-card" {:ns ["ns"
+                                 "app.comp.group-card"
+                                 [":require-macros"
+                                  ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "div" "span" "input" "button"]]]
+                                 [":require"
+                                  ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                                  ["[]" "clojure.string" ":as" "string"]
+                                  ["[]" "respo-ui.style" ":as" "ui"]
+                                  ["[]" "respo-ui.style.colors" ":as" "colors"]
+                                  ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                                  ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                                  ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]]],
+                            :defs {"style-container" ["def"
+                                                      "style-container"
+                                                      ["{}"
+                                                       [":background-color" "colors/motif"]
+                                                       [":line-height" "|40px"]
+                                                       [":cursor" ":pointer"]
+                                                       [":color" ":white"]
+                                                       [":margin-right" "16"]
+                                                       [":margin-bottom" "16"]
+                                                       [":padding" "8"]
+                                                       [":min-width" "80"]]],
+                                   "on-route" ["defn"
+                                               "on-route"
+                                               ["group-id"]
+                                               ["fn"
+                                                ["e" "dispatch!"]
+                                                ["dispatch!"
+                                                 ":router/change"
+                                                 ["{}" [":name" ":group"] [":params" "group-id"]]]]],
+                                   "comp-group-card" ["defcomp"
+                                                      "comp-group-card"
+                                                      ["task-group"]
+                                                      ["div"
+                                                       ["{}"
+                                                        [":style" ["merge" "ui/center" "style-container"]]
+                                                        [":event" ["{}" [":click" ["on-route" [":id" "task-group"]]]]]]
+                                                       ["<>" "span" [":name" "task-group"] "nil"]]]},
+                            :procs []},
+         "comp.task-editor" {:ns ["ns"
+                                  "app.comp.task-editor"
+                                  [":require-macros"
+                                   ["[]"
+                                    "respo.macros"
+                                    ":refer"
+                                    ["[]" "defcomp" "<>" "div" "span" "a" "input" "button"]]]
+                                  [":require"
+                                   ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                                   ["[]" "clojure.string" ":as" "string"]
+                                   ["[]" "respo-ui.style" ":as" "ui"]
+                                   ["[]" "respo-ui.style.colors" ":as" "colors"]
+                                   ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                                   ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                                   ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]
+                                   ["[]" "app.comp.back" ":refer" ["[]" "comp-back"]]]],
+                             :defs {"on-delete" ["defn"
+                                                 "on-delete"
+                                                 ["group-id" "task-id"]
+                                                 ["fn"
+                                                  ["e" "dispatch!"]
+                                                  ["dispatch!"
+                                                   ":task/delete"
+                                                   ["{}" [":group-id" "group-id"] [":task-id" "task-id"]]]]],
+                                    "on-submit" ["defn"
+                                                 "on-submit"
+                                                 ["group-id" "task-id" "state"]
+                                                 ["fn"
+                                                  ["e" "dispatch!" "mutate!"]
+                                                  ["if"
+                                                   ["not" ["string/blank?" "state"]]
+                                                   ["do"
+                                                    ["mutate!" "|"]
+                                                    ["dispatch!"
+                                                     ":task/edit"
+                                                     ["{}"
+                                                      [":group-id" "group-id"]
+                                                      [":task-id" "task-id"]
+                                                      [":text" "state"]]]]]]],
+                                    "on-input" ["defn"
+                                                "on-input"
+                                                ["e" "dispatch!" "mutate!"]
+                                                ["mutate!" [":value" "e"]]],
+                                    "comp-task-editor" ["defcomp"
+                                                        "comp-task-editor"
+                                                        ["states" "task"]
+                                                        ["let"
+                                                         [["state" ["or" [":data" "states"] "|"]]]
+                                                         ["div"
+                                                          ["{}"]
+                                                          ["div" ["{}"] ["<>" "span" [":text" "task"] "nil"]]
+                                                          ["div"
+                                                           ["{}"]
+                                                           ["input"
+                                                            ["{}"
+                                                             [":style" "ui/input"]
+                                                             [":attrs"
+                                                              ["{}" [":value" "state"] [":placeholder" "|Task content"]]]
+                                                             [":event" ["{}" [":input" "on-input"]]]]]
+                                                           ["=<" "8" "nil"]
+                                                           ["button"
+                                                            ["{}"
+                                                             [":style" "ui/button"]
+                                                             [":event"
+                                                              ["{}"
+                                                               [":click"
+                                                                ["on-submit"
+                                                                 [":group-id" "task"]
+                                                                 [":id" "task"]
+                                                                 "state"]]]]]
+                                                            ["<>" "span" "|Submit" "nil"]]
+                                                           ["=<" "8" "nil"]
+                                                           ["button"
+                                                            ["{}"
+                                                             [":style"
+                                                              ["merge"
+                                                               "ui/button"
+                                                               ["{}" [":background-color" "colors/irreversible"]]]]
+                                                             [":event"
+                                                              ["{}"
+                                                               [":click"
+                                                                ["on-delete" [":group-id" "task"] [":id" "task"]]]]]]
+                                                            ["<>" "span" "|Delete" "nil"]]
+                                                           ["=<" "nil" "120"]
+                                                           ["div" ["{}"] ["comp-back" [":group-id" "task"] "nil"]]]]]]},
+                             :procs []},
+         "comp.creator" {:ns ["ns"
+                              "app.comp.creator"
+                              [":require-macros"
+                               ["[]" "respo.macros" ":refer" ["[]" "defcomp" "div" "span" "input" "<>"]]]
+                              [":require"
+                               ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                               ["[]" "respo-ui.style" ":as" "ui"]
+                               ["[]" "respo-ui.style.colors" ":as" "colors"]
+                               ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                               ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                               ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]]],
+                         :defs {"style-trigger" ["def"
+                                                 "style-trigger"
+                                                 ["{}"
+                                                  [":color" "colors/motif"]
+                                                  [":cursor" ":pointer"]
+                                                  [":font-size" "32"]
+                                                  [":display" ":inline-block"]
+                                                  [":vertical-align" ":center"]]],
+                                "on-create" ["defn"
+                                             "on-create"
+                                             ["text"]
+                                             ["fn"
+                                              ["e" "dispatch!" "mutate!"]
+                                              ["dispatch!" ":task-group/create" "text"]
+                                              ["mutate!" "|"]]],
+                                "comp-creator" ["defcomp"
+                                                "comp-creator"
+                                                ["states"]
+                                                ["let"
+                                                 [["state" ["or" [":data" "states"] "|"]]]
+                                                 ["div"
+                                                  ["{}"]
+                                                  ["div"
+                                                   ["{}"]
+                                                   ["input"
+                                                    ["{}"
+                                                     [":attrs" ["{}" [":value" "state"] [":placeholder" "|Group name"]]]
+                                                     [":event"
+                                                      ["{}"
+                                                       [":input"
+                                                        ["fn" ["e" "dispatch!" "mutate!"] ["mutate!" [":value" "e"]]]]]]
+                                                     [":style" "ui/input"]]]
+                                                   ["=<" "8" "nil"]
+                                                   ["div"
+                                                    ["{}"
+                                                     [":style" ["merge" "ui/center" "style-trigger"]]
+                                                     [":event" ["{}" [":click" ["on-create" "state"]]]]]
+                                                    ["span"
+                                                     ["{}" [":attrs" ["{}" [":class-name" "|icon ion-md-add-circle"]]]]]]]]]]},
+                         :procs []},
+         "comp.task" {:ns ["ns"
+                           "app.comp.task"
+                           [":require-macros" ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "div" "span" "input"]]]
+                           [":require"
+                            ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                            ["[]" "respo-ui.style" ":as" "ui"]
+                            ["[]" "respo-ui.style.colors" ":as" "colors"]
+                            ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                            ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                            ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]]],
+                      :defs {"on-touch" ["defn"
+                                         "on-touch"
+                                         ["group-id" "task-id"]
+                                         ["fn"
+                                          ["e" "dispatch!"]
+                                          ["dispatch!"
+                                           ":task/touch"
+                                           ["{}" [":group-id" "group-id"] [":task-id" "task-id"]]]]],
+                             "style-container" ["def"
+                                                "style-container"
+                                                ["{}"
+                                                 [":align-items" ":center"]
+                                                 [":margin-top" "8"]
+                                                 [":color" "colors/texture"]]],
+                             "style-touch" ["def"
+                                            "style-touch"
+                                            ["{}"
+                                             [":width" "40"]
+                                             [":height" "40"]
+                                             [":cursor" ":pointer"]
+                                             [":background-color" "colors/verdant"]]],
+                             "style-done" ["def"
+                                           "style-done"
+                                           ["{}"
+                                            [":width" "40"]
+                                            [":height" "40"]
+                                            [":cursor" ":pointer"]
+                                            [":background-color" "colors/attractive"]]],
+                             "comp-task" ["defcomp"
+                                          "comp-task"
+                                          ["task"]
+                                          ["div"
+                                           ["{}" [":style" ["merge" "ui/row" "style-container"]]]
+                                           ["div"
+                                            ["{}"
+                                             [":style"
+                                              ["merge"
+                                               "style-done"
+                                               ["if" [":done?" "task"] ["{}" [":background-color" "colors/verdant"]]]]]
+                                             [":event"
+                                              ["{}"
+                                               [":click"
+                                                ["on-toggle" [":group-id" "task"] [":id" "task"] [":done?" "task"]]]]]]]
+                                           ["=<" "8" "nil"]
+                                           ["div"
+                                            ["{}"
+                                             [":event"
+                                              ["{}" [":click" ["on-edit" [":group-id" "task"] [":id" "task"]]]]]
+                                             [":style" "style-text"]]
+                                            ["<>" "span" [":text" "task"] "nil"]]
+                                           ["=<" "8" "nil"]
+                                           ["div"
+                                            ["{}"
+                                             [":style" "style-touch"]
+                                             [":attrs" ["{}" [":title" "|Touch"]]]
+                                             [":event"
+                                              ["{}" [":click" ["on-touch" [":group-id" "task"] [":id" "task"]]]]]]]]],
+                             "on-toggle" ["defn"
+                                          "on-toggle"
+                                          ["group-id" "task-id" "done?"]
+                                          ["fn"
+                                           ["e" "dispatch!"]
+                                           ["dispatch!"
+                                            ":task/toggle"
+                                            ["{}" [":group-id" "group-id"] [":task-id" "task-id"] [":done?" "done?"]]]]],
+                             "style-text" ["def"
+                                           "style-text"
+                                           ["{}"
+                                            [":min-width" "400"]
+                                            [":background-color" "colors/paper"]
+                                            [":height" "40"]
+                                            [":line-height" "|40px"]
+                                            [":padding" "|0 8px"]
+                                            [":cursor" ":pointer"]]],
+                             "on-edit" ["defn"
+                                        "on-edit"
+                                        ["group-id" "task-id"]
+                                        ["fn"
+                                         ["e" "dispatch!"]
+                                         ["dispatch!"
+                                          ":router/change"
+                                          ["{}"
+                                           [":name" ":task-editor"]
+                                           [":params" ["{}" [":group-id" "group-id"] [":task-id" "task-id"]]]]]]]},
+                      :procs []},
+         "comp.back" {:ns ["ns"
+                           "app.comp.back"
+                           [":require-macros" ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "div" "span" "input"]]]
+                           [":require"
+                            ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                            ["[]" "respo-ui.style" ":as" "ui"]
+                            ["[]" "respo-ui.style.colors" ":as" "colors"]
+                            ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                            ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                            ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]]],
+                      :defs {"style-container" ["def"
+                                                "style-container"
+                                                ["{}"
+                                                 [":background-color" "colors/paper"]
+                                                 [":color" "colors/texture-light"]
+                                                 [":display" ":inline-flex"]
+                                                 [":width" "80"]
+                                                 [":height" "32"]
+                                                 [":cursor" ":pointer"]]],
+                             "comp-back" ["defcomp"
+                                          "comp-back"
+                                          ["group-id"]
+                                          ["div"
+                                           ["{}"
+                                            [":style" ["merge" "ui/center" "style-container"]]
+                                            [":event" ["{}" [":click" ["on-back" "group-id"]]]]]
+                                           ["<>" "span" "|Go back" "nil"]]],
+                             "on-back" ["defn"
+                                        "on-back"
+                                        ["group-id"]
+                                        ["fn"
+                                         ["e" "dispatch!"]
+                                         ["dispatch!" ":router/change" ["{}" [":name" ":group"] [":params" "group-id"]]]]]},
+                      :procs []},
+         "schema" {:ns ["ns" "app.schema"],
+                   :defs {"configs" ["def" "configs" ["{}" [":storage-key" "|woodenlist-login"] [":port" "5021"]]],
+                          "store" ["def" "store" "nil"]},
+                   :procs []},
+         "comp.speaker" {:ns ["ns"
+                              "app.comp.speaker"
+                              [":require-macros"
+                               ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "div" "span" "img" "button" "input"]]]
+                              [":require"
+                               ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                               ["[]" "respo-ui.style" ":as" "ui"]
+                               ["[]" "respo-ui.style.colors" ":as" "colors"]
+                               ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                               ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                               ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]]],
+                         :defs {"comp-speaker" ["defcomp"
+                                                "comp-speaker"
+                                                ["states"]
+                                                ["let"
+                                                 [["state" ["or" [":data" "states"] "initial-state"]]]
+                                                 ["div"
+                                                  ["{}"]
+                                                  ["input"
+                                                   ["{}"
+                                                    [":attrs"
+                                                     ["{}" [":value" "state"] [":placeholder" "|Message to leave..."]]]
+                                                    [":event"
+                                                     ["{}"
+                                                      [":input"
+                                                       ["fn" ["e" "dispatch!" "mutate!"] ["mutate!" [":value" "e"]]]]
+                                                      [":keydown"
+                                                       ["fn"
+                                                        ["e" "dispatch!" "mutate!"]
+                                                        ["if"
+                                                         ["=" "13" [":key-code" "e"]]
+                                                         ["do" ["dispatch!" ":message/create" "state"] ["mutate!" "|"]]]]]]]
+                                                    [":style" ["merge" "ui/input" "style-input"]]]]
+                                                  ["=<" "8" "nil"]
+                                                  ["button"
+                                                   ["{}"
+                                                    [":style" "ui/button"]
+                                                    [":event"
+                                                     ["{}"
+                                                      [":click"
+                                                       ["fn"
+                                                        ["e" "dispatch!" "mutate!"]
+                                                        ["dispatch!" ":message/create" "state"]
+                                                        ["mutate!" "|"]]]]]]
+                                                   ["<>" "span" "|Submit" "nil"]]]]],
+                                "style-input" ["def" "style-input" ["{}" [":width" "400"]]],
+                                "initial-state" ["def" "initial-state" "|"]},
+                         :procs []},
+         "comp.container" {:ns ["ns"
+                                "app.comp.container"
+                                [":require-macros"
+                                 ["[]" "respo.macros" ":refer" ["[]" "defcomp" "cursor->" "<>" "div" "span"]]]
+                                [":require"
+                                 ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                                 ["[]" "respo-ui.style" ":as" "ui"]
+                                 ["[]" "respo-ui.style.colors" ":as" "colors"]
+                                 ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                                 ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                                 ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]
+                                 ["[]" "app.comp.header" ":refer" ["[]" "comp-header"]]
+                                 ["[]" "app.comp.profile" ":refer" ["[]" "comp-profile"]]
+                                 ["[]" "app.comp.login" ":refer" ["[]" "comp-login"]]
+                                 ["[]" "respo-message.comp.msg-list" ":refer" ["[]" "comp-msg-list"]]
+                                 ["[]" "app.comp.portal" ":refer" ["[]" "comp-portal"]]
+                                 ["[]" "app.comp.group" ":refer" ["[]" "comp-group"]]
+                                 ["[]" "app.comp.group-editor" ":refer" ["[]" "comp-group-editor"]]
+                                 ["[]" "app.comp.task-editor" ":refer" ["[]" "comp-task-editor"]]
+                                 ["[]" "app.comp.group-manager" ":refer" ["[]" "comp-group-manager"]]
+                                 ["[]" "app.comp.person" ":refer" ["[]" "comp-person"]]
+                                 ["[]" "app.comp.groups-view" ":refer" ["[]" "comp-groups-view"]]
+                                 ["[]" "app.comp.people" ":refer" ["[]" "comp-people"]]
+                                 ["[]" "app.comp.no-connection" ":refer" ["[]" "comp-no-connection"]]
+                                 ["[]" "app.comp.avatar-editor" ":refer" ["[]" "comp-avatar-editor"]]
+                                 ["[]" "app.comp.message-list" ":refer" ["[]" "comp-message-list"]]]],
+                           :defs {"comp-container" ["defcomp"
+                                                    "comp-container"
+                                                    ["states" "store"]
+                                                    ["let"
+                                                     [["state" [":data" "states"]]]
+                                                     ["if"
+                                                      ["nil?" "store"]
+                                                      ["div"
+                                                       ["{}"
+                                                        [":style"
+                                                         ["merge"
+                                                          "ui/global"
+                                                          "ui/fullscreen"
+                                                          "ui/column"
+                                                          "style-container"]]]
+                                                       ["comp-no-connection"]]
+                                                      ["div"
+                                                       ["{}"
+                                                        [":style"
+                                                         ["merge"
+                                                          "ui/global"
+                                                          "ui/fullscreen"
+                                                          "ui/column"
+                                                          "style-container"]]]
+                                                       ["comp-header"
+                                                        [":logged-in?" "store"]
+                                                        ["get-in" "store" ["[]" ":user" ":avatar"]]
+                                                        [":statistics" "store"]]
+                                                       ["div"
+                                                        ["{}" [":style" ["merge" "ui/fullscreen" "style-body"]]]
+                                                        ["=<" "nil" "80"]
+                                                        ["if"
+                                                         [":logged-in?" "store"]
+                                                         ["let"
+                                                          [["router" [":router" "store"]]]
+                                                          ["case"
+                                                           [":name" "router"]
+                                                           [":profile" ["comp-profile" [":user" "store"]]]
+                                                           [":portal"
+                                                            ["cursor"
+                                                             ":portal"
+                                                             "comp-portal"
+                                                             "states"
+                                                             [":data" "router"]]]
+                                                           [":group"
+                                                            ["comp-group"
+                                                             "states"
+                                                             [":data" "router"]
+                                                             ["get-in" "store" ["[]" ":session" ":show-done?"]]]]
+                                                           [":group-editor"
+                                                            ["comp-group-editor" "states" [":data" "router"]]]
+                                                           [":task-editor"
+                                                            ["comp-task-editor" "states" [":data" "router"]]]
+                                                           [":group-manager"
+                                                            ["comp-group-manager"
+                                                             "states"
+                                                             [":data" "router"]
+                                                             [":user" "store"]]]
+                                                           [":person" ["comp-person" [":data" "router"]]]
+                                                           [":groups" ["comp-groups-view" [":data" "router"]]]
+                                                           [":people" ["comp-people" [":data" "router"]]]
+                                                           [":edit-avatar"
+                                                            ["cursor->"
+                                                             ":avatar"
+                                                             "comp-avatar-editor"
+                                                             ["get-in" "store" ["[]" ":user" ":avatar"]]]]
+                                                           [":messages"
+                                                            ["comp-message-list" "states" [":data" "router"]]]
+                                                           ["div"
+                                                            ["{}"]
+                                                            ["<>"
+                                                             "span"
+                                                             ["str" "|404 page: " ["pr-str" "router"]]
+                                                             "nil"]]]]
+                                                         ["cursor->" ":login" "comp-login" "states"]]
+                                                        ["=<" "nil" "120"]]
+                                                       ["--" "comp-inspect" [":router" "store"] "style-debugger"]
+                                                       ["div"
+                                                        ["{}" [":style" ["{}" [":z-index" "9990"]]]]
+                                                        ["comp-msg-list"
+                                                         ["get-in" "store" ["[]" ":session" ":notifications"]]
+                                                         ":session/remove-notification"]]]]]],
+                                  "style-container" ["def"
+                                                     "style-container"
+                                                     ["{}"
+                                                      [":background-image" ["str" "|url(dark-lamp.jpg)"]]
+                                                      [":background-color" ":black"]
+                                                      [":background-size" ":cover"]
+                                                      [":color" "colors/paper"]
+                                                      [":background-position" ":center"]]],
+                                  "style-debugger" ["def"
+                                                    "style-debugger"
+                                                    ["{}" [":bottom" "0"] [":left" "0"] [":max-width" "|100%"]]],
+                                  "style-body" ["def"
+                                                "style-body"
+                                                ["{}" [":overflow" ":auto"] [":padding" "|16px 200px"]]]},
+                           :procs []},
+         "comp.groups-view" {:ns ["ns"
+                                  "app.comp.groups-view"
+                                  [":require-macros" ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "div" "span"]]]
+                                  [":require"
+                                   ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                                   ["[]" "respo-ui.style" ":as" "ui"]
+                                   ["[]" "respo-ui.style.colors" ":as" "colors"]
+                                   ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                                   ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                                   ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]]],
+                             :defs {"style-group" ["def"
+                                                   "style-group"
+                                                   ["{}"
+                                                    [":background-color" "colors/motif-dark"]
+                                                    [":padding" "8"]
+                                                    [":margin-right" "8"]
+                                                    [":margin-bottom" "8"]]],
+                                    "style-list" ["def" "style-list" ["{}" [":flex-wrap" ":wrap"]]],
+                                    "comp-groups-view" ["defcomp"
+                                                        "comp-groups-view"
+                                                        ["groups"]
+                                                        ["div"
+                                                         ["{}"]
+                                                         ["div"
+                                                          ["{}" [":style" "style-title"]]
+                                                          ["<>" "span" "|All Groups" "nil"]]
+                                                         ["=<" "nil" "16"]
+                                                         ["div"
+                                                          ["{}" [":style" ["merge" "ui/row" "style-list"]]]
+                                                          ["->>"
+                                                           ["vals" "groups"]
+                                                           ["map"
+                                                            ["fn"
+                                                             ["task-group"]
+                                                             ["[]"
+                                                              [":id" "task-group"]
+                                                              ["div"
+                                                               ["{}" [":style" "style-group"]]
+                                                               ["<>" "span" [":name" "task-group"] "nil"]]]]]]]]],
+                                    "style-title" ["def"
+                                                   "style-title"
+                                                   ["{}"
+                                                    [":font-family" "|Josefin Sans"]
+                                                    [":font-size" "20"]
+                                                    [":font-weight" "100"]]]},
+                             :procs []},
+         "comp.avatar-editor" {:ns ["ns"
+                                    "app.comp.avatar-editor"
+                                    [":require-macros"
+                                     ["[]"
+                                      "respo.macros"
+                                      ":refer"
+                                      ["[]" "defcomp" "div" "<>" "span" "img" "button" "input"]]]
+                                    [":require"
+                                     ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                                     ["[]" "respo-ui.style" ":as" "ui"]
+                                     ["[]" "respo-ui.style.colors" ":as" "colors"]
+                                     ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                                     ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                                     ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]]],
+                               :defs {"style-url" ["def" "style-url" ["{}" [":width" "600"]]],
+                                      "comp-avatar-editor" ["defcomp"
+                                                            "comp-avatar-editor"
+                                                            ["states" "avatar"]
+                                                            ["let"
+                                                             [["state" ["or" [":data" "states"] "initial-state"]]]
+                                                             ["div"
+                                                              ["{}"]
+                                                              ["div"
+                                                               ["{}"]
+                                                               ["input"
+                                                                ["{}"
+                                                                 [":style" ["merge" "ui/input" "style-url"]]
+                                                                 [":attrs"
+                                                                  ["{}"
+                                                                   [":value" "state"]
+                                                                   [":placeholder" ["or" "avatar" "|URL for avatar"]]
+                                                                   [":type" "|url"]]]
+                                                                 [":event"
+                                                                  ["{}"
+                                                                   [":input"
+                                                                    ["fn"
+                                                                     ["e" "dispatch!" "mutate!"]
+                                                                     ["mutate!" [":value" "e"]]]]]]]]
+                                                               ["=<" "8" "nil"]
+                                                               ["button"
+                                                                ["{}"
+                                                                 [":style" "ui/button"]
+                                                                 [":event" ["{}" [":click" ["on-submit" "state"]]]]]
+                                                                ["<>" "span" "|Submit" "nil"]]]]]],
+                                      "on-submit" ["defn"
+                                                   "on-submit"
+                                                   ["url"]
+                                                   ["fn"
+                                                    ["e" "dispatch!" "mutate!"]
+                                                    ["dispatch!" ":user/avatar" "url"]
+                                                    ["mutate!" "|"]]],
+                                      "initial-state" ["def" "initial-state" "|"]},
+                               :procs []},
+         "main" {:ns ["ns"
+                      "app.main"
+                      [":require"
+                       ["[]" "respo.core" ":refer" ["[]" "render!" "clear-cache!" "realize-ssr!"]]
+                       ["[]" "app.comp.container" ":refer" ["[]" "comp-container"]]
+                       ["[]" "cljs.reader" ":refer" ["[]" "read-string"]]
+                       ["[]" "app.network" ":refer" ["[]" "send!" "setup-socket!"]]
+                       ["[]" "app.schema" ":as" "schema"]]],
+                 :defs {"dispatch!" ["defn" "dispatch!" ["op" "op-data"] ["send!" "op" "op-data"]],
+                        "reload!" ["defn"
+                                   "reload!"
+                                   []
+                                   ["clear-cache!"]
+                                   ["render-app!" "render!"]
+                                   ["println" "|code updated."]],
+                        "render-app!" ["defn"
+                                       "render-app!"
+                                       ["renderer"]
+                                       ["renderer" "mount-target" ["comp-container" "@*states" "@*store"] "dispatch!"]],
+                        "main!" ["defn"
+                                 "main!"
+                                 []
+                                 ["if" "ssr?" ["render-app!" "realize-ssr!"]]
+                                 ["render-app!" "render!"]
+                                 ["setup-socket!"
+                                  "*store"
+                                  ["{}"
+                                   [":url" ["str" "|ws://" [".-hostname" "js/location"] "|:5021"]]
+                                   [":on-close!"
+                                    ["fn"
+                                     ["event"]
+                                     ["reset!" "*store" "nil"]
+                                     [".error" "js/console" "|Lost connection!"]]]
+                                   [":on-open!"
+                                    ["fn"
+                                     ["event"]
+                                     ["let"
+                                      [["raw" [".getItem" "js/localStorage" [":storage-key" "schema/configs"]]]]
+                                      ["if"
+                                       ["some?" "raw"]
+                                       ["do"
+                                        ["println" "|Found login information:" "raw"]
+                                        ["dispatch!" ":user/log-in" ["read-string" "raw"]]]]]]]]]
+                                 ["add-watch" "*store" ":changes" ["fn" [] ["render-app!" "render!"]]]
+                                 ["add-watch" "*states" ":changes" ["fn" [] ["render-app!" "render!"]]]
+                                 ["println" "|app started!"]],
+                        "*store" ["defonce" "*store" ["atom" "nil"]],
+                        "*states" ["defonce" "*states" ["atom" ["{}"]]],
+                        "mount-target" ["def" "mount-target" [".querySelector" "js/document" "|.app"]],
+                        "ssr?" ["def" "ssr?" ["some?" [".querySelector" "js/document" "|meta.respo-ssr"]]]},
+                 :procs [["set!" "js/window.onload" "main!"]]},
+         "network" {:ns ["ns"
+                         "app.network"
+                         [":require-macros" ["[]" "cljs.core.async.macros" ":refer" ["[]" "go"]]]
+                         [":require"
+                          ["[]" "cljs.reader" ":as" "reader"]
+                          ["[]" "cljs.core.async" ":as" "a" ":refer" ["[]" ">!" "<!" "chan" "timeout"]]
+                          ["[]" "recollect.patch" ":refer" ["[]" "patch-bunch"]]]],
+                    :defs {"sender" ["defonce" "sender" ["chan"]],
+                           "send!" ["defn" "send!" ["op" "op-data"] ["go" [">!" "sender" ["[]" "op" "op-data"]]]],
+                           "setup-socket!" ["defn"
+                                            "setup-socket!"
+                                            ["*store" "configs"]
+                                            ["let"
+                                             [["ws-url" [":url" "configs"]]
+                                              ["ws" ["js/WebSocket." "ws-url"]]
+                                              ["handle-close!"
+                                               ["if"
+                                                ["fn?" [":on-close!" "configs"]]
+                                                [":on-close!" "configs"]
+                                                "identity"]]
+                                              ["handle-open!"
+                                               ["if" ["fn?" [":on-open!" "configs"]] [":on-open!" "configs"] "identity"]]]
+                                             ["set!" "ws.onopen" ["fn" ["event"] ["handle-open!" "event"]]]
+                                             ["set!" "ws.onclose" ["fn" ["event"] ["handle-close!" "event"]]]
+                                             ["set!"
+                                              "ws.onmessage"
+                                              ["fn"
+                                               ["event"]
+                                               ["let"
+                                                [["changes" ["reader/read-string" "event.data"]]]
+                                                ["println" "|Changes" "changes"]
+                                                ["reset!" "*store" ["patch-bunch" "@*store" "changes"]]]]]
+                                             ["go" ["loop" ["[]"] [".send" "ws" ["pr-str" ["<!" "sender"]]] ["recur"]]]]]},
+                    :procs []},
+         "comp.login" {:ns ["ns"
+                            "app.comp.login"
+                            [":require-macros"
+                             ["[]" "respo.macros" ":refer" ["[]" "defcomp" "div" "input" "button" "<>" "span"]]]
+                            [":require"
+                             ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                             ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]
+                             ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                             ["[]" "respo-ui.style" ":as" "ui"]
+                             ["[]" "app.schema" ":as" "schema"]]],
+                       :defs {"on-toggle" ["defn"
+                                           "on-toggle"
+                                           ["state"]
+                                           ["fn"
+                                            ["e" "dispatch!" "mutate!"]
+                                            ["mutate!" ["update" "state" ":signup?" "not"]]]],
+                              "on-submit" ["defn"
+                                           "on-submit"
+                                           ["username" "password" "signup?"]
+                                           ["fn"
+                                            ["e" "dispatch!"]
+                                            ["do"
+                                             ["dispatch!"
+                                              ["if" "signup?" ":user/sign-up" ":user/log-in"]
+                                              ["[]" "username" "password"]]
+                                             [".setItem"
+                                              "js/localStorage"
+                                              [":storage-key" "schema/configs"]
+                                              ["pr-str" ["[]" "username" "password"]]]]]],
+                              "on-input" ["defn"
+                                          "on-input"
+                                          ["state" "k"]
+                                          ["fn"
+                                           ["e" "dispatch!" "mutate!"]
+                                           ["mutate!" ["assoc" "state" "k" [":value" "e"]]]]],
+                              "comp-login" ["defcomp"
+                                            "comp-login"
+                                            ["states"]
+                                            ["let"
+                                             [["state" ["or" [":data" "states"] "initial-state"]]]
+                                             ["div"
+                                              ["{}" [":style" ["merge" "ui/flex" "ui/column"]]]
+                                              ["div"
+                                               ["{}"]
+                                               ["<>"
+                                                "span"
+                                                ["if" [":signup?" "state"] "|Sign up" "|Log in"]
+                                                "style-title"]
+                                               ["if"
+                                                [":signup?" "state"]
+                                                ["div"
+                                                 ["{}"]
+                                                 ["<>" "span" "|Want to log in?" "nil"]
+                                                 ["=<" "8" "nil"]
+                                                 ["div"
+                                                  ["{}"
+                                                   [":style" "ui/clickable-text"]
+                                                   [":event" ["{}" [":click" ["on-toggle" "state"]]]]]
+                                                  ["<>" "span" "|Log in" "nil"]]]
+                                                ["div"
+                                                 ["{}"]
+                                                 ["<>" "span" "|No account yet?" "nil"]
+                                                 ["=<" "8" "nil"]
+                                                 ["div"
+                                                  ["{}"
+                                                   [":style" "ui/clickable-text"]
+                                                   [":event" ["{}" [":click" ["on-toggle" "state"]]]]]
+                                                  ["<>" "span" "|Sign up" "nil"]]]]]
+                                              ["div"
+                                               ["{}" [":style" ["{}"]]]
+                                               ["div"
+                                                ["{}"]
+                                                ["input"
+                                                 ["{}"
+                                                  [":style" "ui/input"]
+                                                  [":attrs"
+                                                   ["{}" [":placeholder" "|Username"] [":value" [":username" "state"]]]]
+                                                  [":event" ["{}" [":input" ["on-input" "state" ":username"]]]]]]]
+                                               ["=<" "nil" "8"]
+                                               ["div"
+                                                ["{}"]
+                                                ["input"
+                                                 ["{}"
+                                                  [":style" "ui/input"]
+                                                  [":attrs"
+                                                   ["{}" [":placeholder" "|Password"] [":value" [":password" "state"]]]]
+                                                  [":event" ["{}" [":input" ["on-input" "state" ":password"]]]]]]]]
+                                              ["=<" "nil" "8"]
+                                              ["div"
+                                               ["{}" [":style" "ui/flex"]]
+                                               ["button"
+                                                ["{}"
+                                                 [":style"
+                                                  ["merge" "ui/button" ["{}" [":outline" ":none"] [":border" ":none"]]]]
+                                                 [":event"
+                                                  ["{}"
+                                                   [":click"
+                                                    ["on-submit"
+                                                     [":username" "state"]
+                                                     [":password" "state"]
+                                                     [":signup?" "state"]]]]]]
+                                                ["<>" "span" "|Submit" "nil"]]]
+                                              ["--" "comp-inspect" "state" "nil"]]]],
+                              "style-title" ["def"
+                                             "style-title"
+                                             ["{}"
+                                              [":font-size" "24"]
+                                              [":font-weight" "300"]
+                                              [":font-family" "|Josefin Sans"]]],
+                              "initial-state" ["def"
+                                               "initial-state"
+                                               ["{}" [":signup?" "false"] [":username" "|"] [":password" "|"]]]},
+                       :procs []},
+         "comp.message" {:ns ["ns"
+                              "app.comp.message"
+                              [":require-macros"
+                               ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "div" "span" "img"]]]
+                              [":require"
+                               ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                               ["[]" "respo-ui.style" ":as" "ui"]
+                               ["[]" "respo-ui.style.colors" ":as" "colors"]
+                               ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                               ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                               ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]]],
+                         :defs {"style-avatar" ["def"
+                                                "style-avatar"
+                                                ["{}"
+                                                 [":width" "32"]
+                                                 [":height" "32"]
+                                                 [":border-radius" "|50%"]
+                                                 [":background-size" "|cover"]]],
+                                "comp-message" ["defcomp"
+                                                "comp-message"
+                                                ["message"]
+                                                ["div"
+                                                 ["{}" [":style" ["merge" "ui/row" "style-message"]]]
+                                                 ["div"
+                                                  ["{}"
+                                                   [":style"
+                                                    ["merge"
+                                                     "style-avatar"
+                                                     ["{}"
+                                                      [":background-image"
+                                                       ["str"
+                                                        "|url("
+                                                        ["get-in" "message" ["[]" ":user" ":avatar"]]
+                                                        "|)"]]]]]]]
+                                                 ["=<" "8" "nil"]
+                                                 ["<>" "span" [":text" "message"] "nil"]]],
+                                "style-message" ["def" "style-message" ["{}" [":margin-bottom" "8"]]]},
+                         :procs []},
+         "comp.group" {:ns ["ns"
+                            "app.comp.group"
+                            [":require-macros"
+                             ["[]" "respo.macros" ":refer" ["[]" "defcomp" "cursor->" "div" "input" "span" "<>"]]]
+                            [":require"
+                             ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                             ["[]" "respo-ui.style" ":as" "ui"]
+                             ["[]" "respo-ui.style.colors" ":as" "colors"]
+                             ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                             ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                             ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]
+                             ["[]" "app.comp.task-draft" ":refer" ["[]" "comp-task-draft"]]
+                             ["[]" "app.comp.task" ":refer" ["[]" "comp-task"]]]],
+                       :defs {"style-icon" ["def" "style-icon" ["{}" [":cursor" ":pointer"]]],
+                              "on-toggle-hidden" ["defn"
+                                                  "on-toggle-hidden"
+                                                  ["group-id"]
+                                                  ["fn"
+                                                   ["e" "dispatch!"]
+                                                   ["dispatch!" ":session/toggle-hidden" "group-id"]]],
+                              "style-draft" ["def" "style-draft" ["{}"]],
+                              "on-edit-group" ["defn"
+                                               "on-edit-group"
+                                               ["group-id"]
+                                               ["fn"
+                                                ["e" "dispatch!"]
+                                                ["dispatch!"
+                                                 ":router/change"
+                                                 ["{}" [":name" ":group-editor"] [":params" "group-id"]]]]],
+                              "style-list" ["def" "style-list" ["{}"]],
+                              "style-container" ["def" "style-container" ["{}" [":width" "|100%"]]],
+                              "style-empty" ["def"
+                                             "style-empty"
+                                             ["{}"
+                                              [":font-size" "20"]
+                                              [":font-weight" "100"]
+                                              [":font-family" "|Josefin Sans"]
+                                              [":color" "colors/texture-light"]]],
+                              "comp-group" ["defcomp"
+                                            "comp-group"
+                                            ["states" "task-group" "show-done?"]
+                                            ["div"
+                                             ["{}" [":style" ["merge" "ui/row" "style-container"]]]
+                                             ["div"
+                                              ["{}" [":style" ["merge" "ui/flex" "style-list"]]]
+                                              ["let"
+                                               [["tasks" [":tasks" "task-group"]]
+                                                ["done-tasks" [":done-tasks" "task-group"]]]
+                                               ["div"
+                                                ["{}"]
+                                                ["div"
+                                                 ["{}" [":style" "style-draft"]]
+                                                 ["cursor->" ":draft" "comp-task-draft" [":id" "task-group"]]]
+                                                ["=<" "nil" "32"]
+                                                ["if"
+                                                 ["empty?" "tasks"]
+                                                 ["div" ["{}" [":style" "style-empty"]] ["<>" "span" "|No tasks" "nil"]]
+                                                 ["div"
+                                                  ["{}"]
+                                                  ["->>"
+                                                   ["vals" "tasks"]
+                                                   ["sort"
+                                                    ["fn"
+                                                     ["a" "b"]
+                                                     ["compare" [":updated-time" "b"] [":updated-time" "a"]]]]
+                                                   ["map" ["fn" ["task"] ["[]" [":id" "task"] ["comp-task" "task"]]]]]]]
+                                                ["=<" "nil" "32"]
+                                                ["div"
+                                                 ["{}"]
+                                                 ["<>" "span" "|Done tasks:" "nil"]
+                                                 ["=<" "8" "nil"]
+                                                 ["div"
+                                                  ["{}"
+                                                   [":style" "ui/clickable-text"]
+                                                   [":event"
+                                                    ["{}" [":click" ["on-toggle-hidden" [":id" "task-group"]]]]]]
+                                                  ["<>" "span" "|Toggle" "nil"]]]
+                                                ["if"
+                                                 ["empty?" "done-tasks"]
+                                                 ["div"
+                                                  ["{}" [":style" "style-empty"]]
+                                                  ["<>" "span" ["if" "show-done?" "|No tasks" "|Hidden"] "nil"]]
+                                                 ["div"
+                                                  ["{}"]
+                                                  ["->>"
+                                                   ["vals" "done-tasks"]
+                                                   ["sort"
+                                                    ["fn"
+                                                     ["a" "b"]
+                                                     ["compare" [":updated-time" "b"] [":updated-time" "a"]]]]
+                                                   ["map" ["fn" ["task"] ["[]" [":id" "task"] ["comp-task" "task"]]]]]]]]]]
+                                             ["div"
+                                              ["{}" [":style" "style-sidebar"]]
+                                              ["div"
+                                               ["{}" [":style" "style-name"]]
+                                               ["<>" "span" [":name" "task-group"] "nil"]
+                                               ["=<" "8" "nil"]
+                                               ["span"
+                                                ["{}"
+                                                 [":attrs" ["{}" [":class-name" "|icon ion-md-create"]]]
+                                                 [":style" "style-icon"]
+                                                 [":event" ["{}" [":click" ["on-edit-group" [":id" "task-group"]]]]]]]
+                                               ["=<" "8" "nil"]
+                                               ["span"
+                                                ["{}"
+                                                 [":attrs" ["{}" [":class-name" "|icon ion-md-people"]]]
+                                                 [":style" "style-icon"]
+                                                 [":event" ["{}" [":click" ["on-group-manage" [":id" "task-group"]]]]]]]]]]],
+                              "style-sidebar" ["def" "style-sidebar" ["{}" [":width" "320"]]],
+                              "style-name" ["def"
+                                            "style-name"
+                                            ["{}"
+                                             [":font-size" "24"]
+                                             [":font-weight" "100"]
+                                             [":font-family" "|Josefin Sans"]]],
+                              "on-group-manage" ["defn"
+                                                 "on-group-manage"
+                                                 ["group-id"]
+                                                 ["fn"
+                                                  ["e" "dispatch!"]
+                                                  ["dispatch!"
+                                                   ":router/change"
+                                                   ["{}" [":name" ":group-manager"] [":params" "group-id"]]]]]},
+                       :procs []},
+         "render" {:ns ["ns"
+                        "app.render"
+                        [":require"
+                         ["[]" "respo.render.html" ":refer" ["[]" "make-string"]]
+                         ["[]" "shell-page.core" ":refer" ["[]" "make-page" "spit" "slurp"]]
+                         ["[]" "app.comp.container" ":refer" ["[]" "comp-container"]]]],
+                   :defs {"main!" ["defn"
+                                   "main!"
+                                   []
+                                   ["if"
+                                    ["=" "js/process.env.env" "|dev"]
+                                    ["spit" "|target/index.html" ["dev-page"]]
+                                    ["spit" "|dist/index.html" ["prod-page"]]]],
+                          "base-info" ["def"
+                                       "base-info"
+                                       ["{}"
+                                        [":title" "|Woodenlist"]
+                                        [":icon" "|cumulo.png"]
+                                        [":ssr" "nil"]
+                                        [":inner-html" "nil"]]],
+                          "dev-page" ["defn"
+                                      "dev-page"
+                                      []
+                                      ["make-page"
+                                       "|"
+                                       ["merge"
+                                        "base-info"
+                                        ["{}" [":styles" ["[]"]] [":scripts" ["[]" "|/main.js" "|/browser/main.js"]]]]]],
+                          "prod-page" ["defn"
+                                       "prod-page"
+                                       []
+                                       ["let"
+                                        [["html-content" ["make-string" ["comp-container" ["{}"] "nil"]]]
+                                         ["manifest" [".parse" "js/JSON" ["slurp" "|dist/manifest.json"]]]]
+                                        ["make-page"
+                                         "html-content"
+                                         ["merge"
+                                          "base-info"
+                                          ["{}"
+                                           [":styles" ["[]" ["aget" "manifest" "|main.css"]]]
+                                           [":scripts"
+                                            ["[]" ["aget" "manifest" "|vendor.js"] ["aget" "manifest" "|main.js"]]]]]]]]},
+                   :procs []},
+         "comp.header" {:ns ["ns"
+                             "app.comp.header"
+                             [":require-macros"
+                              ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "cursor->" "div" "span"]]]
+                             [":require"
+                              ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                              ["[]" "respo-ui.style" ":as" "ui"]
+                              ["[]" "respo-ui.style.colors" ":as" "colors"]
+                              ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                              ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                              ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]]],
+                        :defs {"on-messages" ["defn"
+                                              "on-messages"
+                                              ["e" "dispatch!"]
+                                              ["dispatch!"
+                                               ":router/change"
+                                               ["{}" [":name" ":messages"] [":params" "nil"]]]],
+                               "on-profile" ["defn"
+                                             "on-profile"
+                                             ["e" "dispatch!"]
+                                             ["dispatch!"
+                                              ":router/change"
+                                              ["{}" [":name" ":profile"] [":params" "nil"] [":router" "nil"]]]],
+                               "style-header" ["def"
+                                               "style-header"
+                                               ["{}"
+                                                [":height" "48"]
+                                                [":width" "|100%"]
+                                                [":justify-content" ":space-between"]
+                                                [":padding" "|0 16px"]
+                                                [":font-size" "16"]
+                                                [":color" ":white"]
+                                                [":position" ":absolute"]
+                                                [":z-index" "100"]
+                                                [":background-color" ["hsl" "0" "0" "0" "0.6"]]]],
+                               "on-groups" ["defn"
+                                            "on-groups"
+                                            ["e" "dispatch!"]
+                                            ["dispatch!" ":router/change" ["{}" [":name" ":groups"] [":params" "nil"]]]],
+                               "on-home" ["defn"
+                                          "on-home"
+                                          ["e" "dispatch!"]
+                                          ["dispatch!"
+                                           ":router/change"
+                                           ["{}" [":name" ":portal"] [":params" "nil"] [":router" "nil"]]]],
+                               "style-smaller" ["def" "style-smaller" ["{}" [":font-size" "20"]]],
+                               "style-logo" ["def"
+                                             "style-logo"
+                                             ["{}"
+                                              [":cursor" "|pointer"]
+                                              [":font-family" "|Josefin Sans"]
+                                              [":font-size" "32"]
+                                              [":font-weight" "100"]
+                                              [":margin-right" "32"]]],
+                               "style-pointer" ["def" "style-pointer" ["{}" [":cursor" "|pointer"]]],
+                               "style-avatar" ["def"
+                                               "style-avatar"
+                                               ["{}"
+                                                [":width" "32"]
+                                                [":height" "32"]
+                                                [":border-radius" "|50%"]
+                                                [":background-size" ":cover"]
+                                                [":cursor" ":pointer"]]],
+                               "comp-header" ["defcomp"
+                                              "comp-header"
+                                              ["logged-in?" "avatar" "statistics"]
+                                              ["div"
+                                               ["{}" [":style" ["merge" "ui/row-center" "style-header"]]]
+                                               ["div"
+                                                ["{}" [":style" ["merge" "ui/row" ["{}" [":align-items" ":center"]]]]]
+                                                ["div"
+                                                 ["{}" [":event" ["{}" [":click" "on-home"]]] [":style" "style-logo"]]
+                                                 ["<>" "span" "|Woodenlist" "nil"]]
+                                                ["div"
+                                                 ["{}"
+                                                  [":style" ["merge" "style-logo" "style-smaller"]]
+                                                  [":event" ["{}" [":click" "on-groups"]]]]
+                                                 ["<>" "span" "|Groups" "nil"]]
+                                                ["div"
+                                                 ["{}"
+                                                  [":style" ["merge" "style-logo" "style-smaller"]]
+                                                  [":event" ["{}" [":click" "on-people"]]]]
+                                                 ["<>"
+                                                  "span"
+                                                  ["str"
+                                                   "|People("
+                                                   [":sessions-count" "statistics"]
+                                                   "|/"
+                                                   [":users-count" "statistics"]
+                                                   "|)"]
+                                                  "nil"]]
+                                                ["div"
+                                                 ["{}"
+                                                  [":style" ["merge" "style-logo" "style-smaller"]]
+                                                  [":event" ["{}" [":click" "on-messages"]]]]
+                                                 ["<>" "span" "|Messages" "nil"]]]
+                                               ["if"
+                                                "logged-in?"
+                                                ["div"
+                                                 ["{}"
+                                                  [":style"
+                                                   ["merge"
+                                                    "style-avatar"
+                                                    ["{}" [":background-image" ["str" "|url(" "avatar" "|)"]]]]]
+                                                  [":event" ["{}" [":click" "on-profile"]]]]]
+                                                ["div" ["{}" [":style" "style-pointer"]] ["<>" "span" "|Guest" "nil"]]]]],
+                               "on-people" ["defn"
+                                            "on-people"
+                                            ["e" "dispatch!"]
+                                            ["dispatch!" ":router/change" ["{}" [":name" ":people"] [":params" "nil"]]]]},
+                        :procs []},
+         "comp.person" {:ns ["ns"
+                             "app.comp.person"
+                             [":require-macros"
+                              ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "div" "span" "img" "input"]]]
+                             [":require"
+                              ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                              ["[]" "respo-ui.style" ":as" "ui"]
+                              ["[]" "respo-ui.style.colors" ":as" "colors"]
+                              ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                              ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                              ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]
+                              ["[]" "app.comp.group-card" ":refer" ["[]" "comp-group-card"]]]],
+                        :defs {"comp-person" ["defcomp"
+                                              "comp-person"
+                                              ["router-data"]
+                                              ["let"
+                                               [["user" [":user" "router-data"]]]
+                                               ["div"
+                                                ["{}"]
+                                                ["div"
+                                                 ["{}"]
+                                                 ["div"
+                                                  ["{}"
+                                                   [":style"
+                                                    ["merge"
+                                                     "style-avatar"
+                                                     ["{}"
+                                                      [":background-image" ["str" "|url(" [":avatar" "user"] "|)"]]]]]]]]
+                                                ["div"
+                                                 ["{}"]
+                                                 ["<>" "span" "|Name:" "nil"]
+                                                 ["=<" "8" "nil"]
+                                                 ["<>" "span" [":name" "user"] "nil"]]
+                                                ["div"
+                                                 ["{}"]
+                                                 ["<>" "span" "|Id:" "nil"]
+                                                 ["=<" "8" "nil"]
+                                                 ["input"
+                                                  ["{}"
+                                                   [":style" "ui/input"]
+                                                   [":attrs" ["{}" [":value" [":id" "user"]]]]]]]
+                                                ["=<" "nil" "8"]
+                                                ["div"
+                                                 ["{}" [":style" "ui/row"]]
+                                                 ["<>" "span" "|Groups:" "nil"]
+                                                 ["=<" "16" "nil"]
+                                                 ["div"
+                                                  ["{}" [":style" "ui/row"]]
+                                                  ["->>"
+                                                   [":groups" "router-data"]
+                                                   ["map"
+                                                    ["fn"
+                                                     ["entry"]
+                                                     ["update"
+                                                      "entry"
+                                                      "1"
+                                                      ["fn" ["task-group"] ["comp-group-card" "task-group"]]]]]]]]]]],
+                               "style-avatar" ["def"
+                                               "style-avatar"
+                                               ["{}"
+                                                [":width" "80"]
+                                                [":height" "80"]
+                                                [":background-image" "colors/paper"]
+                                                [":background-size" ":cover"]
+                                                [":border-radius" "|50%"]]]},
+                        :procs []},
+         "comp.task-draft" {:ns ["ns"
+                                 "app.comp.task-draft"
+                                 [":require-macros"
+                                  ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "div" "span" "input"]]]
+                                 [":require"
+                                  ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                                  ["[]" "respo-ui.style" ":as" "ui"]
+                                  ["[]" "respo-ui.style.colors" ":as" "colors"]
+                                  ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                                  ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]]],
+                            :defs {"style-draft" ["def" "style-draft" ["{}" [":width" "400"]]],
+                                   "on-keydown" ["defn"
+                                                 "on-keydown"
+                                                 ["text" "group-id"]
+                                                 ["fn"
+                                                  ["e" "dispatch!" "mutate!"]
+                                                  ["if"
+                                                   ["=" "13" [":key-code" "e"]]
+                                                   ["do"
+                                                    ["mutate!" "|"]
+                                                    ["dispatch!"
+                                                     ":task/create"
+                                                     ["{}" [":text" "text"] [":group-id" "group-id"]]]]]]],
+                                   "on-input" ["defn" "on-input" ["e" "dispach!" "mutate!"] ["mutate!" [":value" "e"]]],
+                                   "comp-task-draft" ["defcomp"
+                                                      "comp-task-draft"
+                                                      ["states" "group-id"]
+                                                      ["let"
+                                                       [["state" ["or" [":data" "states"] "|"]]]
+                                                       ["input"
+                                                        ["{}"
+                                                         [":style" ["merge" "ui/input" "style-draft"]]
+                                                         [":attrs"
+                                                          ["{}" [":value" "state"] [":placeholder" "|Add task"]]]
+                                                         [":event"
+                                                          ["{}"
+                                                           [":input" "on-input"]
+                                                           [":keydown" ["on-keydown" "state" "group-id"]]]]]]]]},
+                            :procs []},
+         "comp.group-manager" {:ns ["ns"
+                                    "app.comp.group-manager"
+                                    [":require-macros"
+                                     ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "div" "span" "input" "button"]]]
+                                    [":require"
+                                     ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                                     ["[]" "clojure.string" ":as" "string"]
+                                     ["[]" "respo-ui.style" ":as" "ui"]
+                                     ["[]" "respo-ui.style.colors" ":as" "colors"]
+                                     ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                                     ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                                     ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]
+                                     ["[]" "app.comp.member-card" ":refer" ["[]" "comp-member-card"]]
+                                     ["[]" "app.comp.back" ":refer" ["[]" "comp-back"]]]],
+                               :defs {"on-input" ["defn"
+                                                  "on-input"
+                                                  ["e" "dispatch!" "mutate!"]
+                                                  ["mutate!" [":value" "e"]]],
+                                      "on-add-member" ["defn"
+                                                       "on-add-member"
+                                                       ["group-id" "user-id"]
+                                                       ["fn"
+                                                        ["e" "dispatch!" "mutate!"]
+                                                        ["if"
+                                                         ["not" ["string/blank?" "user-id"]]
+                                                         ["do"
+                                                          ["dispatch!"
+                                                           ":task-group/add-member"
+                                                           ["{}" [":group-id" "group-id"] [":user-id" "user-id"]]]
+                                                          ["mutate!" "|"]]]]],
+                                      "render-members" ["defn"
+                                                        "render-members"
+                                                        ["members" "admin?" "group-id" "user-id" "by-admin?"]
+                                                        ["div"
+                                                         ["{}" [":style" "ui/row"]]
+                                                         ["->>"
+                                                          ["vals" "members"]
+                                                          ["map"
+                                                           ["fn"
+                                                            ["member"]
+                                                            ["[]"
+                                                             [":id" "member"]
+                                                             ["comp-member-card"
+                                                              "member"
+                                                              "admin?"
+                                                              "group-id"
+                                                              "user-id"
+                                                              "by-admin?"]]]]]]],
+                                      "style-empty" ["def" "style-empty" ["{}" [":color" "colors/texture-light"]]],
+                                      "render-empty" ["defn"
+                                                      "render-empty"
+                                                      []
+                                                      ["div"
+                                                       ["{}" [":style" "style-empty"]]
+                                                       ["<>" "span" "|No users" "nil"]]],
+                                      "comp-group-manager" ["defcomp"
+                                                            "comp-group-manager"
+                                                            ["states" "task-group" "user"]
+                                                            ["let"
+                                                             [["state" ["or" [":data" "states"] "|"]]
+                                                              ["by-admin?"
+                                                               ["contains?"
+                                                                ["into" ["#{}"] ["keys" [":admins" "task-group"]]]
+                                                                [":id" "user"]]]]
+                                                             ["div"
+                                                              ["{}"]
+                                                              ["div"
+                                                               ["{}"]
+                                                               ["<>" "span" "|Add user:" "nil"]
+                                                               ["=<" "8" "nil"]
+                                                               ["input"
+                                                                ["{}"
+                                                                 [":attrs"
+                                                                  ["{}" [":value" "state"] [":placeholder" "|User id"]]]
+                                                                 [":style" "ui/input"]
+                                                                 [":event" ["{}" [":input" "on-input"]]]]]
+                                                               ["=<" "8" "nil"]
+                                                               ["button"
+                                                                ["{}"
+                                                                 [":style" "ui/button"]
+                                                                 [":event"
+                                                                  ["{}"
+                                                                   [":click"
+                                                                    ["on-add-member" [":id" "task-group"] "state"]]]]]
+                                                                ["<>" "span" "|Add" "nil"]]]
+                                                              ["div"
+                                                               ["{}"]
+                                                               ["div" ["{}"] ["<>" "span" "|Admins" "nil"]]
+                                                               ["if"
+                                                                ["empty?" [":admins" "task-group"]]
+                                                                ["render-empty"]
+                                                                ["render-members"
+                                                                 [":admins" "task-group"]
+                                                                 "true"
+                                                                 [":id" "task-group"]
+                                                                 [":id" "user"]
+                                                                 "by-admin?"]]]
+                                                              ["div"
+                                                               ["{}"]
+                                                               ["div" ["{}"] ["<>" "span" "|Members" "nil"]]
+                                                               ["if"
+                                                                ["empty?" [":users" "task-group"]]
+                                                                ["render-empty"]
+                                                                ["render-members"
+                                                                 [":users" "task-group"]
+                                                                 "false"
+                                                                 [":id" "task-group"]
+                                                                 [":id" "user"]
+                                                                 "by-admin?"]]]
+                                                              ["=<" "nil" "120"]
+                                                              ["comp-back" [":id" "task-group"]]]]]},
+                               :procs []},
+         "comp.no-connection" {:ns ["ns"
+                                    "app.comp.no-connection"
+                                    [":require-macros"
+                                     ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "div" "span" "img"]]]
+                                    [":require"
+                                     ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                                     ["[]" "respo-ui.style" ":as" "ui"]
+                                     ["[]" "respo-ui.style.colors" ":as" "colors"]
+                                     ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                                     ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                                     ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]]],
+                               :defs {"comp-no-connection" ["defcomp"
+                                                            "comp-no-connection"
+                                                            []
+                                                            ["div"
+                                                             ["{}"
+                                                              [":style"
+                                                               ["merge" "ui/fullscreen" "ui/center" "style-container"]]]
+                                                             ["<>" "span" "|No connection." "nil"]]],
+                                      "style-container" ["def"
+                                                         "style-container"
+                                                         ["{}"
+                                                          [":font-family" "|Josefin Sans"]
+                                                          [":font-size" "40"]
+                                                          [":font-weight" "100"]]]},
+                               :procs []},
+         "comp.group-editor" {:ns ["ns"
+                                   "app.comp.group-editor"
+                                   [":require-macros"
+                                    ["[]" "respo.macros" ":refer" ["[]" "defcomp" "<>" "div" "input" "span" "button"]]]
+                                   [":require"
+                                    ["[]" "hsl.core" ":refer" ["[]" "hsl"]]
+                                    ["[]" "clojure.string" ":as" "string"]
+                                    ["[]" "respo-ui.style" ":as" "ui"]
+                                    ["[]" "respo-ui.style.colors" ":as" "colors"]
+                                    ["[]" "respo.core" ":refer" ["[]" "create-comp"]]
+                                    ["[]" "respo.comp.inspect" ":refer" ["[]" "comp-inspect"]]
+                                    ["[]" "respo.comp.space" ":refer" ["[]" "=<"]]
+                                    ["[]" "app.comp.back" ":refer" ["[]" "comp-back"]]]],
+                              :defs {"on-input" ["defn"
+                                                 "on-input"
+                                                 ["e" "dispatch!" "mutate!"]
+                                                 ["mutate!" [":value" "e"]]],
+                                     "on-delete" ["defn"
+                                                  "on-delete"
+                                                  ["group-id"]
+                                                  ["fn" ["e" "dispatch!"] ["dispatch!" ":task-group/delete" "group-id"]]],
+                                     "comp-group-editor" ["defcomp"
+                                                          "comp-group-editor"
+                                                          ["states" "task-group"]
+                                                          ["let"
+                                                           [["state" ["or" [":data" "states"] "|"]]]
+                                                           ["div"
+                                                            ["{}"]
+                                                            ["div" ["{}"] ["<>" "span" [":name" "task-group"] "nil"]]
+                                                            ["div"
+                                                             ["{}"]
+                                                             ["input"
+                                                              ["{}"
+                                                               [":style" "ui/input"]
+                                                               [":attrs"
+                                                                ["{}" [":value" "state"] [":placeholder" "|Group name"]]]
+                                                               [":event" ["{}" [":input" "on-input"]]]]]
+                                                             ["=<" "8" "nil"]
+                                                             ["button"
+                                                              ["{}"
+                                                               [":style" "ui/button"]
+                                                               [":event"
+                                                                ["{}"
+                                                                 [":click" ["on-rename" [":id" "task-group"] "state"]]]]]
+                                                              ["<>" "span" "|Submit" "nil"]]]
+                                                            ["=<" "nil" "120"]
+                                                            ["div"
+                                                             ["{}"]
+                                                             ["<>" "span" "|Delete the whole group!" "nil"]
+                                                             ["=<" "8" "nil"]
+                                                             ["button"
+                                                              ["{}"
+                                                               [":style"
+                                                                ["merge"
+                                                                 "ui/button"
+                                                                 ["{}" [":background-color" "colors/irreversible"]]]]
+                                                               [":event"
+                                                                ["{}" [":click" ["on-delete" [":id" "task-group"]]]]]]
+                                                              ["<>" "span" "|Delete" "nil"]]]
+                                                            ["=<" "nil" "16"]
+                                                            ["comp-back" [":id" "task-group"]]]]],
+                                     "on-rename" ["defn"
+                                                  "on-rename"
+                                                  ["group-id" "state"]
+                                                  ["fn"
+                                                   ["e" "dispatch!" "mutate!"]
+                                                   ["if"
+                                                    ["not" ["string/blank?" "state"]]
+                                                    ["do"
+                                                     ["dispatch!"
+                                                      ":task-group/rename"
+                                                      ["{}" [":id" "group-id"] [":text" "state"]]]
+                                                     ["mutate!" "|"]]]]]},
+                              :procs []}}}
