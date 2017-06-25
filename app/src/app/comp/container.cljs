@@ -52,7 +52,7 @@
          (let [router (:router store)]
            (case (:name router)
              :profile (comp-profile (:user store))
-             :portal (cursor :portal comp-portal states (:data router))
+             :portal (comp-portal states (:data router))
              :group (comp-group states (:data router) (get-in store [:session :show-done?]))
              :group-editor (comp-group-editor states (:data router))
              :task-editor (comp-task-editor states (:data router))
@@ -66,7 +66,7 @@
              (div {} (<> span (str "404 page: " (pr-str router)) nil))))
          (cursor-> :login comp-login states))
        (=< nil 120))
-      (comment comp-inspect (:router store) style-debugger)
+      (comp-inspect "Router" (:router store) style-debugger)
       (div
        {:style {:z-index 9990}}
        (comp-msg-list (get-in store [:session :notifications]) :session/remove-notification))))))

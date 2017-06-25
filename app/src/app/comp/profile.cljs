@@ -50,23 +50,23 @@
     {:style (merge style-avatar {:background-image (str "url(" (:avatar user) ")")})}
     (div
      {:style (merge ui/center style-edit), :event {:click on-change-avatar}}
-     (a {:attrs {:class-name "icon ion-md-create"}}))))
+     (a {:class-name "icon ion-md-create"}))))
   (=< nil 32)
   (div {:style ui/flex} (<> span (str "Hello! " (:name user)) nil))
   (div
    {}
    (<> span "User id:" nil)
    (=< 8 nil)
-   (input {:attrs {:value (:id user)}, :style ui/input} nil))
+   (input {:value (:id user), :style ui/input} nil))
   (=< nil 16)
   (div
    {}
    (<> span "Want to feedback?" nil)
    (=< 8 nil)
    (a
-    {:attrs {:href "https://github.com/Cumulo/woodenlist/issues",
-             :target "_blank",
-             :inner-text "Add an issue"},
+    {:href "https://github.com/Cumulo/woodenlist/issues",
+     :target "_blank",
+     :inner-text "Add an issue",
      :style ui/clickable-text}))
   (=< nil 32)
   (div {} (a {:style style-trigger, :event {:click on-log-out}} (<> span "Log out" nil)))))

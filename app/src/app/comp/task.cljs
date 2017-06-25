@@ -51,6 +51,6 @@
    (<> span (:text task) nil))
   (=< 8 nil)
   (div
-   {:style style-touch,
-    :attrs {:title "Touch"},
+   {:title "Touch",
+    :style style-touch,
     :event {:click (on-touch (:group-id task) (:id task))}})))

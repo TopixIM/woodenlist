@@ -44,9 +44,7 @@
      (<> span "Add user:" nil)
      (=< 8 nil)
      (input
-      {:attrs {:value state, :placeholder "User id"},
-       :style ui/input,
-       :event {:input on-input}})
+      {:value state, :placeholder "User id", :style ui/input, :event {:input on-input}})
      (=< 8 nil)
      (button
       {:style ui/button, :event {:click (on-add-member (:id task-group) state)}}

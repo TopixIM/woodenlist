@@ -21,6 +21,7 @@
  (states group-id)
  (let [state (or (:data states) "")]
    (input
-    {:style (merge ui/input style-draft),
-     :attrs {:value state, :placeholder "Add task"},
+    {:value state,
+     :placeholder "Add task",
+     :style (merge ui/input style-draft),
      :event {:input on-input, :keydown (on-keydown state group-id)}})))

@@ -75,11 +75,11 @@
     (<> span (:name task-group) nil)
     (=< 8 nil)
     (span
-     {:attrs {:class-name "icon ion-md-create"},
+     {:class-name "icon ion-md-create",
       :style style-icon,
       :event {:click (on-edit-group (:id task-group))}})
     (=< 8 nil)
     (span
-     {:attrs {:class-name "icon ion-md-people"},
+     {:class-name "icon ion-md-people",
       :style style-icon,
       :event {:click (on-group-manage (:id task-group))}})))))

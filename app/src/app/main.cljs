@@ -1,16 +1,18 @@
 
 (ns app.main
   (:require [respo.core :refer [render! clear-cache! realize-ssr!]]
+            [respo.cursor :refer [mutate]]
             [app.comp.container :refer [comp-container]]
             [cljs.reader :refer [read-string]]
             [app.network :refer [send! setup-socket!]]
             [app.schema :as schema]))
 
-(defn dispatch! [op op-data] (send! op op-data))
+(defonce *states (atom {}))
+
+(defn dispatch! [op op-data]
+  (if (= op :states) (swap! *states (mutate op-data)) (send! op op-data)))
 
 (defonce *store (atom nil))
-
-(defonce *states (atom {}))
 
 (def mount-target (.querySelector js/document ".app"))
 

@@ -50,15 +50,17 @@
      (div
       {}
       (input
-       {:style ui/input,
-        :attrs {:placeholder "Username", :value (:username state)},
+       {:placeholder "Username",
+        :value (:username state),
+        :style ui/input,
         :event {:input (on-input state :username)}}))
      (=< nil 8)
      (div
       {}
       (input
-       {:style ui/input,
-        :attrs {:placeholder "Password", :value (:password state)},
+       {:placeholder "Password",
+        :value (:password state),
+        :style ui/input,
         :event {:input (on-input state :password)}})))
     (=< nil 8)
     (div

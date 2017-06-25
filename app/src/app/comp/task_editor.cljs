@@ -32,9 +32,7 @@
     (div
      {}
      (input
-      {:style ui/input,
-       :attrs {:value state, :placeholder "Task content"},
-       :event {:input on-input}})
+      {:value state, :placeholder "Task content", :style ui/input, :event {:input on-input}})
      (=< 8 nil)
      (button
       {:style ui/button, :event {:click (on-submit (:group-id task) (:id task) state)}}

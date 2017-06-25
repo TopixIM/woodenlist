@@ -23,8 +23,10 @@
     (div
      {}
      (input
-      {:style (merge ui/input style-url),
-       :attrs {:value state, :placeholder (or avatar "URL for avatar"), :type "url"},
+      {:value state,
+       :placeholder (or avatar "URL for avatar"),
+       :type "url",
+       :style (merge ui/input style-url),
        :event {:input (fn [e dispatch! mutate!] (mutate! (:value e)))}})
      (=< 8 nil)
      (button {:style ui/button, :event {:click (on-submit state)}} (<> span "Submit" nil))))))

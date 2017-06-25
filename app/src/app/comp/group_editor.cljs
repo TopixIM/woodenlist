@@ -29,9 +29,7 @@
     (div
      {}
      (input
-      {:style ui/input,
-       :attrs {:value state, :placeholder "Group name"},
-       :event {:input on-input}})
+      {:value state, :placeholder "Group name", :style ui/input, :event {:input on-input}})
      (=< 8 nil)
      (button
       {:style ui/button, :event {:click (on-rename (:id task-group) state)}}

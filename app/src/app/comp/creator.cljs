@@ -27,10 +27,11 @@
     (div
      {}
      (input
-      {:attrs {:value state, :placeholder "Group name"},
+      {:value state,
+       :placeholder "Group name",
        :event {:input (fn [e dispatch! mutate!] (mutate! (:value e)))},
        :style ui/input})
      (=< 8 nil)
      (div
       {:style (merge ui/center style-trigger), :event {:click (on-create state)}}
-      (span {:attrs {:class-name "icon ion-md-add-circle"}}))))))
+      (span {:class-name "icon ion-md-add-circle"}))))))

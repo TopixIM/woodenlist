@@ -19,7 +19,8 @@
    (div
     {}
     (input
-     {:attrs {:value state, :placeholder "Message to leave..."},
+     {:value state,
+      :placeholder "Message to leave...",
       :event {:input (fn [e dispatch! mutate!] (mutate! (:value e))),
               :keydown (fn [e dispatch! mutate!]
                 (if (= 13 (:key-code e)) (do (dispatch! :message/create state) (mutate! ""))))},

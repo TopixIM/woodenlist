@@ -41,7 +41,7 @@
  (div
   {:style (merge ui/row style-container)}
   (img
-   {:attrs {:src (:avatar member)},
+   {:src (:avatar member),
     :style style-avatar,
     :event {:click (on-view-member (:id member))}})
   (=< 8 nil)
@@ -51,11 +51,11 @@
     (div
      {}
      (span
-      {:attrs {:class-name "icon ion-md-remove-circle"},
+      {:class-name "icon ion-md-remove-circle",
        :event {:click (on-delete group-id (:id member))},
        :style style-icon})
      (=< 16 nil)
      (span
-      {:attrs {:class-name "icon ion-md-build"},
+      {:class-name "icon ion-md-build",
        :style style-icon,
        :event {:click (on-change-role group-id (:id member) admin?)}})))))

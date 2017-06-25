@@ -165,7 +165,7 @@
                                                          ["{}" [":style" ["merge" "ui/row" "style-container"]]]
                                                          ["img"
                                                           ["{}"
-                                                           [":attrs" ["{}" [":src" [":avatar" "member"]]]]
+                                                           [":src" [":avatar" "member"]]
                                                            [":style" "style-avatar"]
                                                            [":event"
                                                             ["{}" [":click" ["on-view-member" [":id" "member"]]]]]]]
@@ -178,8 +178,7 @@
                                                            ["{}"]
                                                            ["span"
                                                             ["{}"
-                                                             [":attrs"
-                                                              ["{}" [":class-name" "|icon ion-md-remove-circle"]]]
+                                                             [":class-name" "|icon ion-md-remove-circle"]
                                                              [":event"
                                                               ["{}"
                                                                [":click" ["on-delete" "group-id" [":id" "member"]]]]]
@@ -187,7 +186,7 @@
                                                            ["=<" "16" "nil"]
                                                            ["span"
                                                             ["{}"
-                                                             [":attrs" ["{}" [":class-name" "|icon ion-md-build"]]]
+                                                             [":class-name" "|icon ion-md-build"]
                                                              [":style" "style-icon"]
                                                              [":event"
                                                               ["{}"
@@ -244,7 +243,7 @@
                                                     ["{}"
                                                      [":style" ["merge" "ui/center" "style-edit"]]
                                                      [":event" ["{}" [":click" "on-change-avatar"]]]]
-                                                    ["a" ["{}" [":attrs" ["{}" [":class-name" "|icon ion-md-create"]]]]]]]]
+                                                    ["a" ["{}" [":class-name" "|icon ion-md-create"]]]]]]
                                                  ["=<" "nil" "32"]
                                                  ["div"
                                                   ["{}" [":style" "ui/flex"]]
@@ -253,11 +252,7 @@
                                                   ["{}"]
                                                   ["<>" "span" "|User id:" "nil"]
                                                   ["=<" "8" "nil"]
-                                                  ["input"
-                                                   ["{}"
-                                                    [":attrs" ["{}" [":value" [":id" "user"]]]]
-                                                    [":style" "ui/input"]]
-                                                   "nil"]]
+                                                  ["input" ["{}" [":value" [":id" "user"]] [":style" "ui/input"]] "nil"]]
                                                  ["=<" "nil" "16"]
                                                  ["div"
                                                   ["{}"]
@@ -265,11 +260,9 @@
                                                   ["=<" "8" "nil"]
                                                   ["a"
                                                    ["{}"
-                                                    [":attrs"
-                                                     ["{}"
-                                                      [":href" "|https://github.com/Cumulo/woodenlist/issues"]
-                                                      [":target" "|_blank"]
-                                                      [":inner-text" "|Add an issue"]]]
+                                                    [":href" "|https://github.com/Cumulo/woodenlist/issues"]
+                                                    [":target" "|_blank"]
+                                                    [":inner-text" "|Add an issue"]
                                                     [":style" "ui/clickable-text"]]]]
                                                  ["=<" "nil" "32"]
                                                  ["div"
@@ -395,9 +388,9 @@
                                                            ["{}"]
                                                            ["input"
                                                             ["{}"
+                                                             [":value" "state"]
+                                                             [":placeholder" "|Task content"]
                                                              [":style" "ui/input"]
-                                                             [":attrs"
-                                                              ["{}" [":value" "state"] [":placeholder" "|Task content"]]]
                                                              [":event" ["{}" [":input" "on-input"]]]]]
                                                            ["=<" "8" "nil"]
                                                            ["button"
@@ -463,7 +456,8 @@
                                                    ["{}"]
                                                    ["input"
                                                     ["{}"
-                                                     [":attrs" ["{}" [":value" "state"] [":placeholder" "|Group name"]]]
+                                                     [":value" "state"]
+                                                     [":placeholder" "|Group name"]
                                                      [":event"
                                                       ["{}"
                                                        [":input"
@@ -474,8 +468,7 @@
                                                     ["{}"
                                                      [":style" ["merge" "ui/center" "style-trigger"]]
                                                      [":event" ["{}" [":click" ["on-create" "state"]]]]]
-                                                    ["span"
-                                                     ["{}" [":attrs" ["{}" [":class-name" "|icon ion-md-add-circle"]]]]]]]]]]},
+                                                    ["span" ["{}" [":class-name" "|icon ion-md-add-circle"]]]]]]]]},
                          :procs []},
          "comp.task" {:ns ["ns"
                            "app.comp.task"
@@ -540,8 +533,8 @@
                                            ["=<" "8" "nil"]
                                            ["div"
                                             ["{}"
+                                             [":title" "|Touch"]
                                              [":style" "style-touch"]
-                                             [":attrs" ["{}" [":title" "|Touch"]]]
                                              [":event"
                                               ["{}" [":click" ["on-touch" [":group-id" "task"] [":id" "task"]]]]]]]]],
                              "on-toggle" ["defn"
@@ -630,8 +623,8 @@
                                                   ["{}"]
                                                   ["input"
                                                    ["{}"
-                                                    [":attrs"
-                                                     ["{}" [":value" "state"] [":placeholder" "|Message to leave..."]]]
+                                                    [":value" "state"]
+                                                    [":placeholder" "|Message to leave..."]
                                                     [":event"
                                                      ["{}"
                                                       [":input"
@@ -722,12 +715,7 @@
                                                           ["case"
                                                            [":name" "router"]
                                                            [":profile" ["comp-profile" [":user" "store"]]]
-                                                           [":portal"
-                                                            ["cursor"
-                                                             ":portal"
-                                                             "comp-portal"
-                                                             "states"
-                                                             [":data" "router"]]]
+                                                           [":portal" ["comp-portal" "states" [":data" "router"]]]
                                                            [":group"
                                                             ["comp-group"
                                                              "states"
@@ -760,7 +748,7 @@
                                                              "nil"]]]]
                                                          ["cursor->" ":login" "comp-login" "states"]]
                                                         ["=<" "nil" "120"]]
-                                                       ["--" "comp-inspect" [":router" "store"] "style-debugger"]
+                                                       ["comp-inspect" "|Router" [":router" "store"] "style-debugger"]
                                                        ["div"
                                                         ["{}" [":style" ["{}" [":z-index" "9990"]]]]
                                                         ["comp-msg-list"
@@ -853,12 +841,10 @@
                                                                ["{}"]
                                                                ["input"
                                                                 ["{}"
+                                                                 [":value" "state"]
+                                                                 [":placeholder" ["or" "avatar" "|URL for avatar"]]
+                                                                 [":type" "|url"]
                                                                  [":style" ["merge" "ui/input" "style-url"]]
-                                                                 [":attrs"
-                                                                  ["{}"
-                                                                   [":value" "state"]
-                                                                   [":placeholder" ["or" "avatar" "|URL for avatar"]]
-                                                                   [":type" "|url"]]]
                                                                  [":event"
                                                                   ["{}"
                                                                    [":input"
@@ -884,11 +870,18 @@
                       "app.main"
                       [":require"
                        ["[]" "respo.core" ":refer" ["[]" "render!" "clear-cache!" "realize-ssr!"]]
+                       ["[]" "respo.cursor" ":refer" ["[]" "mutate"]]
                        ["[]" "app.comp.container" ":refer" ["[]" "comp-container"]]
                        ["[]" "cljs.reader" ":refer" ["[]" "read-string"]]
                        ["[]" "app.network" ":refer" ["[]" "send!" "setup-socket!"]]
                        ["[]" "app.schema" ":as" "schema"]]],
-                 :defs {"dispatch!" ["defn" "dispatch!" ["op" "op-data"] ["send!" "op" "op-data"]],
+                 :defs {"dispatch!" ["defn"
+                                     "dispatch!"
+                                     ["op" "op-data"]
+                                     ["if"
+                                      ["=" "op" ":states"]
+                                      ["swap!" "*states" ["mutate" "op-data"]]
+                                      ["send!" "op" "op-data"]]],
                         "reload!" ["defn"
                                    "reload!"
                                    []
@@ -1039,18 +1032,18 @@
                                                 ["{}"]
                                                 ["input"
                                                  ["{}"
+                                                  [":placeholder" "|Username"]
+                                                  [":value" [":username" "state"]]
                                                   [":style" "ui/input"]
-                                                  [":attrs"
-                                                   ["{}" [":placeholder" "|Username"] [":value" [":username" "state"]]]]
                                                   [":event" ["{}" [":input" ["on-input" "state" ":username"]]]]]]]
                                                ["=<" "nil" "8"]
                                                ["div"
                                                 ["{}"]
                                                 ["input"
                                                  ["{}"
+                                                  [":placeholder" "|Password"]
+                                                  [":value" [":password" "state"]]
                                                   [":style" "ui/input"]
-                                                  [":attrs"
-                                                   ["{}" [":placeholder" "|Password"] [":value" [":password" "state"]]]]
                                                   [":event" ["{}" [":input" ["on-input" "state" ":password"]]]]]]]]
                                               ["=<" "nil" "8"]
                                               ["div"
@@ -1215,13 +1208,13 @@
                                                ["=<" "8" "nil"]
                                                ["span"
                                                 ["{}"
-                                                 [":attrs" ["{}" [":class-name" "|icon ion-md-create"]]]
+                                                 [":class-name" "|icon ion-md-create"]
                                                  [":style" "style-icon"]
                                                  [":event" ["{}" [":click" ["on-edit-group" [":id" "task-group"]]]]]]]
                                                ["=<" "8" "nil"]
                                                ["span"
                                                 ["{}"
-                                                 [":attrs" ["{}" [":class-name" "|icon ion-md-people"]]]
+                                                 [":class-name" "|icon ion-md-people"]
                                                  [":style" "style-icon"]
                                                  [":event" ["{}" [":click" ["on-group-manage" [":id" "task-group"]]]]]]]]]]],
                               "style-sidebar" ["def" "style-sidebar" ["{}" [":width" "320"]]],
@@ -1431,10 +1424,7 @@
                                                  ["{}"]
                                                  ["<>" "span" "|Id:" "nil"]
                                                  ["=<" "8" "nil"]
-                                                 ["input"
-                                                  ["{}"
-                                                   [":style" "ui/input"]
-                                                   [":attrs" ["{}" [":value" [":id" "user"]]]]]]]
+                                                 ["input" ["{}" [":value" [":id" "user"]] [":style" "ui/input"]]]]
                                                 ["=<" "nil" "8"]
                                                 ["div"
                                                  ["{}" [":style" "ui/row"]]
@@ -1491,9 +1481,9 @@
                                                        [["state" ["or" [":data" "states"] "|"]]]
                                                        ["input"
                                                         ["{}"
+                                                         [":value" "state"]
+                                                         [":placeholder" "|Add task"]
                                                          [":style" ["merge" "ui/input" "style-draft"]]
-                                                         [":attrs"
-                                                          ["{}" [":value" "state"] [":placeholder" "|Add task"]]]
                                                          [":event"
                                                           ["{}"
                                                            [":input" "on-input"]
@@ -1571,8 +1561,8 @@
                                                                ["=<" "8" "nil"]
                                                                ["input"
                                                                 ["{}"
-                                                                 [":attrs"
-                                                                  ["{}" [":value" "state"] [":placeholder" "|User id"]]]
+                                                                 [":value" "state"]
+                                                                 [":placeholder" "|User id"]
                                                                  [":style" "ui/input"]
                                                                  [":event" ["{}" [":input" "on-input"]]]]]
                                                                ["=<" "8" "nil"]
@@ -1670,9 +1660,9 @@
                                                              ["{}"]
                                                              ["input"
                                                               ["{}"
+                                                               [":value" "state"]
+                                                               [":placeholder" "|Group name"]
                                                                [":style" "ui/input"]
-                                                               [":attrs"
-                                                                ["{}" [":value" "state"] [":placeholder" "|Group name"]]]
                                                                [":event" ["{}" [":input" "on-input"]]]]]
                                                              ["=<" "8" "nil"]
                                                              ["button"

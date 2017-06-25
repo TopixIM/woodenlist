@@ -26,11 +26,7 @@
      {}
      (div {:style (merge style-avatar {:background-image (str "url(" (:avatar user) ")")})}))
     (div {} (<> span "Name:" nil) (=< 8 nil) (<> span (:name user) nil))
-    (div
-     {}
-     (<> span "Id:" nil)
-     (=< 8 nil)
-     (input {:style ui/input, :attrs {:value (:id user)}}))
+    (div {} (<> span "Id:" nil) (=< 8 nil) (input {:value (:id user), :style ui/input}))
     (=< nil 8)
     (div
      {:style ui/row}
