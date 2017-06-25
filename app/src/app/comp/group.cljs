@@ -44,7 +44,7 @@
    (let [tasks (:tasks task-group), done-tasks (:done-tasks task-group)]
      (div
       {}
-      (div {:style style-draft} (cursor-> :draft comp-task-draft (:id task-group)))
+      (div {:style style-draft} (cursor-> :draft comp-task-draft states (:id task-group)))
       (=< nil 32)
       (if (empty? tasks)
         (div {:style style-empty} (<> span "No tasks" nil))

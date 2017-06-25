@@ -1161,7 +1161,7 @@
                                                 ["{}"]
                                                 ["div"
                                                  ["{}" [":style" "style-draft"]]
-                                                 ["cursor->" ":draft" "comp-task-draft" [":id" "task-group"]]]
+                                                 ["cursor->" ":draft" "comp-task-draft" "states" [":id" "task-group"]]]
                                                 ["=<" "nil" "32"]
                                                 ["if"
                                                  ["empty?" "tasks"]
