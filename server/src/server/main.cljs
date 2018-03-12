@@ -1,55 +1,50 @@
 
 (ns server.main
-  (:require [cljs.nodejs :as nodejs]
+  (:require [server.schema :as schema]
+            [server.network :refer [run-server! sync-clients!]]
+            [server.updater :refer [updater]]
             [cljs.reader :refer [read-string]]
-            [server.schema :as schema]
-            [server.network :refer [run-server! render-clients!]]
-            [server.updater.core :refer [updater]]
-            [cljs.core.async :refer [<!]])
-  (:require-macros [cljs.core.async.macros :refer [go-loop]]))
+            [server.util :refer [try-verbosely!]]
+            [server.reel :refer [reel-updater refresh-reel reel-schema]]
+            ["fs" :as fs]
+            ["shortid" :as shortid]))
 
-(defonce writer-db-ref
-  (atom
-   (let [fs (js/require "fs")]
-     (enable-console-print!)
-     (if (fs.existsSync (:storage-key schema/configs))
-       (do
-        (println "Found storage, loading.")
-        (read-string (fs.readFileSync (:storage-key schema/configs) "utf8")))
-       (do (println "No storage found.") schema/database)))))
+(def initial-db
+  (let [filepath (:storage-key schema/configs)]
+    (if (fs/existsSync filepath)
+      (do (println "Found storage.") (read-string (fs/readFileSync filepath "utf8")))
+      schema/database)))
 
-(defonce reader-db-ref (atom @writer-db-ref))
+(defonce *reel (atom (merge reel-schema {:base initial-db, :db initial-db})))
 
-(defn reload! [] (println "Code updated.") (render-clients! @reader-db-ref))
+(defonce *reader-reel (atom @*reel))
 
-(defn persist-db! []
-  (let [raw (pr-str (assoc @writer-db-ref :sessions {})), fs (js/require "fs")]
-    (println "Writing DB to storage.")
-    (fs.writeFileSync (:storage-key schema/configs) raw)))
+(defn dispatch! [op op-data sid]
+  (let [op-id (.generate shortid), op-time (.valueOf (js/Date.))]
+    (println "Dispatch!" (str op) op-data sid)
+    (try-verbosely!
+     (let [new-reel (reel-updater @*reel updater op op-data sid op-id op-time)]
+       (reset! *reel new-reel)))))
+
+(defn on-exit! [code]
+  (fs/writeFileSync (:storage-key schema/configs) (pr-str (assoc (:db @*reel) :sessions {})))
+  (println "Saving file on exit" code)
+  (.exit js/process))
+
+(defn proxy-dispatch! [& args] "Make dispatch hot relodable." (apply dispatch! args))
 
 (defn render-loop! []
-  (if (not= @reader-db-ref @writer-db-ref)
-    (do
-     (reset! reader-db-ref @writer-db-ref)
-     (comment println "render loop")
-     (render-clients! @reader-db-ref)))
-  (js/setTimeout render-loop! 300))
+  (if (not (identical? @*reader-reel @*reel))
+    (do (reset! *reader-reel @*reel) (sync-clients! @*reader-reel)))
+  (js/setTimeout render-loop! 200))
 
 (defn main! []
-  (let [server-ch (run-server! {:port 5021})]
-    (go-loop
-     []
-     (let [[op op-data session-id op-id op-time] (<! server-ch)]
-       (println "Action:" op (pr-str op-data) session-id op-id op-time)
-       (comment println "Database:" @writer-db-ref)
-       (try
-        (let [new-db (updater @writer-db-ref op op-data session-id op-id op-time)]
-          (reset! writer-db-ref new-db))
-        (catch js/Error e (.log js/console e)))
-       (recur)))
-    (render-loop!))
-  (add-watch reader-db-ref :log (fn [] ))
-  (.on js/process "exit" (fn [code] (println "Exit:" code) (persist-db!)))
+  (run-server! proxy-dispatch! (:port schema/configs))
+  (render-loop!)
+  (.on js/process "SIGINT" on-exit!)
   (println "Server started."))
 
-(set! *main-cli-fn* main!)
+(defn reload! []
+  (println "Code updated.")
+  (reset! *reel (refresh-reel @*reel initial-db updater))
+  (sync-clients! @*reader-reel))

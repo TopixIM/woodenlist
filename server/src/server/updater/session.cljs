@@ -7,9 +7,6 @@
 (defn disconnect [db op-data session-id op-id op-time]
   (update db :sessions (fn [session] (dissoc session session-id))))
 
-(defn toggle-hidden [db op-data session-id op-id op-time]
-  (update-in db [:sessions session-id :show-done?] not))
-
 (defn remove-notification [db op-data session-id op-id op-time]
   (update-in
    db

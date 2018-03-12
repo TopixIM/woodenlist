@@ -1,26 +1,5 @@
 
-(ns server.updater.user (:require [server.util :refer [find-first]]))
-
-(defn sign-up [db op-data session-id op-id op-time]
-  (let [[username password] op-data
-        maybe-user (find-first (fn [user] (= username (:name user))) (vals (:users db)))]
-    (if (some? maybe-user)
-      (update-in
-       db
-       [:sessions session-id :notifications]
-       (fn [notifications]
-         (conj
-          notifications
-          {:id op-id, :kind :attentive, :text (str "Name is token: " username)})))
-      (-> db
-          (assoc-in [:sessions session-id :user-id] op-id)
-          (assoc-in
-           [:users op-id]
-           {:id op-id, :name username, :nickname username, :password password, :avatar nil})))))
-
-(defn set-avatar [db op-data session-id op-id op-time]
-  (let [user-id (get-in db [:sessions session-id :user-id])]
-    (if (some? user-id) (assoc-in db [:users user-id :avatar] op-data) db)))
+(ns server.updater.user (:require [server.util :refer [find-first]] ["md5" :as md5]))
 
 (defn log-in [db op-data session-id op-id op-time]
   (let [[username password] op-data
@@ -32,7 +11,7 @@
      [:sessions session-id]
      (fn [session]
        (if (some? maybe-user)
-         (if (= password (:password maybe-user))
+         (if (= (md5 password) (:password maybe-user))
            (assoc session :user-id (:id maybe-user))
            (update
             session
@@ -51,3 +30,24 @@
 
 (defn log-out [db op-data session-id op-id op-time]
   (assoc-in db [:sessions session-id :user-id] nil))
+
+(defn sign-up [db op-data session-id op-id op-time]
+  (let [[username password] op-data
+        maybe-user (find-first (fn [user] (= username (:name user))) (vals (:users db)))]
+    (if (some? maybe-user)
+      (update-in
+       db
+       [:sessions session-id :notifications]
+       (fn [notifications]
+         (conj
+          notifications
+          {:id op-id, :kind :attentive, :text (str "Name is token: " username)})))
+      (-> db
+          (assoc-in [:sessions session-id :user-id] op-id)
+          (assoc-in
+           [:users op-id]
+           {:id op-id,
+            :name username,
+            :nickname username,
+            :password (md5 password),
+            :avatar nil})))))
