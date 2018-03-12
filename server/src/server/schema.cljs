@@ -3,7 +3,7 @@
 
 (def configs {:storage-key "/data/cumulo/woodenlist.edn", :port 5021})
 
-(def database {:sessions {}, :users {}, :count 0})
+(def database {:sessions {}, :users {}, :tasks {}})
 
 (def notification {:id nil, :kind nil, :text nil})
 
