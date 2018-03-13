@@ -3,14 +3,15 @@
   (:require [hsl.core :refer [hsl]]
             [respo-ui.core :as ui]
             [respo-ui.colors :as colors]
-            [respo.macros :refer [defcomp <> div span button]]
+            [respo.macros :refer [defcomp <> div span cursor-> button]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.comp.space :refer [=<]]
             [app.comp.sidebar :refer [comp-sidebar]]
             [app.comp.profile :refer [comp-profile]]
             [app.comp.login :refer [comp-login]]
             [respo-message.comp.msg-list :refer [comp-msg-list]]
-            [app.comp.reel :refer [comp-reel]]))
+            [app.comp.reel :refer [comp-reel]]
+            [app.comp.home :refer [comp-home]]))
 
 (def style-alert {:font-family "Josefin Sans", :font-weight 100, :font-size 40})
 
@@ -31,10 +32,13 @@
      chunk-offline
      (div
       {:style (merge ui/global ui/fullscreen ui/row)}
-      (comp-sidebar (:logged-in? store))
+      (comp-sidebar (:router store) (:logged-in? store))
       (if (:logged-in? store)
         (let [router (:router store)]
-          (case (:name router) :profile (comp-profile (:user store)) (<> router nil)))
+          (case (:name router)
+            :profile (comp-profile (:user store))
+            :home (cursor-> :home comp-home states (:data router))
+            (<> router nil)))
         (comp-login states))
       (comp-inspect "Store" store style-debugger)
       (comp-msg-list (get-in store [:session :notifications]) :session/remove-notification)

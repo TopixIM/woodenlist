@@ -11,5 +11,13 @@
    (merge
     base-data
     (if logged-in?
-      {:user (twig-user (get-in db [:users (:user-id session)])), :router router}
+      {:user (twig-user (get-in db [:users (:user-id session)])),
+       :router (assoc
+                router
+                :data
+                (case (:name router)
+                  :home (:working-tasks db)
+                  :pending (:pending-tasks db)
+                  :done (:done-tasks db)
+                  router))}
       nil))))
