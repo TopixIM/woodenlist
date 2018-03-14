@@ -11,7 +11,9 @@
             [app.comp.login :refer [comp-login]]
             [respo-message.comp.msg-list :refer [comp-msg-list]]
             [app.comp.reel :refer [comp-reel]]
-            [app.comp.home :refer [comp-home]]))
+            [app.comp.home :refer [comp-home]]
+            [app.comp.pending :refer [comp-pending]]
+            [app.comp.done-tasks :refer [comp-done-tasks]]))
 
 (def style-alert {:font-family "Josefin Sans", :font-weight 100, :font-size 40})
 
@@ -38,6 +40,8 @@
           (case (:name router)
             :profile (comp-profile (:user store))
             :home (cursor-> :home comp-home states (:data router))
+            :pending (cursor-> :pending comp-pending states (:data router))
+            :done (cursor-> :done comp-done-tasks states (:data router))
             (<> router nil)))
         (comp-login states))
       (comp-inspect "Store" store style-debugger)

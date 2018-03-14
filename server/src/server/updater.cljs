@@ -15,5 +15,7 @@
             :session/remove-notification session/remove-notification
             :router/change router/change
             :task/create task/create
+            :task/move-task task/move-task
+            :task/remove-done task/remove-done
             (do (println "Unknown op:" op) identity))]
     (f db op-data sid op-id op-time)))
