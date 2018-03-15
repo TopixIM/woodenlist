@@ -18,3 +18,9 @@
 (defn remove-done [db op-data sid op-id op-time]
   (println "remove one:" op-data)
   (update db :done-tasks (fn [tasks] (dissoc tasks op-data))))
+
+(defn update-text [db op-data sid op-id op-time]
+  (update-in
+   db
+   [(:group op-data) (:id op-data)]
+   (fn [task] (assoc task :text (:text op-data) :time op-time))))

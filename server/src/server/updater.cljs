@@ -16,6 +16,7 @@
             :router/change router/change
             :task/create task/create
             :task/move-task task/move-task
+            :task/update-text task/update-text
             :task/remove-done task/remove-done
             (do (println "Unknown op:" op) identity))]
     (f db op-data sid op-id op-time)))
