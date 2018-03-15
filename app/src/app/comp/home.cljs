@@ -10,7 +10,8 @@
             [respo.comp.space :refer [=<]]
             [respo.util.list :refer [map-val]]
             [clojure.string :as string]
-            [respo-ui.comp.icon :refer [comp-icon]]))
+            [respo-ui.comp.icon :refer [comp-icon]]
+            [keycode.core :as keycode]))
 
 (defcomp
  comp-task
@@ -48,7 +49,11 @@
       {:style (merge ui/input {:width 320}),
        :placeholder "new task here...",
        :value (:draft state),
-       :on-input (mutation-> (assoc state :draft (:value %e)))})
+       :on-input (mutation-> (assoc state :draft (:value %e))),
+       :on-keydown (fn [e d! m!]
+         (let [draft (:draft state)]
+           (if (and (= (:keycode e) keycode/return) (not (string/blank? draft)))
+             (do (d! :task/create draft) (m! (assoc state :draft ""))))))})
      (=< 8 nil)
      (button
       {:style ui/button,
@@ -57,4 +62,8 @@
          (let [draft (:draft state)]
            (if (not (string/blank? draft))
              (do (d! :task/create draft) (m! (assoc state :draft ""))))))}))
-    (list-> {} (->> tasks (map-val (fn [task] (comp-task task))))))))
+    (list->
+     {}
+     (->> tasks
+          (sort-by (fn [[k task]] (unchecked-negate (:time task))))
+          (map-val (fn [task] (comp-task task))))))))

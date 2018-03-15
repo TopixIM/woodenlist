@@ -40,5 +40,5 @@
   {:style {:padding 16}}
   (div
    {:style {:font-family ui/font-fancy, :font-size 24, :font-weight 100}}
-   (<> "Pending Tasks"))
+   (<> (str "Pending Tasks(" (count router-data) ")")))
   (list-> {} (->> router-data (map-val (fn [task] (comp-task task)))))))

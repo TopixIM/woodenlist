@@ -19,7 +19,7 @@
   {:style {:padding 16}}
   (div
    {:style {:font-size 24, :font-family ui/font-fancy, :font-weight 100}}
-   (<> "Done Tasks"))
+   (<> (str "Done Tasks(" (count router-data) ")")))
   (list->
    {}
    (->> router-data
