@@ -34,7 +34,7 @@
      chunk-offline
      (div
       {:style (merge ui/global ui/fullscreen ui/row)}
-      (comp-sidebar (:router store) (:logged-in? store))
+      (comp-sidebar (:router store) (:logged-in? store) (:count store))
       (if (:logged-in? store)
         (let [router (:router store)]
           (case (:name router)

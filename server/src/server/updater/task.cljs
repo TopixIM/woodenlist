@@ -1,6 +1,8 @@
 
 (ns server.updater.task )
 
+(defn clear-done [db op-data sid op-id op-time] (assoc db :done-tasks {}))
+
 (defn create [db op-data sid op-id op-time]
   (assoc-in
    db

@@ -19,5 +19,6 @@
                   :home (:working-tasks db)
                   :pending (:pending-tasks db)
                   :done (:done-tasks db)
-                  router))}
+                  router)),
+       :count (count (:sessions db))}
       nil))))

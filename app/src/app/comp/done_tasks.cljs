@@ -38,4 +38,7 @@
               :on-click (action->
                          :task/move-task
                          {:id (:id task), :from :done-tasks, :to :working-tasks})}
-             (comp-icon :ios-loop)))))))))
+             (comp-icon :ios-loop)))))))
+  (div
+   {}
+   (button {:style ui/button, :on-click (action-> :task/clear-done nil)} (<> "Done")))))

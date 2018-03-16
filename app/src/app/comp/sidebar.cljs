@@ -11,7 +11,7 @@
 
 (defcomp
  comp-sidebar
- (router logged-in?)
+ (router logged-in? active-count)
  (div
   {:style (merge
            ui/column-parted
@@ -33,6 +33,9 @@
      :style (merge style-entry (if (= :done (:name router)) {:color :black}))}
     (comp-icon :social-buffer)))
   (div
-   {:style (merge style-entry (if (= :profile (:name router)) {:color :black})),
-    :on-click (fn [e d! m!] (d! :router/change {:name :profile}))}
-   (if logged-in? (comp-icon :ios-contact) (comp-icon :log-in)))))
+   {:style ui/column}
+   (div {:style (merge ui/center {:font-size 16, :color (hsl 0 0 60)})} (<> active-count))
+   (div
+    {:style (merge style-entry (if (= :profile (:name router)) {:color :black})),
+     :on-click (fn [e d! m!] (d! :router/change {:name :profile}))}
+    (if logged-in? (comp-icon :ios-contact) (comp-icon :log-in))))))
