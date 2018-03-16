@@ -1,7 +1,7 @@
 
 (ns server.schema )
 
-(def configs {:storage-key "/data/cumulo/woodenlist.edn", :port 5021})
+(def configs {:storage-key "/data/topix/woodenlist.edn", :port 11000})
 
 (def database
   {:sessions {}, :users {}, :working-tasks {}, :pending-tasks {}, :done-tasks {}})
