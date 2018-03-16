@@ -27,7 +27,9 @@
          (fn [task]
            (div
             {:style (merge ui/row-center {:margin "8px 0"})}
-            (input {:value (:text task), :style (merge ui/input {:width 240})})
+            (div
+             {:style (merge {:width 320, :background-color (hsl 0 0 94), :padding "0 8px"})}
+             (<> (:text task)))
             (=< 16 nil)
             (div
              {:style {:cursor :pointer}, :on-click (action-> :task/remove-done (:id task))}

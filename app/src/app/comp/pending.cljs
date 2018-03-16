@@ -10,14 +10,23 @@
             [respo.comp.space :refer [=<]]
             [app.comp.reel :refer [comp-reel]]
             [respo.util.list :refer [map-val]]
-            [respo-ui.comp.icon :refer [comp-icon]]))
+            [respo-ui.comp.icon :refer [comp-icon]]
+            [app.comp.timed-input :refer [comp-timed-input]]))
 
 (defcomp
  comp-task
- (task)
+ (states task)
  (div
   {:style (merge ui/row-center {:margin "8px 0"})}
-  (input {:value (:text task), :style (merge ui/input {:width 240})})
+  (cursor->
+   (:id task)
+   comp-timed-input
+   states
+   (:text task)
+   (:time task)
+   ""
+   (fn [new-text d!]
+     (d! :task/update-text {:id (:id task), :text new-text, :group :pending-tasks})))
   (=< 16 nil)
   (div
    {:style {:cursor :pointer},
@@ -41,4 +50,4 @@
   (div
    {:style {:font-family ui/font-fancy, :font-size 24, :font-weight 100}}
    (<> (str "Pending Tasks(" (count router-data) ")")))
-  (list-> {} (->> router-data (map-val (fn [task] (comp-task task)))))))
+  (list-> {} (->> router-data (map-val (fn [task] (comp-task states task)))))))
