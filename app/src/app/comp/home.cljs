@@ -58,17 +58,17 @@
  (let [state (or (:data states) {:draft ""})]
    (div
     {:style (merge ui/flex {:padding 16})}
-    (div
-     {:style ui/row-parted}
-     (span nil)
-     (button
-      {:style ui/button,
-       :inner-text "Add",
-       :on-click (fn [e d! m!]
-         (d! :task/create "")
-         (js/setTimeout
-          (fn [] (let [el (.querySelector js/document ".cursor-task")] (.focus el)))
-          300))}))
+    (if (empty? tasks)
+      (div
+       {:style ui/row-parted}
+       (button
+        {:style ui/button,
+         :inner-text "Add",
+         :on-click (fn [e d! m!]
+           (d! :task/create "")
+           (js/setTimeout
+            (fn [] (let [el (.querySelector js/document ".cursor-task")] (.focus el)))
+            300))})))
     (list->
      {:style {:position :relative,
               :height (+ 8 (* 48 (count tasks))),

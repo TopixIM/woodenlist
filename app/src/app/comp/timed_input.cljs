@@ -7,7 +7,8 @@
              :refer
              [defcomp <> div span button input mutation-> action-> list->]]
             [respo.comp.space :refer [=<]]
-            [clojure.string :as string]))
+            [clojure.string :as string]
+            [keycode.core :as keycode]))
 
 (defcomp
  comp-timed-input
@@ -20,4 +21,11 @@
      :value (if (> (:time state) time) (:text state) text),
      :on-input (fn [e d! m!]
        (m! (assoc state :text (:value e) :time (.now js/Date)))
-       (on-change! (:value e) d!))})))
+       (on-change! (:value e) d!)),
+     :on-keydown (fn [e d! m!]
+       (if (= (:keycode e) keycode/return)
+         (do
+          (d! :task/create "")
+          (js/setTimeout
+           (fn [] (let [el (.querySelector js/document ".cursor-task")] (.focus el)))
+           300))))})))

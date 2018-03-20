@@ -4,3 +4,5 @@
 /node_modules
 .shadow-cljs/
 .cpcache/
+
+.nrepl-port
