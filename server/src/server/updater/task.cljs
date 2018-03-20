@@ -33,4 +33,4 @@
     (update-in
      db
      [:users user-id (:group op-data) (:id op-data)]
-     (fn [task] (assoc task :text (:text op-data) :time op-time)))))
+     (fn [task] (assoc task :text (:text op-data) :time (:time op-data))))))

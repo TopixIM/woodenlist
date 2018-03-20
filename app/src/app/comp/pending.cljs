@@ -25,8 +25,10 @@
    (:text task)
    (:time task)
    ""
-   (fn [new-text d!]
-     (d! :task/update-text {:id (:id task), :text new-text, :group :pending-tasks})))
+   (fn [d! new-text instant]
+     (d!
+      :task/update-text
+      {:id (:id task), :text new-text, :time instant, :group :pending-tasks})))
   (=< 16 nil)
   (div
    {:style {:cursor :pointer},

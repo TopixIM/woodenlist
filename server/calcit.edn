@@ -3513,7 +3513,13 @@
                 }
                }
                "x" {:type :leaf, :by "root", :at 1521133586820, :text ":time", :id "r1mGO7_YG"}
-               "y" {:type :leaf, :by "root", :at 1521133587959, :text "op-time", :id "SkQjMuX_FM"}
+               "y" {
+                :type :expr, :by "root", :at 1521565735247, :id "BJZyNeaRFG"
+                :data {
+                 "T" {:type :leaf, :by "root", :at 1521565737499, :text ":time", :id "SkQjMuX_FM"}
+                 "j" {:type :leaf, :by "root", :at 1521565742154, :text "op-data", :id "SkfNepRKf"}
+                }
+               }
               }
              }
             }

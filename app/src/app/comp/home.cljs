@@ -41,8 +41,10 @@
    (:text task)
    (:time task)
    (if (zero? idx) "cursor-task")
-   (fn [new-text d!]
-     (d! :task/update-text {:id (:id task), :text new-text, :group :working-tasks})))
+   (fn [d! new-text instant]
+     (d!
+      :task/update-text
+      {:id (:id task), :text new-text, :group :working-tasks, :time instant})))
   (=< 16 nil)
   (div
    {:style (merge ui/center {:cursor :pointer}),

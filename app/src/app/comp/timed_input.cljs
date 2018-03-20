@@ -20,8 +20,9 @@
      :placeholder "task text...",
      :value (if (> (:time state) time) (:text state) text),
      :on-input (fn [e d! m!]
-       (m! (assoc state :text (:value e) :time (.now js/Date)))
-       (on-change! (:value e) d!)),
+       (let [now (.now js/Date)]
+         (m! (assoc state :text (:value e) :time now))
+         (on-change! d! (:value e) now))),
      :on-keydown (fn [e d! m!]
        (if (= (:keycode e) keycode/return)
          (do
