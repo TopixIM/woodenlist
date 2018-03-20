@@ -1,5 +1,6 @@
 
-(ns server.updater.user (:require [server.util :refer [find-first]] ["md5" :as md5]))
+(ns server.updater.user
+  (:require [server.util :refer [find-first]] ["md5" :as md5] [server.schema :as schema]))
 
 (defn log-in [db op-data session-id op-id op-time]
   (let [[username password] op-data
@@ -46,8 +47,10 @@
           (assoc-in [:sessions session-id :user-id] op-id)
           (assoc-in
            [:users op-id]
-           {:id op-id,
-            :name username,
-            :nickname username,
-            :password (md5 password),
-            :avatar nil})))))
+           (merge
+            schema/user
+            {:id op-id,
+             :name username,
+             :nickname username,
+             :password (md5 password),
+             :avatar nil}))))))

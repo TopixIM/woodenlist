@@ -58,6 +58,9 @@
  (let [state (or (:data states) {:draft ""})]
    (div
     {:style (merge ui/flex {:padding 16})}
+    (div
+     {:style {:font-size 24, :font-family ui/font-fancy, :font-weight 100}}
+     (<> (str "Working(" (count tasks) ")")))
     (if (empty? tasks)
       (div
        {:style ui/row-parted}
@@ -70,9 +73,7 @@
             (fn [] (let [el (.querySelector js/document ".cursor-task")] (.focus el)))
             300))})))
     (list->
-     {:style {:position :relative,
-              :height (+ 8 (* 48 (count tasks))),
-              :background-color (hsl 0 0 98)}}
+     {:style {:position :relative, :height (+ 8 (* 48 (count tasks)))}}
      (->> tasks
           (sort-by (fn [[k task]] (unchecked-negate (:time task))))
           (map-indexed (fn [idx [k task]] [(:id task) (comp-task states task idx)]))

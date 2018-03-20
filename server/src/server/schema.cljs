@@ -3,8 +3,7 @@
 
 (def configs {:storage-key "/data/topix/woodenlist.edn", :port 11000})
 
-(def database
-  {:sessions {}, :users {}, :working-tasks {}, :pending-tasks {}, :done-tasks {}})
+(def database {:sessions {}, :users {}})
 
 (def notification {:id nil, :kind nil, :text nil})
 
@@ -15,4 +14,12 @@
 
 (def task {:id nil, :text "", :text-time ""})
 
-(def user {:name nil, :id nil, :nickname nil, :avatar nil, :password nil})
+(def user
+  {:name nil,
+   :id nil,
+   :nickname nil,
+   :avatar nil,
+   :password nil,
+   :working-tasks {},
+   :pending-tasks {},
+   :done-tasks {}})

@@ -28,7 +28,7 @@
            (div
             {:style (merge ui/row-center {:margin "8px 0"})}
             (div
-             {:style (merge {:width 320, :background-color (hsl 0 0 94), :padding "0 8px"})}
+             {:style (merge {:width 400, :background-color (hsl 0 0 94), :padding "0 8px"})}
              (<> (:text task)))
             (=< 16 nil)
             (div

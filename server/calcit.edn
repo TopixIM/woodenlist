@@ -1855,42 +1855,6 @@
            }
           }
          }
-         "v" {
-          :type :expr, :by "root", :at 1520875386357, :id "Sy-MKDE4tM"
-          :data {
-           "T" {:type :leaf, :by "root", :at 1520962744406, :text ":working-tasks", :id "Sy-MKDE4tMleaf"}
-           "j" {
-            :type :expr, :by "root", :at 1520875389305, :id "S1eBKPENFM"
-            :data {
-             "T" {:type :leaf, :by "root", :at 1520875389649, :text "{}", :id "HyBKwNVFf"}
-            }
-           }
-          }
-         }
-         "x" {
-          :type :expr, :by "root", :at 1520962732844, :id "rkxB3nYrKz"
-          :data {
-           "T" {:type :leaf, :by "root", :at 1520962746446, :text ":pending-tasks", :id "rkxB3nYrKzleaf"}
-           "j" {
-            :type :expr, :by "root", :at 1520962735924, :id "rJ-uh3KrKz"
-            :data {
-             "T" {:type :leaf, :by "root", :at 1520962736587, :text "{}", :id "Hyg_nnKHKf"}
-            }
-           }
-          }
-         }
-         "y" {
-          :type :expr, :by "root", :at 1520962747809, :id "HyxE63YBFz"
-          :data {
-           "T" {:type :leaf, :by "root", :at 1520962750750, :text ":done-tasks", :id "HyxE63YBFzleaf"}
-           "j" {
-            :type :expr, :by "root", :at 1520962751006, :id "H1-wTnKrFM"
-            :data {
-             "T" {:type :leaf, :by "root", :at 1520962751831, :text "{}", :id "H1ePT2KSYM"}
-            }
-           }
-          }
-         }
         }
        }
       }
@@ -2125,6 +2089,42 @@
            "j" {:type :leaf, :id "Hynug8bxCSZ", :text "nil", :by "root", :at 1500541255553}
           }
          }
+         "yT" {
+          :type :expr, :by "root", :at 1521563717844, :id "H1xRHu30Fz"
+          :data {
+           "T" {:type :leaf, :by "root", :at 1521563720568, :text ":working-tasks", :id "H1xRHu30Fzleaf"}
+           "j" {
+            :type :expr, :by "root", :at 1521563722072, :id "BJezL_hAKG"
+            :data {
+             "T" {:type :leaf, :by "root", :at 1521563722766, :text "{}", :id "HyMI_2CFz"}
+            }
+           }
+          }
+         }
+         "yj" {
+          :type :expr, :by "root", :at 1521563723905, :id "BkeVLdh0tM"
+          :data {
+           "T" {:type :leaf, :by "root", :at 1521563728019, :text ":pending-tasks", :id "BkeVLdh0tMleaf"}
+           "j" {
+            :type :expr, :by "root", :at 1521563728473, :id "H1ruUd2RYM"
+            :data {
+             "T" {:type :leaf, :by "root", :at 1521563728797, :text "{}", :id "SkEdUO3CFG"}
+            }
+           }
+          }
+         }
+         "yr" {
+          :type :expr, :by "root", :at 1521563729502, :id "Bk7KL_hCtM"
+          :data {
+           "T" {:type :leaf, :by "root", :at 1521563731294, :text ":done-tasks", :id "Bk7KL_hCtMleaf"}
+           "j" {
+            :type :expr, :by "root", :at 1521563731672, :id "SJ2UO30FG"
+            :data {
+             "T" {:type :leaf, :by "root", :at 1521563731995, :text "{}", :id "Bkro8d3RKG"}
+            }
+           }
+          }
+         }
         }
        }
       }
@@ -2284,19 +2284,18 @@
              "T" {:type :leaf, :id "rJVmgLZlAr-", :text "if", :by "root", :at 1500541255553}
              "j" {:type :leaf, :id "r1S7gUZlArb", :text "logged-in?", :by "root", :at 1500541255553}
              "r" {
-              :type :expr, :id "HJUQxIbx0rZ", :by nil, :at 1500541255553
+              :type :expr, :by "root", :at 1521563747303, :id "Bkejvu20tM"
               :data {
-               "T" {:type :leaf, :id "rJPQl8ZgCHb", :text "{}", :by "root", :at 1500541255553}
-               "v" {
-                :type :expr, :id "B107eU-lCHZ", :by nil, :at 1500541255553
+               "D" {:type :leaf, :by "root", :at 1521563748075, :text "let", :id "B1hDOnCYM"}
+               "L" {
+                :type :expr, :by "root", :at 1521563748645, :id "ByTwOnRYM"
                 :data {
-                 "T" {:type :leaf, :id "Hy1VxUbeCS-", :text ":user", :by "root", :at 1500541255553}
-                 "j" {
-                  :type :expr, :id "HJlNxUbx0r-", :by nil, :at 1500541255553
+                 "T" {
+                  :type :expr, :by "root", :at 1521563752109, :id "Skx__3RKf"
                   :data {
-                   "T" {:type :leaf, :id "SyZVxIZeCS-", :text "twig-user", :by "root", :at 1500541255553}
+                   "T" {:type :leaf, :by "root", :at 1521563753505, :text "user", :id "HkQhwd2CtG"}
                    "j" {
-                    :type :expr, :id "HyG4lIZlRHW", :by nil, :at 1500541255553
+                    :type :expr, :id "Sy-fs_nRYG", :by nil, :at 1500541255553
                     :data {
                      "T" {:type :leaf, :id "HkXVeL-l0Sb", :text "get-in", :by "root", :at 1500541255553}
                      "j" {:type :leaf, :id "rJ4Nx8WeCrb", :text "db", :by "root", :at 1500541255553}
@@ -2320,86 +2319,110 @@
                  }
                 }
                }
-               "x" {
-                :type :expr, :id "SJsEe8ZgCBZ", :by nil, :at 1500541255553
+               "T" {
+                :type :expr, :id "HJUQxIbx0rZ", :by nil, :at 1500541255553
                 :data {
-                 "T" {:type :leaf, :id "HJ2EeUWe0SZ", :text ":router", :by "root", :at 1500541255553}
-                 "j" {
-                  :type :expr, :by "root", :at 1520962667475, :id "SJQ_hFStG"
+                 "T" {:type :leaf, :id "rJPQl8ZgCHb", :text "{}", :by "root", :at 1500541255553}
+                 "v" {
+                  :type :expr, :id "B107eU-lCHZ", :by nil, :at 1500541255553
                   :data {
-                   "D" {:type :leaf, :by "root", :at 1520962670606, :text "assoc", :id "HkEu3tSFf"}
-                   "L" {:type :leaf, :by "root", :at 1520962672999, :text "router", :id "S1__ntStM"}
-                   "P" {:type :leaf, :by "root", :at 1520962674110, :text ":data", :id "S1BFO3tStz"}
-                   "T" {
-                    :type :expr, :by "root", :at 1520962628859, :id "SyTHhYHtz"
+                   "T" {:type :leaf, :id "Hy1VxUbeCS-", :text ":user", :by "root", :at 1500541255553}
+                   "j" {
+                    :type :expr, :id "HJlNxUbx0r-", :by nil, :at 1500541255553
                     :data {
-                     "D" {:type :leaf, :by "root", :at 1520962630424, :text "case", :id "ByRHnYHYf"}
-                     "T" {
-                      :type :expr, :by "root", :at 1520962632373, :id "ByeIhtBKz"
-                      :data {
-                       "D" {:type :leaf, :by "root", :at 1520962634462, :text ":name", :id "B1bU2tBKG"}
-                       "T" {:type :leaf, :id "BJaEl8ZxCS-", :text "router", :by "root", :at 1500541255553}
-                      }
-                     }
-                     "j" {
-                      :type :expr, :by "root", :at 1520962635169, :id "BygQI3trKf"
-                      :data {
-                       "T" {:type :leaf, :by "root", :at 1520962637165, :text ":home", :id "BygQI3trKfleaf"}
-                       "j" {
-                        :type :expr, :by "root", :at 1520962681587, :id "SkfF2FrKz"
-                        :data {
-                         "T" {:type :leaf, :by "root", :at 1520962809504, :text ":working-tasks", :id "SJgYntBFG"}
-                         "j" {:type :leaf, :by "root", :at 1520962810833, :text "db", :id "BJfbpYrtf"}
-                        }
-                       }
-                      }
-                     }
-                     "r" {
-                      :type :expr, :by "root", :at 1520962637615, :id "S18UhtStG"
-                      :data {
-                       "T" {:type :leaf, :by "root", :at 1520962815350, :text ":pending", :id "S18UhtStGleaf"}
-                       "j" {
-                        :type :expr, :by "root", :at 1520962815696, :id "SJeO-ptStz"
-                        :data {
-                         "T" {:type :leaf, :by "root", :at 1520962820095, :text ":pending-tasks", :id "SydZpKrYz"}
-                         "j" {:type :leaf, :by "root", :at 1520962820670, :text "db", :id "rkBh-pFBtM"}
-                        }
-                       }
-                      }
-                     }
-                     "v" {
-                      :type :expr, :by "root", :at 1520962654786, :id "BkePD3YBYz"
-                      :data {
-                       "T" {:type :leaf, :by "root", :at 1520962656662, :text ":done", :id "BkePD3YBYzleaf"}
-                       "j" {
-                        :type :expr, :by "root", :at 1520962822697, :id "HyeyzTFrFM"
-                        :data {
-                         "T" {:type :leaf, :by "root", :at 1520962825409, :text ":done-tasks", :id "B1JzaKSYf"}
-                         "j" {:type :leaf, :by "root", :at 1520962826261, :text "db", :id "Skzz6trYz"}
-                        }
-                       }
-                      }
-                     }
-                     "x" {:type :leaf, :by "root", :at 1520962661835, :text "router", :id "r1xavhFSKM"}
+                     "T" {:type :leaf, :id "SyZVxIZeCS-", :text "twig-user", :by "root", :at 1500541255553}
+                     "j" {:type :leaf, :by "root", :at 1521563803904, :text "user", :id "B1-QjOnCYM"}
                     }
                    }
                   }
                  }
-                }
-               }
-               "y" {
-                :type :expr, :by "root", :at 1521219966762, :id "HJPtFdYKz"
-                :data {
-                 "T" {:type :leaf, :by "root", :at 1521219968239, :text ":count", :id "HJPtFdYKzleaf"}
-                 "j" {
-                  :type :expr, :by "root", :at 1521219968938, :id "rkKFtdKYz"
+                 "x" {
+                  :type :expr, :id "SJsEe8ZgCBZ", :by nil, :at 1500541255553
                   :data {
-                   "T" {:type :leaf, :by "root", :at 1521219969891, :text "count", :id "Hk4_Yt_ttG"}
+                   "T" {:type :leaf, :id "HJ2EeUWe0SZ", :text ":router", :by "root", :at 1500541255553}
                    "j" {
-                    :type :expr, :by "root", :at 1521219972612, :id "HJTKKuFtf"
+                    :type :expr, :by "root", :at 1520962667475, :id "SJQ_hFStG"
                     :data {
-                     "T" {:type :leaf, :by "root", :at 1521219974900, :text ":sessions", :id "rkhttdKtM"}
-                     "j" {:type :leaf, :by "root", :at 1521219975981, :text "db", :id "BJmJcYOFYM"}
+                     "D" {:type :leaf, :by "root", :at 1520962670606, :text "assoc", :id "HkEu3tSFf"}
+                     "L" {:type :leaf, :by "root", :at 1520962672999, :text "router", :id "S1__ntStM"}
+                     "P" {:type :leaf, :by "root", :at 1520962674110, :text ":data", :id "S1BFO3tStz"}
+                     "T" {
+                      :type :expr, :by "root", :at 1520962628859, :id "SyTHhYHtz"
+                      :data {
+                       "D" {:type :leaf, :by "root", :at 1520962630424, :text "case", :id "ByRHnYHYf"}
+                       "T" {
+                        :type :expr, :by "root", :at 1520962632373, :id "ByeIhtBKz"
+                        :data {
+                         "D" {:type :leaf, :by "root", :at 1520962634462, :text ":name", :id "B1bU2tBKG"}
+                         "T" {:type :leaf, :id "BJaEl8ZxCS-", :text "router", :by "root", :at 1500541255553}
+                        }
+                       }
+                       "j" {
+                        :type :expr, :by "root", :at 1520962635169, :id "BygQI3trKf"
+                        :data {
+                         "T" {:type :leaf, :by "root", :at 1520962637165, :text ":home", :id "BygQI3trKfleaf"}
+                         "j" {
+                          :type :expr, :by "root", :at 1520962681587, :id "SkfF2FrKz"
+                          :data {
+                           "T" {:type :leaf, :by "root", :at 1520962809504, :text ":working-tasks", :id "SJgYntBFG"}
+                           "j" {:type :leaf, :by "root", :at 1521563808208, :text "user", :id "BJfbpYrtf"}
+                          }
+                         }
+                        }
+                       }
+                       "r" {
+                        :type :expr, :by "root", :at 1520962637615, :id "S18UhtStG"
+                        :data {
+                         "T" {:type :leaf, :by "root", :at 1520962815350, :text ":pending", :id "S18UhtStGleaf"}
+                         "j" {
+                          :type :expr, :by "root", :at 1520962815696, :id "SJeO-ptStz"
+                          :data {
+                           "T" {:type :leaf, :by "root", :at 1520962820095, :text ":pending-tasks", :id "SydZpKrYz"}
+                           "j" {:type :leaf, :by "root", :at 1521563809867, :text "user", :id "rkBh-pFBtM"}
+                          }
+                         }
+                        }
+                       }
+                       "v" {
+                        :type :expr, :by "root", :at 1520962654786, :id "BkePD3YBYz"
+                        :data {
+                         "T" {:type :leaf, :by "root", :at 1520962656662, :text ":done", :id "BkePD3YBYzleaf"}
+                         "j" {
+                          :type :expr, :by "root", :at 1520962822697, :id "HyeyzTFrFM"
+                          :data {
+                           "T" {:type :leaf, :by "root", :at 1520962825409, :text ":done-tasks", :id "B1JzaKSYf"}
+                           "j" {:type :leaf, :by "root", :at 1521563811813, :text "user", :id "Skzz6trYz"}
+                          }
+                         }
+                        }
+                       }
+                       "x" {
+                        :type :expr, :by "root", :at 1521564100377, :id "rJ2TYnAtM"
+                        :data {
+                         "T" {:type :leaf, :by "root", :at 1521564094007, :text "{}", :id "r1xavhFSKM"}
+                        }
+                       }
+                      }
+                     }
+                    }
+                   }
+                  }
+                 }
+                 "y" {
+                  :type :expr, :by "root", :at 1521219966762, :id "HJPtFdYKz"
+                  :data {
+                   "T" {:type :leaf, :by "root", :at 1521219968239, :text ":count", :id "HJPtFdYKzleaf"}
+                   "j" {
+                    :type :expr, :by "root", :at 1521219968938, :id "rkKFtdKYz"
+                    :data {
+                     "T" {:type :leaf, :by "root", :at 1521219969891, :text "count", :id "Hk4_Yt_ttG"}
+                     "j" {
+                      :type :expr, :by "root", :at 1521219972612, :id "HJTKKuFtf"
+                      :data {
+                       "T" {:type :leaf, :by "root", :at 1521219974900, :text ":sessions", :id "rkhttdKtM"}
+                       "j" {:type :leaf, :by "root", :at 1521219975981, :text "db", :id "BJmJcYOFYM"}
+                      }
+                     }
                     }
                    }
                   }
@@ -2465,11 +2488,38 @@
         }
        }
        "v" {
-        :type :expr, :id "Hk99QgIbxAHW", :by nil, :at 1500541255553
+        :type :expr, :by "root", :at 1521563771994, :id "Ske4FO3AKM"
         :data {
-         "T" {:type :leaf, :id "Bkjc7xUZlCSW", :text "dissoc", :by "root", :at 1500541255553}
-         "j" {:type :leaf, :id "rJ3qXeIbxRHW", :text "user", :by "root", :at 1500541255553}
-         "r" {:type :leaf, :id "rk6cXgLZx0HZ", :text ":password", :by "root", :at 1500541255553}
+         "D" {:type :leaf, :by "root", :at 1521563773568, :text "->", :id "H1bEK_n0YM"}
+         "L" {:type :leaf, :by "root", :at 1521563775112, :text "user", :id "SJwt_2CFf"}
+         "T" {
+          :type :expr, :id "Hk99QgIbxAHW", :by nil, :at 1500541255553
+          :data {
+           "T" {:type :leaf, :id "Bkjc7xUZlCSW", :text "dissoc", :by "root", :at 1500541255553}
+           "r" {:type :leaf, :id "rk6cXgLZx0HZ", :text ":password", :by "root", :at 1500541255553}
+          }
+         }
+         "j" {
+          :type :expr, :by "root", :at 1521563777873, :id "r1xqK_n0Yf"
+          :data {
+           "T" {:type :leaf, :by "root", :at 1521563779385, :text "dissoc", :id "r1xqK_n0Yfleaf"}
+           "j" {:type :leaf, :by "root", :at 1521563782008, :text ":done-tasks", :id "H13Y_hAKf"}
+          }
+         }
+         "r" {
+          :type :expr, :by "root", :at 1521563783111, :id "Hkl1cdn0tG"
+          :data {
+           "T" {:type :leaf, :by "root", :at 1521563785012, :text "dissoc", :id "Hkl1cdn0tGleaf"}
+           "j" {:type :leaf, :by "root", :at 1521563787677, :text ":working-tasks", :id "HkMZ5OhAKz"}
+          }
+         }
+         "v" {
+          :type :expr, :by "root", :at 1521563788158, :id "SkMNqO3CFG"
+          :data {
+           "T" {:type :leaf, :by "root", :at 1521563790582, :text "dissoc", :id "SkMNqO3CFGleaf"}
+           "j" {:type :leaf, :by "root", :at 1521563796215, :text ":pending-tasks", :id "SkxwcOnAFG"}
+          }
+         }
         }
        }
       }
@@ -2944,15 +2994,56 @@
         }
        }
        "v" {
-        :type :expr, :by "root", :at 1521219839212, :id "SyvWK_Ytz"
+        :type :expr, :by "root", :at 1521563964611, :id "rkHSKhRYG"
         :data {
-         "T" {:type :leaf, :by "root", :at 1521219840499, :text "assoc", :id "SyvWK_Ytzleaf"}
-         "j" {:type :leaf, :by "root", :at 1521219842844, :text "db", :id "rktZt_FYG"}
-         "r" {:type :leaf, :by "root", :at 1521219846405, :text ":done-tasks", :id "By6-YuYtM"}
-         "v" {
-          :type :expr, :by "root", :at 1521219847163, :id "r1xyGtuKFM"
+         "D" {:type :leaf, :by "root", :at 1521563965346, :text "let", :id "SkxHBKhRtz"}
+         "L" {
+          :type :expr, :by "root", :at 1521563821744, :id "SyLHY3RKz"
           :data {
-           "T" {:type :leaf, :by "root", :at 1521219847612, :text "{}", :id "Hyyft_FFM"}
+           "T" {
+            :type :expr, :by "root", :at 1521563821902, :id "rkWUhOnRKM"
+            :data {
+             "T" {:type :leaf, :by "root", :at 1521563823189, :text "user-id", :id "Hy82O3CKz"}
+             "j" {
+              :type :expr, :by "root", :at 1521563823541, :id "BJ_3u2AKG"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1521563828340, :text "get-in", :id "HkMvnO3RYz"}
+               "j" {:type :leaf, :by "root", :at 1521563834294, :text "db", :id "rJWT_3RYM"}
+               "r" {
+                :type :expr, :by "root", :at 1521563834883, :id "r17TO2RFz"
+                :data {
+                 "T" {:type :leaf, :by "root", :at 1521563836216, :text "[]", :id "SyGM6_30tM"}
+                 "j" {:type :leaf, :by "root", :at 1521563837643, :text ":sessions", :id "rym46dhCtf"}
+                 "r" {:type :leaf, :by "root", :at 1521563838500, :text "sid", :id "SyW8TdnAFz"}
+                 "v" {:type :leaf, :by "root", :at 1521563842537, :text ":user-id", :id "H1w6u3AtM"}
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+         "T" {
+          :type :expr, :by "root", :at 1521219839212, :id "SyvWK_Ytz"
+          :data {
+           "T" {:type :leaf, :by "root", :at 1521563970977, :text "assoc-in", :id "SyvWK_Ytzleaf"}
+           "j" {:type :leaf, :by "root", :at 1521219842844, :text "db", :id "rktZt_FYG"}
+           "r" {
+            :type :expr, :by "root", :at 1521563972539, :id "H1pSY2RKz"
+            :data {
+             "D" {:type :leaf, :by "root", :at 1521563973198, :text "[]", :id "rkxaHF2CtG"}
+             "L" {:type :leaf, :by "root", :at 1521563975281, :text ":users", :id "HyQTrF3AYz"}
+             "P" {:type :leaf, :by "root", :at 1521563976262, :text "user-id", :id "rybJIK3AFM"}
+             "T" {:type :leaf, :by "root", :at 1521219846405, :text ":done-tasks", :id "By6-YuYtM"}
+            }
+           }
+           "v" {
+            :type :expr, :by "root", :at 1521219847163, :id "r1xyGtuKFM"
+            :data {
+             "T" {:type :leaf, :by "root", :at 1521219847612, :text "{}", :id "Hyyft_FFM"}
+            }
+           }
           }
          }
         }
@@ -2975,48 +3066,83 @@
         }
        }
        "v" {
-        :type :expr, :by "root", :at 1520962421744, :id "r10djKBKM"
+        :type :expr, :by "root", :at 1521563820677, :id "ByBnu30Kf"
         :data {
-         "T" {:type :leaf, :by "root", :at 1520962425129, :text "assoc-in", :id "Byx6_strYG"}
-         "j" {:type :leaf, :by "root", :at 1520962425982, :text "db", :id "SJMWKitBKM"}
-         "r" {
-          :type :expr, :by "root", :at 1520962426391, :id "ByMzKjFStf"
+         "D" {:type :leaf, :by "root", :at 1521563821494, :text "let", :id "SyxSnOnAYf"}
+         "L" {
+          :type :expr, :by "root", :at 1521563821744, :id "S1eIhunAtM"
           :data {
-           "T" {:type :leaf, :by "root", :at 1520962426817, :text "[]", :id "Bk-MKotSFG"}
-           "j" {:type :leaf, :by "root", :at 1520962765286, :text ":working-tasks", :id "rkW7YiFrKM"}
-           "r" {:type :leaf, :by "root", :at 1520962429462, :text "op-id", :id "BJZ4YjKBYf"}
-          }
-         }
-         "v" {
-          :type :expr, :by "root", :at 1520962430284, :id "rkxLtiKBYG"
-          :data {
-           "T" {:type :leaf, :by "root", :at 1520962433347, :text "{}", :id "rkxLtiKBYGleaf"}
-           "j" {
-            :type :expr, :by "root", :at 1520962433677, :id "SJlcYsFHKM"
+           "T" {
+            :type :expr, :by "root", :at 1521563821902, :id "rkWUhOnRKM"
             :data {
-             "T" {:type :leaf, :by "root", :at 1520962434497, :text ":id", :id "r1cKitrYG"}
-             "j" {:type :leaf, :by "root", :at 1520962436918, :text "op-id", :id "rJoKjYStG"}
+             "T" {:type :leaf, :by "root", :at 1521563823189, :text "user-id", :id "Hy82O3CKz"}
+             "j" {
+              :type :expr, :by "root", :at 1521563823541, :id "BJ_3u2AKG"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1521563828340, :text "get-in", :id "HkMvnO3RYz"}
+               "j" {:type :leaf, :by "root", :at 1521563834294, :text "db", :id "rJWT_3RYM"}
+               "r" {
+                :type :expr, :by "root", :at 1521563834883, :id "r17TO2RFz"
+                :data {
+                 "T" {:type :leaf, :by "root", :at 1521563836216, :text "[]", :id "SyGM6_30tM"}
+                 "j" {:type :leaf, :by "root", :at 1521563837643, :text ":sessions", :id "rym46dhCtf"}
+                 "r" {:type :leaf, :by "root", :at 1521563838500, :text "sid", :id "SyW8TdnAFz"}
+                 "v" {:type :leaf, :by "root", :at 1521563842537, :text ":user-id", :id "H1w6u3AtM"}
+                }
+               }
+              }
+             }
             }
            }
+          }
+         }
+         "T" {
+          :type :expr, :by "root", :at 1520962421744, :id "r10djKBKM"
+          :data {
+           "T" {:type :leaf, :by "root", :at 1520962425129, :text "assoc-in", :id "Byx6_strYG"}
+           "j" {:type :leaf, :by "root", :at 1520962425982, :text "db", :id "SJMWKitBKM"}
            "r" {
-            :type :expr, :by "root", :at 1520962438366, :id "r1ZAKjYrYz"
+            :type :expr, :by "root", :at 1520962426391, :id "ByMzKjFStf"
             :data {
-             "T" {:type :leaf, :by "root", :at 1520962570013, :text ":text", :id "r1ZAKjYrYzleaf"}
-             "j" {:type :leaf, :by "root", :at 1520962571787, :text "op-data", :id "Hk7zMhtrFG"}
+             "T" {:type :leaf, :by "root", :at 1520962426817, :text "[]", :id "Bk-MKotSFG"}
+             "b" {:type :leaf, :by "root", :at 1521563849128, :text ":users", :id "HkT6unRYf"}
+             "f" {:type :leaf, :by "root", :at 1521563851279, :text "user-id", :id "SJM0u3RFf"}
+             "j" {:type :leaf, :by "root", :at 1520962765286, :text ":working-tasks", :id "rkW7YiFrKM"}
+             "r" {:type :leaf, :by "root", :at 1520962429462, :text "op-id", :id "BJZ4YjKBYf"}
             }
            }
            "v" {
-            :type :expr, :by "root", :at 1520962573443, :id "HkeHG2FHtG"
+            :type :expr, :by "root", :at 1520962430284, :id "rkxLtiKBYG"
             :data {
-             "T" {:type :leaf, :by "root", :at 1520962575236, :text ":mode", :id "HkeHG2FHtGleaf"}
-             "j" {:type :leaf, :by "root", :at 1520962583713, :text ":working", :id "S1uGhFHFG"}
-            }
-           }
-           "x" {
-            :type :expr, :by "root", :at 1521132390040, :id "BkgCw7Xdtf"
-            :data {
-             "T" {:type :leaf, :by "root", :at 1521132391552, :text ":time", :id "BkgCw7Xdtfleaf"}
-             "j" {:type :leaf, :by "root", :at 1521132393641, :text "op-time", :id "BylgOmQdYM"}
+             "T" {:type :leaf, :by "root", :at 1520962433347, :text "{}", :id "rkxLtiKBYGleaf"}
+             "j" {
+              :type :expr, :by "root", :at 1520962433677, :id "SJlcYsFHKM"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1520962434497, :text ":id", :id "r1cKitrYG"}
+               "j" {:type :leaf, :by "root", :at 1520962436918, :text "op-id", :id "rJoKjYStG"}
+              }
+             }
+             "r" {
+              :type :expr, :by "root", :at 1520962438366, :id "r1ZAKjYrYz"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1520962570013, :text ":text", :id "r1ZAKjYrYzleaf"}
+               "j" {:type :leaf, :by "root", :at 1520962571787, :text "op-data", :id "Hk7zMhtrFG"}
+              }
+             }
+             "v" {
+              :type :expr, :by "root", :at 1520962573443, :id "HkeHG2FHtG"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1520962575236, :text ":mode", :id "HkeHG2FHtGleaf"}
+               "j" {:type :leaf, :by "root", :at 1520962583713, :text ":working", :id "S1uGhFHFG"}
+              }
+             }
+             "x" {
+              :type :expr, :by "root", :at 1521132390040, :id "BkgCw7Xdtf"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1521132391552, :text ":time", :id "BkgCw7Xdtfleaf"}
+               "j" {:type :leaf, :by "root", :at 1521132393641, :text "op-time", :id "BylgOmQdYM"}
+              }
+             }
             }
            }
           }
@@ -3060,89 +3186,138 @@
              }
             }
            }
-          }
-         }
-         "T" {
-          :type :expr, :by "root", :at 1521044084828, :id "Bya_qp8Yf"
-          :data {
-           "T" {:type :leaf, :by "root", :at 1521044092538, :text "->", :id "Bya_qp8Yfleaf"}
-           "j" {:type :leaf, :by "root", :at 1521044094156, :text "db", :id "SkgHYcT8tz"}
-           "r" {
-            :type :expr, :by "root", :at 1521044094496, :id "By7UY5TIKM"
+           "j" {
+            :type :expr, :by "root", :at 1521563821902, :id "rkWUhOnRKM"
             :data {
-             "T" {:type :leaf, :by "root", :at 1521044102618, :text "assoc-in", :id "BJfLFqaUYM"}
+             "T" {:type :leaf, :by "root", :at 1521563823189, :text "user-id", :id "Hy82O3CKz"}
              "j" {
-              :type :expr, :by "root", :at 1521044103286, :id "ByG1c9TUtM"
+              :type :expr, :by "root", :at 1521563823541, :id "BJ_3u2AKG"
               :data {
-               "T" {:type :leaf, :by "root", :at 1521044103533, :text "[]", :id "HJby956LYG"}
-               "j" {
-                :type :expr, :by "root", :at 1521044103906, :id "rJWec56LKG"
+               "T" {:type :leaf, :by "root", :at 1521563828340, :text "get-in", :id "HkMvnO3RYz"}
+               "j" {:type :leaf, :by "root", :at 1521563834294, :text "db", :id "rJWT_3RYM"}
+               "r" {
+                :type :expr, :by "root", :at 1521563834883, :id "r17TO2RFz"
                 :data {
-                 "T" {:type :leaf, :by "root", :at 1521044110094, :text ":to", :id "SJelqqp8KM"}
-                 "j" {:type :leaf, :by "root", :at 1521044112713, :text "op-data", :id "SyDc96ItM"}
+                 "T" {:type :leaf, :by "root", :at 1521563836216, :text "[]", :id "SyGM6_30tM"}
+                 "j" {:type :leaf, :by "root", :at 1521563837643, :text ":sessions", :id "rym46dhCtf"}
+                 "r" {:type :leaf, :by "root", :at 1521563838500, :text "sid", :id "SyW8TdnAFz"}
+                 "v" {:type :leaf, :by "root", :at 1521563842537, :text ":user-id", :id "H1w6u3AtM"}
                 }
                }
-               "r" {:type :leaf, :by "root", :at 1521044155294, :text "task-id", :id "SyW7p968Kz"}
-              }
-             }
-             "r" {
-              :type :expr, :by "root", :at 1521132645592, :id "B1ADVmdKM"
-              :data {
-               "D" {:type :leaf, :by "root", :at 1521132648449, :text "assoc", :id "r1xAD47utz"}
-               "T" {
-                :type :expr, :by "root", :at 1521044136003, :id "Skle25TIKf"
-                :data {
-                 "T" {:type :leaf, :by "root", :at 1521044137971, :text "get-in", :id "Syxh5aUtG"}
-                 "j" {:type :leaf, :by "root", :at 1521044138720, :text "db", :id "BkfM3qpIYG"}
-                 "r" {
-                  :type :expr, :by "root", :at 1521044139840, :id "SJ-Nh56Ltz"
-                  :data {
-                   "T" {:type :leaf, :by "root", :at 1521044140913, :text "[]", :id "rylV29T8FM"}
-                   "j" {
-                    :type :expr, :by "root", :at 1521044141311, :id "HJzH2q6LKM"
-                    :data {
-                     "T" {:type :leaf, :by "root", :at 1521044141961, :text ":from", :id "rJbBh9pItG"}
-                     "j" {:type :leaf, :by "root", :at 1521044144037, :text "op-data", :id "SkmUh96ItM"}
-                    }
-                   }
-                   "r" {:type :leaf, :by "root", :at 1521044156697, :text "task-id", :id "r1-NacTLYf"}
-                  }
-                 }
-                }
-               }
-               "j" {:type :leaf, :by "root", :at 1521132650459, :text ":time", :id "BkeW_4XdYf"}
-               "r" {:type :leaf, :by "root", :at 1521132651462, :text "op-time", :id "HyXdNX_KG"}
               }
              }
             }
            }
-           "v" {
-            :type :expr, :by "root", :at 1521044158462, :id "H1G8aqpIYM"
+          }
+         }
+         "T" {
+          :type :expr, :by "root", :at 1521563884599, :id "BkreKhRKM"
+          :data {
+           "D" {:type :leaf, :by "root", :at 1521563888044, :text "update-in", :id "SyxBgKhCtz"}
+           "L" {:type :leaf, :by "root", :at 1521563888459, :text "db", :id "BJG_eYnAKM"}
+           "P" {
+            :type :expr, :by "root", :at 1521563889039, :id "SJetgK3RFf"
             :data {
-             "T" {:type :leaf, :by "root", :at 1521044160988, :text "update", :id "H1G8aqpIYMleaf"}
-             "j" {
-              :type :expr, :by "root", :at 1521044162330, :id "Byqa96Itz"
+             "T" {:type :leaf, :by "root", :at 1521563889260, :text "[]", :id "HJKgK3AFz"}
+             "j" {:type :leaf, :by "root", :at 1521563892031, :text ":users", :id "HJ5gK3CtM"}
+             "r" {:type :leaf, :by "root", :at 1521563907422, :text "user-id", :id "HJplF3CtM"}
+            }
+           }
+           "T" {
+            :type :expr, :by "root", :at 1521563908542, :id "HyT-t20Kf"
+            :data {
+             "D" {:type :leaf, :by "root", :at 1521563909650, :text "fn", :id "rylT-YnAKM"}
+             "L" {
+              :type :expr, :by "root", :at 1521563909896, :id "SyfRZY20Kf"
               :data {
-               "T" {:type :leaf, :by "root", :at 1521044164961, :text ":from", :id "SkQKT5TUFf"}
-               "j" {:type :leaf, :by "root", :at 1521044166458, :text "op-data", :id "HJXTa9pUtz"}
+               "T" {:type :leaf, :by "root", :at 1521563910311, :text "user", :id "H1bR-YhRtf"}
               }
              }
-             "r" {
-              :type :expr, :by "root", :at 1521044166958, :id "Hy-kR5aLFM"
+             "T" {
+              :type :expr, :by "root", :at 1521044084828, :id "Bya_qp8Yf"
               :data {
-               "T" {:type :leaf, :by "root", :at 1521044167283, :text "fn", :id "S1xyRc6LtM"}
-               "j" {
-                :type :expr, :by "root", :at 1521044167523, :id "rylR9pLtz"
+               "T" {:type :leaf, :by "root", :at 1521044092538, :text "->", :id "Bya_qp8Yfleaf"}
+               "j" {:type :leaf, :by "root", :at 1521563914048, :text "user", :id "SkgHYcT8tz"}
+               "r" {
+                :type :expr, :by "root", :at 1521044094496, :id "By7UY5TIKM"
                 :data {
-                 "T" {:type :leaf, :by "root", :at 1521044168314, :text "tasks", :id "BJ41Rqp8Kf"}
+                 "T" {:type :leaf, :by "root", :at 1521044102618, :text "assoc-in", :id "BJfLFqaUYM"}
+                 "j" {
+                  :type :expr, :by "root", :at 1521044103286, :id "ByG1c9TUtM"
+                  :data {
+                   "T" {:type :leaf, :by "root", :at 1521044103533, :text "[]", :id "HJby956LYG"}
+                   "j" {
+                    :type :expr, :by "root", :at 1521044103906, :id "rJWec56LKG"
+                    :data {
+                     "T" {:type :leaf, :by "root", :at 1521044110094, :text ":to", :id "SJelqqp8KM"}
+                     "j" {:type :leaf, :by "root", :at 1521044112713, :text "op-data", :id "SyDc96ItM"}
+                    }
+                   }
+                   "r" {:type :leaf, :by "root", :at 1521044155294, :text "task-id", :id "SyW7p968Kz"}
+                  }
+                 }
+                 "r" {
+                  :type :expr, :by "root", :at 1521132645592, :id "B1ADVmdKM"
+                  :data {
+                   "D" {:type :leaf, :by "root", :at 1521132648449, :text "assoc", :id "r1xAD47utz"}
+                   "T" {
+                    :type :expr, :by "root", :at 1521044136003, :id "Skle25TIKf"
+                    :data {
+                     "T" {:type :leaf, :by "root", :at 1521044137971, :text "get-in", :id "Syxh5aUtG"}
+                     "j" {:type :leaf, :by "root", :at 1521564393618, :text "user", :id "BkfM3qpIYG"}
+                     "r" {
+                      :type :expr, :by "root", :at 1521044139840, :id "SJ-Nh56Ltz"
+                      :data {
+                       "T" {:type :leaf, :by "root", :at 1521044140913, :text "[]", :id "rylV29T8FM"}
+                       "j" {
+                        :type :expr, :by "root", :at 1521044141311, :id "HJzH2q6LKM"
+                        :data {
+                         "T" {:type :leaf, :by "root", :at 1521044141961, :text ":from", :id "rJbBh9pItG"}
+                         "j" {:type :leaf, :by "root", :at 1521044144037, :text "op-data", :id "SkmUh96ItM"}
+                        }
+                       }
+                       "r" {:type :leaf, :by "root", :at 1521044156697, :text "task-id", :id "r1-NacTLYf"}
+                      }
+                     }
+                    }
+                   }
+                   "j" {:type :leaf, :by "root", :at 1521132650459, :text ":time", :id "BkeW_4XdYf"}
+                   "r" {:type :leaf, :by "root", :at 1521132651462, :text "op-time", :id "HyXdNX_KG"}
+                  }
+                 }
                 }
                }
-               "r" {
-                :type :expr, :by "root", :at 1521044168835, :id "SkxZCqa8tf"
+               "v" {
+                :type :expr, :by "root", :at 1521044158462, :id "H1G8aqpIYM"
                 :data {
-                 "T" {:type :leaf, :by "root", :at 1521044170241, :text "dissoc", :id "SkxZCqa8tfleaf"}
-                 "j" {:type :leaf, :by "root", :at 1521044174019, :text "tasks", :id "H1B096IKf"}
-                 "r" {:type :leaf, :by "root", :at 1521044174505, :text "task-id", :id "HJNIRc6Utf"}
+                 "T" {:type :leaf, :by "root", :at 1521044160988, :text "update", :id "H1G8aqpIYMleaf"}
+                 "j" {
+                  :type :expr, :by "root", :at 1521044162330, :id "Byqa96Itz"
+                  :data {
+                   "T" {:type :leaf, :by "root", :at 1521044164961, :text ":from", :id "SkQKT5TUFf"}
+                   "j" {:type :leaf, :by "root", :at 1521044166458, :text "op-data", :id "HJXTa9pUtz"}
+                  }
+                 }
+                 "r" {
+                  :type :expr, :by "root", :at 1521044166958, :id "Hy-kR5aLFM"
+                  :data {
+                   "T" {:type :leaf, :by "root", :at 1521044167283, :text "fn", :id "S1xyRc6LtM"}
+                   "j" {
+                    :type :expr, :by "root", :at 1521044167523, :id "rylR9pLtz"
+                    :data {
+                     "T" {:type :leaf, :by "root", :at 1521044168314, :text "tasks", :id "BJ41Rqp8Kf"}
+                    }
+                   }
+                   "r" {
+                    :type :expr, :by "root", :at 1521044168835, :id "SkxZCqa8tf"
+                    :data {
+                     "T" {:type :leaf, :by "root", :at 1521044170241, :text "dissoc", :id "SkxZCqa8tfleaf"}
+                     "j" {:type :leaf, :by "root", :at 1521044174019, :text "tasks", :id "H1B096IKf"}
+                     "r" {:type :leaf, :by "root", :at 1521044174505, :text "task-id", :id "HJNIRc6Utf"}
+                    }
+                   }
+                  }
+                 }
                 }
                }
               }
@@ -3170,36 +3345,69 @@
          "x" {:type :leaf, :by "root", :at 1521046172590, :text "op-time", :id "Skb7ozC8YG"}
         }
        }
-       "t" {
-        :type :expr, :by "root", :at 1521046208198, :id "BJlupzR8KM"
-        :data {
-         "T" {:type :leaf, :by "root", :at 1521046209116, :text "println", :id "BJlupzR8KMleaf"}
-         "j" {:type :leaf, :by "root", :at 1521046214508, :text "|remove one:", :id "HkBYazCLtM"}
-         "r" {:type :leaf, :by "root", :at 1521046215943, :text "op-data", :id "rJk0MC8Fz"}
-        }
-       }
        "v" {
-        :type :expr, :by "root", :at 1521046173248, :id "rJ-BozRUYz"
+        :type :expr, :by "root", :at 1521563956061, :id "HJ-2EFnRtz"
         :data {
-         "T" {:type :leaf, :by "root", :at 1521046174636, :text "update", :id "rJ-BozRUYzleaf"}
-         "j" {:type :leaf, :by "root", :at 1521046175806, :text "db", :id "r1bDsfCIKM"}
-         "r" {:type :leaf, :by "root", :at 1521046181110, :text ":done-tasks", :id "Bkx9ifAUKG"}
-         "v" {
-          :type :expr, :by "root", :at 1521046181608, :id "BkCsGRIYG"
+         "D" {:type :leaf, :by "root", :at 1521563956684, :text "let", :id "SkG3EYhAYz"}
+         "L" {
+          :type :expr, :by "root", :at 1521563821744, :id "rJgC4F3RKf"
           :data {
-           "T" {:type :leaf, :by "root", :at 1521046182219, :text "fn", :id "B14Tsz0UFG"}
-           "j" {
-            :type :expr, :by "root", :at 1521046182521, :id "HJJnMC8tM"
+           "T" {
+            :type :expr, :by "root", :at 1521563821902, :id "rkWUhOnRKM"
             :data {
-             "T" {:type :leaf, :by "root", :at 1521046183807, :text "tasks", :id "HJfRjz0IFf"}
+             "T" {:type :leaf, :by "root", :at 1521563823189, :text "user-id", :id "Hy82O3CKz"}
+             "j" {
+              :type :expr, :by "root", :at 1521563823541, :id "BJ_3u2AKG"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1521563828340, :text "get-in", :id "HkMvnO3RYz"}
+               "j" {:type :leaf, :by "root", :at 1521563834294, :text "db", :id "rJWT_3RYM"}
+               "r" {
+                :type :expr, :by "root", :at 1521563834883, :id "r17TO2RFz"
+                :data {
+                 "T" {:type :leaf, :by "root", :at 1521563836216, :text "[]", :id "SyGM6_30tM"}
+                 "j" {:type :leaf, :by "root", :at 1521563837643, :text ":sessions", :id "rym46dhCtf"}
+                 "r" {:type :leaf, :by "root", :at 1521563838500, :text "sid", :id "SyW8TdnAFz"}
+                 "v" {:type :leaf, :by "root", :at 1521563842537, :text ":user-id", :id "H1w6u3AtM"}
+                }
+               }
+              }
+             }
             }
            }
+          }
+         }
+         "T" {
+          :type :expr, :by "root", :at 1521046173248, :id "rJ-BozRUYz"
+          :data {
+           "T" {:type :leaf, :by "root", :at 1521563949488, :text "update-in", :id "rJ-BozRUYzleaf"}
+           "j" {:type :leaf, :by "root", :at 1521046175806, :text "db", :id "r1bDsfCIKM"}
            "r" {
-            :type :expr, :by "root", :at 1521046184512, :id "BJzx2z0IKz"
+            :type :expr, :by "root", :at 1521563950582, :id "HJvNF2RFf"
             :data {
-             "T" {:type :leaf, :by "root", :at 1521046185527, :text "dissoc", :id "BJzx2z0IKzleaf"}
-             "j" {:type :leaf, :by "root", :at 1521046188808, :text "tasks", :id "S1gGhGRUYf"}
-             "r" {:type :leaf, :by "root", :at 1521046191898, :text "op-data", :id "rJbShMAUFM"}
+             "D" {:type :leaf, :by "root", :at 1521563951265, :text "[]", :id "BkePEt2AFM"}
+             "L" {:type :leaf, :by "root", :at 1521563953967, :text ":users", :id "SkdEYh0Fz"}
+             "P" {:type :leaf, :by "root", :at 1521563954988, :text "user-id", :id "S1NqVthAYz"}
+             "T" {:type :leaf, :by "root", :at 1521046181110, :text ":done-tasks", :id "Bkx9ifAUKG"}
+            }
+           }
+           "v" {
+            :type :expr, :by "root", :at 1521046181608, :id "BkCsGRIYG"
+            :data {
+             "T" {:type :leaf, :by "root", :at 1521046182219, :text "fn", :id "B14Tsz0UFG"}
+             "j" {
+              :type :expr, :by "root", :at 1521046182521, :id "HJJnMC8tM"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1521046183807, :text "tasks", :id "HJfRjz0IFf"}
+              }
+             }
+             "r" {
+              :type :expr, :by "root", :at 1521046184512, :id "BJzx2z0IKz"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1521046185527, :text "dissoc", :id "BJzx2z0IKzleaf"}
+               "j" {:type :leaf, :by "root", :at 1521046188808, :text "tasks", :id "S1gGhGRUYf"}
+               "r" {:type :leaf, :by "root", :at 1521046191898, :text "op-data", :id "rJbShMAUFM"}
+              }
+             }
             }
            }
           }
@@ -3224,55 +3432,90 @@
         }
        }
        "v" {
-        :type :expr, :by "root", :at 1521133547526, :id "BkNxuXuFM"
+        :type :expr, :by "root", :at 1521563927831, :id "H1lxXF3Atz"
         :data {
-         "D" {:type :leaf, :by "root", :at 1521133550726, :text "update-in", :id "S1lNgdQuFf"}
-         "L" {:type :leaf, :by "root", :at 1521133551903, :text "db", :id "HJde_muFG"}
-         "P" {
-          :type :expr, :by "root", :at 1521133558931, :id "HylJbdQuFG"
+         "D" {:type :leaf, :by "root", :at 1521563928484, :text "let", :id "ryWx7Y3RKz"}
+         "L" {
+          :type :expr, :by "root", :at 1521563928723, :id "Byx-mt3AFf"
           :data {
-           "T" {:type :leaf, :by "root", :at 1521133559280, :text "[]", :id "ry1W_7uYz"}
-           "j" {
-            :type :expr, :by "root", :at 1521133559718, :id "Skeb_7uFf"
+           "T" {
+            :type :expr, :by "root", :at 1521563821902, :id "rkWUhOnRKM"
             :data {
-             "T" {:type :leaf, :by "root", :at 1521133560858, :text ":group", :id "BkQJb_mOFM"}
-             "j" {:type :leaf, :by "root", :at 1521133562974, :text "op-data", :id "Syz-dQuYz"}
-            }
-           }
-           "r" {
-            :type :expr, :by "root", :at 1521133564668, :id "HkHZOmOYM"
-            :data {
-             "T" {:type :leaf, :by "root", :at 1521133565817, :text ":id", :id "H1EbdQutf"}
-             "j" {:type :leaf, :by "root", :at 1521133566901, :text "op-data", :id "rkZUZuQ_FM"}
+             "T" {:type :leaf, :by "root", :at 1521563823189, :text "user-id", :id "Hy82O3CKz"}
+             "j" {
+              :type :expr, :by "root", :at 1521563823541, :id "BJ_3u2AKG"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1521563828340, :text "get-in", :id "HkMvnO3RYz"}
+               "j" {:type :leaf, :by "root", :at 1521563834294, :text "db", :id "rJWT_3RYM"}
+               "r" {
+                :type :expr, :by "root", :at 1521563834883, :id "r17TO2RFz"
+                :data {
+                 "T" {:type :leaf, :by "root", :at 1521563836216, :text "[]", :id "SyGM6_30tM"}
+                 "j" {:type :leaf, :by "root", :at 1521563837643, :text ":sessions", :id "rym46dhCtf"}
+                 "r" {:type :leaf, :by "root", :at 1521563838500, :text "sid", :id "SyW8TdnAFz"}
+                 "v" {:type :leaf, :by "root", :at 1521563842537, :text ":user-id", :id "H1w6u3AtM"}
+                }
+               }
+              }
+             }
             }
            }
           }
          }
          "T" {
-          :type :expr, :by "root", :at 1521133553753, :id "SylceOXdtG"
+          :type :expr, :by "root", :at 1521133547526, :id "BkNxuXuFM"
           :data {
-           "D" {:type :leaf, :by "root", :at 1521133554351, :text "fn", :id "rJWqgOX_KM"}
-           "L" {
-            :type :expr, :by "root", :at 1521133555298, :id "S1esedmdYf"
+           "D" {:type :leaf, :by "root", :at 1521133550726, :text "update-in", :id "S1lNgdQuFf"}
+           "L" {:type :leaf, :by "root", :at 1521133551903, :text "db", :id "HJde_muFG"}
+           "P" {
+            :type :expr, :by "root", :at 1521133558931, :id "HylJbdQuFG"
             :data {
-             "T" {:type :leaf, :by "root", :at 1521133555882, :text "task", :id "SyoeumdKf"}
-            }
-           }
-           "j" {
-            :type :expr, :by "root", :at 1521133571030, :id "ryjbu7Otf"
-            :data {
-             "T" {:type :leaf, :by "root", :at 1521133571945, :text "assoc", :id "ryjbu7Otfleaf"}
-             "j" {:type :leaf, :by "root", :at 1521133574406, :text "task", :id "BkMn-dXdtG"}
-             "r" {:type :leaf, :by "root", :at 1521133575495, :text ":text", :id "HykGd7dFf"}
-             "v" {
-              :type :expr, :by "root", :at 1521133576278, :id "SyelzO7dFf"
+             "T" {:type :leaf, :by "root", :at 1521133559280, :text "[]", :id "ry1W_7uYz"}
+             "b" {:type :leaf, :by "root", :at 1521563936877, :text ":users", :id "H1Bmt3RtM"}
+             "f" {:type :leaf, :by "root", :at 1521563938560, :text "user-id", :id "BkxFQY3CFz"}
+             "j" {
+              :type :expr, :by "root", :at 1521133559718, :id "Skeb_7uFf"
               :data {
-               "T" {:type :leaf, :by "root", :at 1521133577211, :text ":text", :id "HyxMdm_tM"}
-               "j" {:type :leaf, :by "root", :at 1521133578268, :text "op-data", :id "S17bfOXOKM"}
+               "T" {:type :leaf, :by "root", :at 1521133560858, :text ":group", :id "BkQJb_mOFM"}
+               "j" {:type :leaf, :by "root", :at 1521133562974, :text "op-data", :id "Syz-dQuYz"}
               }
              }
-             "x" {:type :leaf, :by "root", :at 1521133586820, :text ":time", :id "r1mGO7_YG"}
-             "y" {:type :leaf, :by "root", :at 1521133587959, :text "op-time", :id "SkQjMuX_FM"}
+             "r" {
+              :type :expr, :by "root", :at 1521133564668, :id "HkHZOmOYM"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1521133565817, :text ":id", :id "H1EbdQutf"}
+               "j" {:type :leaf, :by "root", :at 1521133566901, :text "op-data", :id "rkZUZuQ_FM"}
+              }
+             }
+            }
+           }
+           "T" {
+            :type :expr, :by "root", :at 1521133553753, :id "SylceOXdtG"
+            :data {
+             "D" {:type :leaf, :by "root", :at 1521133554351, :text "fn", :id "rJWqgOX_KM"}
+             "L" {
+              :type :expr, :by "root", :at 1521133555298, :id "S1esedmdYf"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1521133555882, :text "task", :id "SyoeumdKf"}
+              }
+             }
+             "j" {
+              :type :expr, :by "root", :at 1521133571030, :id "ryjbu7Otf"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1521133571945, :text "assoc", :id "ryjbu7Otfleaf"}
+               "j" {:type :leaf, :by "root", :at 1521133574406, :text "task", :id "BkMn-dXdtG"}
+               "r" {:type :leaf, :by "root", :at 1521133575495, :text ":text", :id "HykGd7dFf"}
+               "v" {
+                :type :expr, :by "root", :at 1521133576278, :id "SyelzO7dFf"
+                :data {
+                 "T" {:type :leaf, :by "root", :at 1521133577211, :text ":text", :id "HyxMdm_tM"}
+                 "j" {:type :leaf, :by "root", :at 1521133578268, :text "op-data", :id "S17bfOXOKM"}
+                }
+               }
+               "x" {:type :leaf, :by "root", :at 1521133586820, :text ":time", :id "r1mGO7_YG"}
+               "y" {:type :leaf, :by "root", :at 1521133587959, :text "op-time", :id "SkQjMuX_FM"}
+              }
+             }
             }
            }
           }
@@ -3319,6 +3562,15 @@
           "j" {:type :leaf, :text "|md5", :id "H1GPjPKpZf", :by "root", :at 1513097121683}
           "r" {:type :leaf, :text ":as", :id "r1-ciPFpWG", :by "root", :at 1513097122864}
           "v" {:type :leaf, :text "md5", :id "SkQojvtaWG", :by "root", :at 1513097123766}
+         }
+        }
+        "v" {
+         :type :expr, :by "root", :at 1521564176287, :id "rkg_f9nRYz"
+         :data {
+          "T" {:type :leaf, :by "root", :at 1521564176596, :text "[]", :id "rkg_f9nRYzleaf"}
+          "j" {:type :leaf, :by "root", :at 1521564179495, :text "server.schema", :id "HJWKz5hCtf"}
+          "r" {:type :leaf, :by "root", :at 1521564180578, :text ":as", :id "HyhMc2CKf"}
+          "v" {:type :leaf, :by "root", :at 1521564182529, :text "schema", :id "HkbpMcnAYf"}
          }
         }
        }
@@ -3865,48 +4117,55 @@
                 }
                }
                "r" {
-                :type :expr, :id "rkTExe8ZlCB-", :by nil, :at 1500541255553
+                :type :expr, :by "root", :at 1521564169262, :id "r1gZf9n0KM"
                 :data {
-                 "T" {:type :leaf, :id "S1RNlgIbxRS-", :text "{}", :by "root", :at 1500541255553}
-                 "j" {
-                  :type :expr, :id "SyyBxgUblRrb", :by nil, :at 1500541255553
+                 "D" {:type :leaf, :by "root", :at 1521564170191, :text "merge", :id "ByGG520tM"}
+                 "L" {:type :leaf, :by "root", :at 1521564173486, :text "schema/user", :id "BJBzMq30KM"}
+                 "T" {
+                  :type :expr, :id "rkTExe8ZlCB-", :by nil, :at 1500541255553
                   :data {
-                   "T" {:type :leaf, :id "r1gSgxUZxArb", :text ":id", :by "root", :at 1500541255553}
-                   "j" {:type :leaf, :id "B1bHllLZeASW", :text "op-id", :by "root", :at 1500541255553}
-                  }
-                 }
-                 "r" {
-                  :type :expr, :id "SkGrxgL-xRBb", :by nil, :at 1500541255553
-                  :data {
-                   "T" {:type :leaf, :id "SyQHle8-e0r-", :text ":name", :by "root", :at 1500541255553}
-                   "j" {:type :leaf, :id "HyNSle8ZeABb", :text "username", :by "root", :at 1500541255553}
-                  }
-                 }
-                 "v" {
-                  :type :expr, :id "BJSHlgLbl0HZ", :by nil, :at 1500541255553
-                  :data {
-                   "T" {:type :leaf, :id "B1IrlgUZe0HZ", :text ":nickname", :by "root", :at 1500541255553}
-                   "j" {:type :leaf, :id "SkDBxe8bxRSb", :text "username", :by "root", :at 1500541255553}
-                  }
-                 }
-                 "x" {
-                  :type :expr, :id "ryuSgxU-eCSb", :by nil, :at 1500541255553
-                  :data {
-                   "T" {:type :leaf, :id "r1YSgxLZg0S-", :text ":password", :by "root", :at 1500541255553}
+                   "T" {:type :leaf, :id "S1RNlgIbxRS-", :text "{}", :by "root", :at 1500541255553}
                    "j" {
-                    :type :expr, :id "S1lMhvKpZz", :by "root", :at 1513097129906
+                    :type :expr, :id "SyyBxgUblRrb", :by nil, :at 1500541255553
                     :data {
-                     "D" {:type :leaf, :text "md5", :id "SJZz2DK6WG", :by "root", :at 1513097131281}
-                     "T" {:type :leaf, :id "rycSxlL-e0r-", :text "password", :by "root", :at 1500541255553}
+                     "T" {:type :leaf, :id "r1gSgxUZxArb", :text ":id", :by "root", :at 1500541255553}
+                     "j" {:type :leaf, :id "B1bHllLZeASW", :text "op-id", :by "root", :at 1500541255553}
                     }
                    }
-                  }
-                 }
-                 "y" {
-                  :type :expr, :id "B1iBgxIWlASW", :by nil, :at 1500541255553
-                  :data {
-                   "T" {:type :leaf, :id "By2Sel8Zx0S-", :text ":avatar", :by "root", :at 1500541255553}
-                   "j" {:type :leaf, :id "rkTSexUZlRrZ", :text "nil", :by "root", :at 1500541255553}
+                   "r" {
+                    :type :expr, :id "SkGrxgL-xRBb", :by nil, :at 1500541255553
+                    :data {
+                     "T" {:type :leaf, :id "SyQHle8-e0r-", :text ":name", :by "root", :at 1500541255553}
+                     "j" {:type :leaf, :id "HyNSle8ZeABb", :text "username", :by "root", :at 1500541255553}
+                    }
+                   }
+                   "v" {
+                    :type :expr, :id "BJSHlgLbl0HZ", :by nil, :at 1500541255553
+                    :data {
+                     "T" {:type :leaf, :id "B1IrlgUZe0HZ", :text ":nickname", :by "root", :at 1500541255553}
+                     "j" {:type :leaf, :id "SkDBxe8bxRSb", :text "username", :by "root", :at 1500541255553}
+                    }
+                   }
+                   "x" {
+                    :type :expr, :id "ryuSgxU-eCSb", :by nil, :at 1500541255553
+                    :data {
+                     "T" {:type :leaf, :id "r1YSgxLZg0S-", :text ":password", :by "root", :at 1500541255553}
+                     "j" {
+                      :type :expr, :id "S1lMhvKpZz", :by "root", :at 1513097129906
+                      :data {
+                       "D" {:type :leaf, :text "md5", :id "SJZz2DK6WG", :by "root", :at 1513097131281}
+                       "T" {:type :leaf, :id "rycSxlL-e0r-", :text "password", :by "root", :at 1500541255553}
+                      }
+                     }
+                    }
+                   }
+                   "y" {
+                    :type :expr, :id "B1iBgxIWlASW", :by nil, :at 1500541255553
+                    :data {
+                     "T" {:type :leaf, :id "By2Sel8Zx0S-", :text ":avatar", :by "root", :at 1500541255553}
+                     "j" {:type :leaf, :id "rkTSexUZlRrZ", :text "nil", :by "root", :at 1500541255553}
+                    }
+                   }
                   }
                  }
                 }

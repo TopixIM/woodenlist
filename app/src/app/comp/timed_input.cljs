@@ -15,7 +15,7 @@
  (states text time class-name on-change!)
  (let [state (or (:data states) {:text "", :time 0})]
    (input
-    {:style (merge ui/input {:width 320}),
+    {:style (merge ui/input {:width 400}),
      :class-name class-name,
      :placeholder "task text...",
      :value (if (> (:time state) time) (:text state) text),
