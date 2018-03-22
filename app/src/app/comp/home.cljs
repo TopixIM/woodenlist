@@ -73,7 +73,7 @@
            (d! :task/create "")
            (js/setTimeout
             (fn [] (let [el (.querySelector js/document ".cursor-task")] (.focus el)))
-            300))})))
+            400))})))
     (list->
      {:style {:position :relative, :height (+ 8 (* 48 (count tasks)))}}
      (->> tasks

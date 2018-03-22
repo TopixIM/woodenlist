@@ -29,4 +29,4 @@
           (d! :task/create "")
           (js/setTimeout
            (fn [] (let [el (.querySelector js/document ".cursor-task")] (.focus el)))
-           300))))})))
+           400))))})))

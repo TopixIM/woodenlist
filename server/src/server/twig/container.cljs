@@ -21,5 +21,8 @@
                     :pending (:pending-tasks user)
                     :done (:done-tasks user)
                     {})),
-         :count (count (:sessions db))})
+         :numbers {:sessions (count (:sessions db)),
+                   :working (count (:working-tasks user)),
+                   :pending (count (:pending-tasks user)),
+                   :done (count (:done-tasks user))}})
       nil))))
