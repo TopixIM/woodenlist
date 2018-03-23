@@ -19,5 +19,6 @@
             :task/update-text task/update-text
             :task/remove-done task/remove-done
             :task/clear-done task/clear-done
+            :task/remove-working task/remove-working
             (do (println "Unknown op:" op) identity))]
     (f db op-data sid op-id op-time)))

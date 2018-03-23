@@ -28,6 +28,10 @@
   (let [user-id (get-in db [:sessions sid :user-id])]
     (update-in db [:users user-id :done-tasks] (fn [tasks] (dissoc tasks op-data)))))
 
+(defn remove-working [db op-data sid op-id op-time]
+  (let [user-id (get-in db [:sessions sid :user-id])]
+    (update-in db [:users user-id :working-tasks] (fn [tasks] (dissoc tasks op-data)))))
+
 (defn update-text [db op-data sid op-id op-time]
   (let [user-id (get-in db [:sessions sid :user-id])]
     (update-in

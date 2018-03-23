@@ -12,7 +12,7 @@
 
 (defcomp
  comp-timed-input
- (states text time class-name on-change!)
+ (states text time class-name on-change! on-keydown!)
  (let [state (or (:data states) {:text "", :time 0})]
    (input
     {:style (merge ui/input {:width 400}),
@@ -23,10 +23,4 @@
        (let [now (.now js/Date)]
          (m! (assoc state :text (:value e) :time now))
          (on-change! d! (:value e) now))),
-     :on-keydown (fn [e d! m!]
-       (if (= (:keycode e) keycode/return)
-         (do
-          (d! :task/create "")
-          (js/setTimeout
-           (fn [] (let [el (.querySelector js/document ".cursor-task")] (.focus el)))
-           400))))})))
+     :on-keydown on-keydown!})))

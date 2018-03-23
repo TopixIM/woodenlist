@@ -28,7 +28,8 @@
    (fn [d! new-text instant]
      (d!
       :task/update-text
-      {:id (:id task), :text new-text, :time instant, :group :pending-tasks})))
+      {:id (:id task), :text new-text, :time instant, :group :pending-tasks}))
+   (fn [e d! m!] (println "keydown")))
   (=< 16 nil)
   (div
    {:style {:cursor :pointer},

@@ -44,7 +44,19 @@
    (fn [d! new-text instant]
      (d!
       :task/update-text
-      {:id (:id task), :text new-text, :group :working-tasks, :time instant})))
+      {:id (:id task), :text new-text, :group :working-tasks, :time instant}))
+   (fn [e d! m!]
+     (cond
+       (= (:keycode e) keycode/return)
+         (do
+          (d! :task/create "")
+          (js/setTimeout
+           (fn [] (let [el (.querySelector js/document ".cursor-task")] (.focus el)))
+           400))
+       (and (= (:keycode e) keycode/backspace)
+            (or (.-metaKey (:event e)) (.-ctrlKey (:event e)))
+            (= "" (:text task)))
+         (d! :task/remove-working (:id task)))))
   (=< 16 nil)
   (div
    {:style (merge ui/center {:cursor :pointer}),
