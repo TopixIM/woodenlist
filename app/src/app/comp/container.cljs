@@ -24,7 +24,7 @@
     {:style {:cursor :pointer}, :on-click (fn [e d! m!] (d! :effect/connect nil))}
     (<> "No connection!" style-alert))))
 
-(def style-debugger {:bottom 0, :right 160, :max-width "100%"})
+(def style-debugger {:bottom 8, :right 8, :max-width "100%", :margin 0})
 
 (defcomp
  comp-container
@@ -46,6 +46,6 @@
         (comp-login states))
       (comp-inspect "Store" store style-debugger)
       (comp-msg-list (get-in store [:session :notifications]) :session/remove-notification)
-      (comp-reel (:reel-length store) {})))))
+      (if js/goog.DEBUG (comp-reel (:reel-length store) {:bottom 24}))))))
 
 (def style-body {:padding "8px 16px"})
