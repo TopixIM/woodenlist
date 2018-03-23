@@ -2106,6 +2106,26 @@
              }
             }
            }
+           "r" {
+            :type :expr, :by "root", :at 1521826880547, :id "SJtS32MqG"
+            :data {
+             "T" {:type :leaf, :by "root", :at 1521826886413, :text ":on-dblclick", :id "SJtS32MqGleaf"}
+             "j" {
+              :type :expr, :by "root", :at 1521826914278, :id "B1gcPn3zqM"
+              :data {
+               "T" {:type :leaf, :by "root", :at 1521826916658, :text "action->", :id "By5whhG9z"}
+               "j" {:type :leaf, :by "root", :at 1521826922035, :text ":task/touch-working", :id "Syl6v23f9f"}
+               "r" {
+                :type :expr, :by "root", :at 1521826925321, :id "rJGBun2f9G"
+                :data {
+                 "T" {:type :leaf, :by "root", :at 1521826926538, :text ":id", :id "Sy7d23f5G"}
+                 "j" {:type :leaf, :by "root", :at 1521826927068, :text "task", :id "HkxDd2hf5z"}
+                }
+               }
+              }
+             }
+            }
+           }
           }
          }
          "n" {

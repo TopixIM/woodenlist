@@ -26,7 +26,8 @@
             :position :absolute,
             :top (+ 8 (* idx 48)),
             :transition-duration "300ms",
-            :z-index (- 100 idx)})}
+            :z-index (- 100 idx)}),
+   :on-dblclick (action-> :task/touch-working (:id task))}
   (div
    {:style (merge ui/center {:cursor :pointer}),
     :on-click (action->

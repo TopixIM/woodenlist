@@ -32,6 +32,10 @@
   (let [user-id (get-in db [:sessions sid :user-id])]
     (update-in db [:users user-id :working-tasks] (fn [tasks] (dissoc tasks op-data)))))
 
+(defn touch-working [db op-data sid op-id op-time]
+  (let [user-id (get-in db [:sessions sid :user-id])]
+    (assoc-in db [:users user-id :working-tasks op-data :time] op-time)))
+
 (defn update-text [db op-data sid op-id op-time]
   (let [user-id (get-in db [:sessions sid :user-id])]
     (update-in
