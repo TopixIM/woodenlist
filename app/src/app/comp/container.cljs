@@ -15,14 +15,16 @@
             [app.comp.pending :refer [comp-pending]]
             [app.comp.done-tasks :refer [comp-done-tasks]]))
 
-(def style-alert {:font-family "Josefin Sans", :font-weight 100, :font-size 40})
-
-(def chunk-offline
-  (div
-   {:style (merge ui/global ui/fullscreen ui/center)}
-   (span
-    {:style {:cursor :pointer}, :on-click (fn [e d! m!] (d! :effect/connect nil))}
-    (<> "No connection!" style-alert))))
+(defcomp
+ comp-offline
+ ()
+ (div
+  {:style (merge ui/global ui/fullscreen ui/center)}
+  (span
+   {:style {:cursor :pointer}, :on-click (fn [e d! m!] (d! :effect/connect nil))}
+   (<>
+    "Socket broken! Click to retry!"
+    {:font-family ui/font-fancy, :font-weight 100, :font-size 32}))))
 
 (def style-debugger {:bottom 8, :right 8, :max-width "100%", :margin 0})
 
@@ -31,7 +33,7 @@
  (states store)
  (let [state (:data states), session (:session store)]
    (if (nil? store)
-     chunk-offline
+     (comp-offline)
      (div
       {:style (merge ui/global ui/fullscreen ui/row)}
       (comp-sidebar (:router store) (:logged-in? store) (:numbers store))
