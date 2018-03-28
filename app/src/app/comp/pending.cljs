@@ -17,7 +17,7 @@
  comp-task
  (states task)
  (div
-  {:style (merge ui/row-center {:margin "8px 0"})}
+  {:style (merge ui/row {:margin "8px 0"})}
   (cursor->
    (:id task)
    comp-timed-input
@@ -49,8 +49,10 @@
  comp-pending
  (states router-data)
  (div
-  {:style {:padding 16}}
+  {:style (merge ui/flex {:padding 16, :overflow :auto})}
   (div
    {:style {:font-family ui/font-fancy, :font-size 24, :font-weight 100}}
    (<> (str "Pending Tasks(" (count router-data) ")")))
-  (list-> {} (->> router-data (map-val (fn [task] (comp-task states task)))))))
+  (list->
+   {:style {:width "100%"}}
+   (->> router-data (map-val (fn [task] (comp-task states task)))))))

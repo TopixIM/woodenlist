@@ -16,7 +16,7 @@
  comp-done-tasks
  (states router-data)
  (div
-  {:style {:padding 16}}
+  {:style (merge ui/flex {:padding 16, :overflow :auto})}
   (div
    {:style {:font-size 24, :font-family ui/font-fancy, :font-weight 100}}
    (<> (str "Done Tasks(" (count router-data) ")")))
@@ -26,9 +26,13 @@
         (map-val
          (fn [task]
            (div
-            {:style (merge ui/row-center {:margin "8px 0"})}
+            {:style (merge ui/row {:margin "8px 0"})}
             (div
-             {:style (merge {:width 400, :background-color (hsl 0 0 94), :padding "0 8px"})}
+             {:style (merge
+                      {:width 400,
+                       :background-color (hsl 0 0 94),
+                       :padding "0 8px",
+                       :min-height 28})}
              (<> (:text task)))
             (=< 16 nil)
             (div

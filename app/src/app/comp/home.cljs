@@ -72,7 +72,7 @@
  (states tasks)
  (let [state (or (:data states) {:draft ""})]
    (div
-    {:style (merge ui/flex {:padding 16})}
+    {:style (merge ui/flex {:padding 16, :overflow :auto})}
     (div
      {:style {:font-size 24, :font-family ui/font-fancy, :font-weight 100}}
      (<> (str "Working(" (count tasks) ")")))
