@@ -55,7 +55,7 @@
            (fn [] (let [el (.querySelector js/document ".cursor-task")] (.focus el)))
            400))
        (and (= (:keycode e) keycode/backspace)
-            (or (.-metaKey (:event e)) (.-ctrlKey (:event e)))
+            (or (.-shiftKey (:event e)) (.-metaKey (:event e)) (.-ctrlKey (:event e)))
             (= "" (:text task)))
          (d! :task/remove-working (:id task)))))
   (=< 16 nil)
