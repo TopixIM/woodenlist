@@ -1,8 +1,10 @@
 
-Woodenlist: a realtime todolist(WIP)
+Woodenlist: a personal todolist
 ------
 
-Demo http://wood.topix-im/
+> It's hosted on server and syncs among clients in realtime.
+
+Site http://wood.topix.im/
 
 ### develop
 
