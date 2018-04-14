@@ -9,7 +9,7 @@
 
 (defn on-log-out [e dispatch!]
   (dispatch! :user/log-out nil)
-  (.removeItem js/localStorage (:storage-key schema/configs)))
+  (.removeItem js/localStorage (:local-storage-key schema/configs)))
 
 (def style-trigger
   {:font-size 14,

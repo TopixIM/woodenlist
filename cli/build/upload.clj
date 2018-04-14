@@ -17,8 +17,7 @@
       (:orgization configs) "/"
       (:name configs) "/"))
 
-
   (sh! "cp package.json dist/")
   (sh!
-    (str "rsync -avr --progress dist/{main.js,package.json} tiye.me:servers/" (:name configs)))
+    (str "rsync -avr --progress dist/{server.js,package.json} tiye.me:servers/" (:name configs)))
   (shutdown-agents))

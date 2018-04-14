@@ -13,7 +13,7 @@
  :builds {:client {:output-dir "target/"
                     :asset-path "./"
                     :target :browser
-                    :modules {:main {:entries [app.client]}}
+                    :modules {:client {:entries [app.client]}}
                     :devtools {:after-load app.client/reload!
                                :http-root "target"
                                :http-port 7000}
@@ -21,9 +21,9 @@
                               :module-hash-names 8
                               :build-options {:manifest-name "assets.edn"}}
           :page {:target :node-script
-                :output-to "target/page.js"
-                :main app.page/main!
-                :devtools {:after-load app.page/main!}}
+                 :output-to "target/page.js"
+                 :main app.page/main!
+                 :devtools {:after-load app.page/main!}}
           :server {:target :node-script
                    :output-to "target/server.js"
                    :main app.server/main!

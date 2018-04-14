@@ -1,7 +1,10 @@
 
 (ns app.schema )
 
-(def configs {:storage-key "woodenlist-storage", :port 11000})
+(def configs
+  {:storage-key "/data/topix/woodenlist.edn",
+   :local-storage-key "woodenlist-storage",
+   :port 11000})
 
 (def database {:sessions {}, :users {}})
 
