@@ -1,0 +1,1 @@
+{:sessions {}, :users {"BylEo2G13z" {:name "chen", :id "BylEo2G13z", :nickname "chen", :avatar nil, :password "d41d8cd98f00b204e9800998ecf8427e", :working-tasks {"H1Ijhf13f" {:id "H1Ijhf13f", :text "ok", :mode :working, :time 1523686560133}}, :pending-tasks {}, :done-tasks {}}}}

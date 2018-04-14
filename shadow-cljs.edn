@@ -23,4 +23,9 @@
           :page {:target :node-script
                 :output-to "target/page.js"
                 :main app.page/main!
-                :devtools {:after-load app.page/main!}}}}
+                :devtools {:after-load app.page/main!}}
+          :server {:target :node-script
+                   :output-to "target/server.js"
+                   :main app.server/main!
+                   :devtools {:after-load app.server/reload!}
+                   :release {:output-to "dist/server.js"}}}}
