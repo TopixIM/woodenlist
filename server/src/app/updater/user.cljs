@@ -1,6 +1,6 @@
 
-(ns server.updater.user
-  (:require [server.util :refer [find-first]] ["md5" :as md5] [server.schema :as schema]))
+(ns app.updater.user
+  (:require [app.util :refer [find-first]] ["md5" :as md5] [app.schema :as schema]))
 
 (defn log-in [db op-data session-id op-id op-time]
   (let [[username password] op-data

@@ -1,5 +1,5 @@
 
-(ns server.updater.task )
+(ns app.updater.task )
 
 (defn clear-done [db op-data sid op-id op-time]
   (let [user-id (get-in db [:sessions sid :user-id])]
