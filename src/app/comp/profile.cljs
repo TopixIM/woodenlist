@@ -4,12 +4,43 @@
             [app.schema :as schema]
             [respo-ui.core :as ui]
             [respo-ui.colors :as colors]
-            [respo.macros :refer [defcomp <> span div a]]
-            [respo.comp.space :refer [=<]]))
+            [respo.macros :refer [defcomp list-> <> span button div a]]
+            [respo.comp.space :refer [=<]]
+            [app.style :as style]))
 
 (defn on-log-out [e dispatch!]
   (dispatch! :user/log-out nil)
   (.removeItem js/localStorage (:local-storage-key schema/configs)))
+
+(defcomp
+ comp-profile
+ (user members)
+ (div
+  {:style (merge ui/flex {:padding 16})}
+  (div
+   {:style {:font-size 40, :font-weight 100, :font-family ui/font-fancy}}
+   (<> (str "Hello! " (:name user))))
+  (=< nil 15)
+  (div
+   {:style ui/row}
+   (<> "Members:")
+   (=< 8 nil)
+   (list->
+    {:style ui/row}
+    (->> members
+         (map (fn [[k username]] [k (div {:style {:margin-right 8}} (<> username))])))))
+  (=< nil 32)
+  (div
+   {}
+   (div
+    {:style (merge
+             ui/button
+             {:color :red,
+              :border-radius "16px",
+              :background-color :white,
+              :border (str "1px solid " (hsl 0 80 70))}),
+     :on-click on-log-out}
+    (<> "Log out")))))
 
 (def style-trigger
   {:font-size 14,
@@ -17,12 +48,3 @@
    :background-color colors/motif-light,
    :color :white,
    :padding "0 8px"})
-
-(defcomp
- comp-profile
- (user)
- (div
-  {:style (merge ui/flex {:padding 16})}
-  (<> span (str "Hello! " (:name user)) nil)
-  (=< 8 nil)
-  (a {:style style-trigger, :on-click on-log-out} (<> span "Log out" nil))))

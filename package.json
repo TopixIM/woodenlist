@@ -6,6 +6,9 @@
   "scripts": {
     "watch": "shadow-cljs watch client server",
     "build": "shadow-cljs clj-run build.main/build",
+    "build-local": "shadow-cljs clj-run build.main/build-local",
+    "page": "shadow-cljs clj-run build.main/page",
+    "upload": "lumo -c cli -m build.upload",
     "serve": "http-server dist -s",
     "repl": "rlwrap shadow-cljs clj-repl"
   },
@@ -21,7 +24,7 @@
   },
   "devDependencies": {
     "http-server": "^0.11.1",
-    "shadow-cljs": "^2.2.29",
+    "shadow-cljs": "^2.3.0",
     "source-map-support": "^0.5.3",
     "ws": "^5.0.0"
   }

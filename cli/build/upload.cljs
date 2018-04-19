@@ -1,6 +1,6 @@
 
 (ns build.upload
-  (:require [clojure.java.shell :refer [sh]]))
+  (:require ["child_process" :as child-process]))
 
 (def configs {:orgization "TopixIM"
               :name "woodenlist"
@@ -8,7 +8,7 @@
 
 (defn sh! [command]
   (println command)
-  (println (sh "bash" "-c" command)))
+  (println (.toString (child-process/execSync command))))
 
 (defn -main []
   (sh! (str "rsync -avr --progress dist/* tiye.me:cdn/" (:cdn configs)))
@@ -19,5 +19,4 @@
 
   (sh! "cp package.json dist/")
   (sh!
-    (str "rsync -avr --progress dist/{server.js,package.json} tiye.me:servers/" (:name configs)))
-  (shutdown-agents))
+    (str "rsync -avr --progress dist/{server.js,package.json} tiye.me:servers/" (:name configs))))
