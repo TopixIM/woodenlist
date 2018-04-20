@@ -50,6 +50,7 @@
   (connect!)
   (add-watch *store :changes #(render-app! render!))
   (add-watch *states :changes #(render-app! render!))
+  (.addEventListener js/window "focus" #(if (nil? @*store) (dispatch! :effect/connect nil)))
   (println "App started!"))
 
 (defn reload! [] (clear-cache!) (render-app! render!) (println "Code updated."))
