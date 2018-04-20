@@ -27,6 +27,19 @@
     "Socket broken! Click to retry!"
     {:font-family ui/font-fancy, :font-weight 100, :font-size 32}))))
 
+(defcomp
+ comp-status-color
+ (color)
+ (div
+  {:style {:background-color color,
+           :height 16,
+           :width 16,
+           :position :absolute,
+           :border-radius "8px",
+           :top 8,
+           :right 8,
+           :transition-duration "300ms"}}))
+
 (def style-debugger {:bottom 8, :right 8, :max-width "100%", :margin 0})
 
 (defcomp
@@ -41,13 +54,14 @@
       (if (:logged-in? store)
         (let [router (:router store)]
           (case (:name router)
-            :profile (comp-profile (:user store) (:data router))
+            :profile (comp-profile (:user store))
             :home (cursor-> :home comp-home states (:data router))
             :pending (cursor-> :pending comp-pending states (:data router))
             :done (cursor-> :done comp-done-tasks states (:data router))
             (<> router nil)))
         (comp-login states))
       (comp-msg-list (get-in store [:session :notifications]) :session/remove-notification)
+      (comp-status-color (:color store))
       (if dev? (comp-inspect "Store" store style-debugger))
       (if dev? (comp-reel (:reel-length store) {:bottom 24}))))))
 

@@ -14,21 +14,13 @@
 
 (defcomp
  comp-profile
- (user members)
+ (user)
  (div
   {:style (merge ui/flex {:padding 16})}
   (div
    {:style {:font-size 40, :font-weight 100, :font-family ui/font-fancy}}
    (<> (str "Hello! " (:name user))))
   (=< nil 15)
-  (div
-   {:style ui/row}
-   (<> "Members:")
-   (=< 8 nil)
-   (list->
-    {:style ui/row}
-    (->> members
-         (map (fn [[k username]] [k (div {:style {:margin-right 8}} (<> username))])))))
   (=< nil 32)
   (div
    {}

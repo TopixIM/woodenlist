@@ -1,14 +1,8 @@
 
 (ns app.twig.container
-  (:require [recollect.macros :refer [deftwig]] [app.twig.user :refer [twig-user]]))
-
-(deftwig
- twig-members
- (sessions users)
- (->> sessions
-      (filter (fn [[k session]] (some? (:user-id session))))
-      (map (fn [[k session]] [k (get-in users [(:user-id session) :name])]))
-      (into {})))
+  (:require [recollect.macros :refer [deftwig]]
+            [app.twig.user :refer [twig-user]]
+            ["randomcolor" :as color]))
 
 (deftwig
  twig-container
@@ -28,10 +22,10 @@
                     :home (:working-tasks user)
                     :pending (:pending-tasks user)
                     :done (:done-tasks user)
-                    :profile (twig-members (:sessions db) (:users db))
                     {})),
          :numbers {:sessions (count (:sessions db)),
                    :working (count (:working-tasks user)),
                    :pending (count (:pending-tasks user)),
-                   :done (count (:done-tasks user))}})
+                   :done (count (:done-tasks user))},
+         :color (color/randomColor)})
       nil))))
