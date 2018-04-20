@@ -13,7 +13,8 @@
             [app.comp.reel :refer [comp-reel]]
             [app.comp.home :refer [comp-home]]
             [app.comp.pending :refer [comp-pending]]
-            [app.comp.done-tasks :refer [comp-done-tasks]]))
+            [app.comp.done-tasks :refer [comp-done-tasks]]
+            [app.schema :refer [dev?]]))
 
 (defcomp
  comp-offline
@@ -46,8 +47,8 @@
             :done (cursor-> :done comp-done-tasks states (:data router))
             (<> router nil)))
         (comp-login states))
-      (comp-inspect "Store" store style-debugger)
       (comp-msg-list (get-in store [:session :notifications]) :session/remove-notification)
-      (if js/goog.DEBUG (comp-reel (:reel-length store) {:bottom 24}))))))
+      (if dev? (comp-inspect "Store" store style-debugger))
+      (if dev? (comp-reel (:reel-length store) {:bottom 24}))))))
 
 (def style-body {:padding "8px 16px"})

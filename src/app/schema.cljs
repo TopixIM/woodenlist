@@ -8,6 +8,8 @@
 
 (def database {:sessions {}, :users {}})
 
+(def dev? js/goog.DEBUG)
+
 (def notification {:id nil, :kind nil, :text nil})
 
 (def router {:name nil, :title nil, :data {}, :router nil})
