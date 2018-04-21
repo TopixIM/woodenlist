@@ -7,12 +7,15 @@
             [app.util :refer [try-verbosely!]]
             [app.reel :refer [reel-updater refresh-reel reel-schema]]
             ["fs" :as fs]
-            ["shortid" :as shortid]))
+            ["shortid" :as shortid]
+            [app.node-env :as node-env]))
 
 (def initial-db
-  (let [filepath (:storage-key schema/configs)]
+  (let [filepath (:storage-path node-env/configs)]
     (if (fs/existsSync filepath)
-      (do (println "Found storage.") (read-string (fs/readFileSync filepath "utf8")))
+      (do
+       (println "Found storage at:" filepath)
+       (read-string (fs/readFileSync filepath "utf8")))
       schema/database)))
 
 (defonce *reel (atom (merge reel-schema {:base initial-db, :db initial-db})))
@@ -27,8 +30,9 @@
        (reset! *reel new-reel)))))
 
 (defn on-exit! [code]
-  (fs/writeFileSync (:storage-key schema/configs) (pr-str (assoc (:db @*reel) :sessions {})))
-  (println "Saving file on exit" code)
+  (let [storage-path (:storage-path node-env/configs)]
+    (fs/writeFileSync storage-path (pr-str (assoc (:db @*reel) :sessions {})))
+    (println "Saving file to:" storage-path ". Exited with code:" code))
   (.exit js/process))
 
 (defn proxy-dispatch! [& args] "Make dispatch hot relodable." (apply dispatch! args))
