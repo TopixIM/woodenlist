@@ -17,7 +17,7 @@
  comp-done-task
  (task)
  (div
-  {:style (merge ui/row {:margin "8px 0"})}
+  {:style (merge ui/row {:margin "8px 0", :align-items :center})}
   (div
    {:style (merge
             {:width 400, :background-color (hsl 0 0 94), :padding "0 8px", :min-height 28})}
