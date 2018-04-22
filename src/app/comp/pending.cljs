@@ -17,7 +17,7 @@
  comp-task
  (states task)
  (div
-  {:style (merge ui/row {:margin "8px 0"})}
+  {:style (merge ui/row {:margin "8px 0", :align-items :center})}
   (cursor->
    (:id task)
    comp-timed-input

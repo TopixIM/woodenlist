@@ -19,6 +19,7 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "dependencies": {
+    "luxon": "^1.1.0",
     "md5": "^2.2.1",
     "randomcolor": "^0.5.3",
     "shortid": "^2.2.6"
