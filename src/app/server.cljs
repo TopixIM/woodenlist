@@ -29,11 +29,12 @@
      (let [new-reel (reel-updater @*reel updater op op-data sid op-id op-time)]
        (reset! *reel new-reel)))))
 
-(defn on-exit! [code]
+(defn persist-edn! []
   (let [storage-path (:storage-path node-env/configs)]
     (fs/writeFileSync storage-path (pr-str (assoc (:db @*reel) :sessions {})))
-    (println "Saving file to:" storage-path ". Exited with code:" code))
-  (.exit js/process))
+    (println "Saving file to:" storage-path)))
+
+(defn on-exit! [code] (persist-edn!) (.exit js/process))
 
 (defn proxy-dispatch! [& args] "Make dispatch hot relodable." (apply dispatch! args))
 
@@ -46,6 +47,7 @@
   (run-server! proxy-dispatch! (:port schema/configs))
   (render-loop!)
   (.on js/process "SIGINT" on-exit!)
+  (js/setInterval persist-edn! (* 1000 60 10))
   (println "Server started."))
 
 (defn reload! []
