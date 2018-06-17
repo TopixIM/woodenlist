@@ -4,7 +4,6 @@
             [app.service :refer [run-server! sync-clients!]]
             [app.updater :refer [updater]]
             [cljs.reader :refer [read-string]]
-            [app.util :refer [try-verbosely!]]
             [app.reel :refer [reel-updater refresh-reel reel-schema]]
             ["fs" :as fs]
             ["shortid" :as shortid]
@@ -25,15 +24,17 @@
 (defn dispatch! [op op-data sid]
   (let [op-id (.generate shortid), op-time (.valueOf (js/Date.))]
     (println "Dispatch!" (str op) op-data sid)
-    (try-verbosely!
+    (try
      (let [new-reel (reel-updater @*reel updater op op-data sid op-id op-time)]
-       (reset! *reel new-reel)))))
+       (reset! *reel new-reel))
+     (catch js/Error e (.error js/console e)))))
 
-(defn on-exit! [code]
+(defn persist-edn! []
   (let [storage-path (:storage-path node-env/configs)]
     (fs/writeFileSync storage-path (pr-str (assoc (:db @*reel) :sessions {})))
-    (println "Saving file to:" storage-path ". Exited with code:" code))
-  (.exit js/process))
+    (println "Saving file to:" storage-path)))
+
+(defn on-exit! [code] (persist-edn!) (.exit js/process))
 
 (defn proxy-dispatch! [& args] "Make dispatch hot relodable." (apply dispatch! args))
 
@@ -46,6 +47,7 @@
   (run-server! proxy-dispatch! (:port schema/configs))
   (render-loop!)
   (.on js/process "SIGINT" on-exit!)
+  (js/setInterval persist-edn! (* 1000 60 10))
   (println "Server started."))
 
 (defn reload! []

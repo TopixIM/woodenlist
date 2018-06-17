@@ -19,15 +19,15 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "dependencies": {
-    "luxon": "^1.1.0",
+    "dayjs": "^1.6.9",
     "md5": "^2.2.1",
     "randomcolor": "^0.5.3",
     "shortid": "^2.2.6"
   },
   "devDependencies": {
     "http-server": "^0.11.1",
-    "shadow-cljs": "^2.3.0",
-    "source-map-support": "^0.5.3",
-    "ws": "^5.0.0"
+    "shadow-cljs": "^2.4.5",
+    "source-map-support": "^0.5.6",
+    "ws": "^5.2.0"
   }
 }
