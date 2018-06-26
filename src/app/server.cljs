@@ -7,6 +7,8 @@
             [app.reel :refer [reel-updater refresh-reel reel-schema]]
             ["fs" :as fs]
             ["shortid" :as shortid]
+            ["path" :as path]
+            ["child_process" :as cp]
             [app.node-env :as node-env]))
 
 (def initial-db
@@ -30,9 +32,18 @@
      (catch js/Error e (.error js/console e)))))
 
 (defn persist-edn! []
-  (let [storage-path (:storage-path node-env/configs)]
-    (fs/writeFileSync storage-path (pr-str (assoc (:db @*reel) :sessions {})))
-    (println "Saving file to:" storage-path)))
+  (let [file-content (pr-str (assoc (:db @*reel) :sessions {}))
+        now (js/Date.)
+        storage-path (:storage-path node-env/configs)
+        backup-path (path/join
+                     js/__dirname
+                     "backups"
+                     (str (inc (.getMonth now)))
+                     (str (.getDate now) "-storage.edn"))]
+    (fs/writeFileSync storage-path file-content)
+    (cp/execSync (str "mkdir -p " (path/dirname backup-path)))
+    (fs/writeFileSync backup-path file-content)
+    (println "Saved file in" storage-path "and saved backup in" backup-path)))
 
 (defn on-exit! [code] (persist-edn!) (.exit js/process))
 
