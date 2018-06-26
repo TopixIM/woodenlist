@@ -38,7 +38,8 @@
                {:id (:id task), :from :pending-tasks, :to :working-tasks})}
    (comp-icon :navigate))
   (=< 16 nil)
-  (div
+  (comment
+   div
    {:style {:cursor :pointer},
     :on-click (action->
                :task/move-task
