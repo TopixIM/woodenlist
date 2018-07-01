@@ -11,25 +11,26 @@
             [app.comp.reel :refer [comp-reel]]
             [respo.util.list :refer [map-val]]
             [respo-ui.comp.icon :refer [comp-icon]]
-            [app.comp.timed-input :refer [comp-timed-input]]))
+            [respo-alerts.comp.alerts :refer [comp-prompt]]))
 
 (defcomp
  comp-task
  (states task)
  (div
-  {:style (merge ui/row {:margin "8px 0", :align-items :center})}
-  (cursor->
-   (:id task)
-   comp-timed-input
-   states
-   (:text task)
-   (:time task)
-   ""
-   (fn [d! new-text instant]
-     (d!
-      :task/update-text
-      {:id (:id task), :text new-text, :time instant, :group :pending-tasks}))
-   (fn [e d! m!] (println "keydown")))
+  {:style (merge ui/row {:margin "8px 0", :align-items :center, :width 400})}
+  (div
+   {:style (merge ui/flex {:padding "0 8px", :background-color (hsl 0 0 96), :height 28})}
+   (cursor->
+    :prompt
+    comp-prompt
+    states
+    (<> (:text task) {:display :inline-block, :min-width 100, :height 28})
+    "Update task:"
+    (or (:text task) "")
+    (fn [result d! m!]
+      (d!
+       :task/update-text
+       {:id (:id task), :text result, :group :pending-tasks, :time (.now js/Date)}))))
   (=< 16 nil)
   (div
    {:style {:cursor :pointer},
@@ -56,4 +57,4 @@
    (<> (str "Pending Tasks(" (count router-data) ")")))
   (list->
    {:style {:width "100%"}}
-   (->> router-data (map-val (fn [task] (comp-task states task)))))))
+   (->> router-data (map-val (fn [task] (cursor-> (:id task) comp-task states task)))))))

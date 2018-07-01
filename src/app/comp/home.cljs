@@ -12,7 +12,7 @@
             [clojure.string :as string]
             [respo-ui.comp.icon :refer [comp-icon]]
             [keycode.core :as keycode]
-            [app.comp.timed-input :refer [comp-timed-input]]))
+            [respo-alerts.comp.alerts :refer [comp-prompt]]))
 
 (defcomp
  comp-task
@@ -22,12 +22,24 @@
            ui/row
            {:line-height "32px",
             :margin "8px 0px",
-            :width 400,
             :position :absolute,
             :top (+ 8 (* idx 48)),
-            :transition-duration "300ms",
-            :z-index (- 100 idx)}),
+            :transition-duration "300ms"}),
    :on-dblclick (action-> :task/touch-working (:id task))}
+  (div
+   {:style (merge ui/flex {:padding "0 8px", :background-color (hsl 0 0 96)})}
+   (cursor->
+    :prompt
+    comp-prompt
+    states
+    (<> (:text task) {:min-width 400, :height 28, :display :inline-block})
+    "Some text:"
+    (:text task)
+    (fn [result d! m!]
+      (d!
+       :task/update-text
+       {:id (:id task), :text result, :group :working-tasks, :time (.now js/Date)}))))
+  (=< 16 nil)
   (div
    {:style (merge ui/center {:cursor :pointer}),
     :on-click (action->
@@ -35,37 +47,25 @@
                {:id (:id task), :from :working-tasks, :to :done-tasks})}
    (comp-icon :android-done))
   (=< 16 nil)
-  (cursor->
-   (:id task)
-   comp-timed-input
-   states
-   (:text task)
-   (:time task)
-   (if (zero? idx) "cursor-task")
-   (fn [d! new-text instant]
-     (d!
-      :task/update-text
-      {:id (:id task), :text new-text, :group :working-tasks, :time instant}))
-   (fn [e d! m!]
-     (cond
-       (= (:keycode e) keycode/return)
-         (do
-          (d! :task/create "")
-          (js/setTimeout
-           (fn [] (let [el (.querySelector js/document ".cursor-task")] (.focus el)))
-           400))
-       (and (= (:keycode e) keycode/backspace)
-            (or (.-shiftKey (:event e)) (.-metaKey (:event e)) (.-ctrlKey (:event e)))
-            (= "" (:text task)))
-         (d! :task/remove-working (:id task)))))
-  (=< 16 nil)
   (div
    {:style (merge ui/center {:cursor :pointer}),
     :on-click (action->
                :task/move-task
                {:id (:id task), :from :working-tasks, :to :pending-tasks}),
     :title (pr-str task)}
-   (comp-icon :ios-time-outline))))
+   (comp-icon :ios-time-outline))
+  (=< 16 nil)
+  (div
+   {:style (merge ui/center {:cursor :pointer}),
+    :on-click (action-> :task/touch-working (:id task)),
+    :title (pr-str task)}
+   (comp-icon :android-arrow-up))
+  (=< 32 nil)
+  (div
+   {:style (merge ui/center {:cursor :pointer, :color :red}),
+    :on-click (action-> :task/remove-working (:id task)),
+    :title (pr-str task)}
+   (comp-icon :android-close))))
 
 (defcomp
  comp-home
@@ -74,8 +74,19 @@
    (div
     {:style (merge ui/flex {:padding 16, :overflow :auto})}
     (div
-     {:style {:font-size 24, :font-family ui/font-fancy, :font-weight 100}}
-     (<> (str "Working(" (count tasks) ")")))
+     {}
+     (<>
+      (str "Working(" (count tasks) ")")
+      {:font-size 24, :font-family ui/font-fancy, :font-weight 100})
+     (=< 16 nil)
+     (cursor->
+      :create
+      comp-prompt
+      states
+      (comp-icon :android-add)
+      "New task:"
+      ""
+      (fn [result d! m!] (d! :task/create result))))
     (if (empty? tasks)
       (div
        {:style ui/row-parted}
@@ -91,5 +102,6 @@
      {:style {:position :relative, :height (+ 8 (* 48 (count tasks)))}}
      (->> tasks
           (sort-by (fn [[k task]] (unchecked-negate (:time task))))
-          (map-indexed (fn [idx [k task]] [(:id task) (comp-task states task idx)]))
+          (map-indexed
+           (fn [idx [k task]] [(:id task) (cursor-> (:id task) comp-task states task idx)]))
           (sort-by first))))))
