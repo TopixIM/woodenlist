@@ -12,7 +12,7 @@
             [clojure.string :as string]
             [respo-ui.comp.icon :refer [comp-icon]]
             [keycode.core :as keycode]
-            [respo-alerts.comp.alerts :refer [comp-prompt]]))
+            [respo-alerts.comp.alerts :refer [comp-prompt comp-alert comp-confirm]]))
 
 (defcomp
  comp-task
@@ -61,11 +61,15 @@
     :title (pr-str task)}
    (comp-icon :android-arrow-up))
   (=< 32 nil)
-  (div
-   {:style (merge ui/center {:cursor :pointer, :color :red}),
-    :on-click (action-> :task/remove-working (:id task)),
-    :title (pr-str task)}
-   (comp-icon :android-close))))
+  (cursor->
+   :confirm
+   comp-confirm
+   states
+   (div
+    {:style (merge ui/center {:cursor :pointer, :color :red}), :title (pr-str task)}
+    (comp-icon :android-close))
+   "Sure to delete Task?"
+   (fn [result d! m!] (when result (d! :task/remove-working (:id task)))))))
 
 (defcomp
  comp-home
