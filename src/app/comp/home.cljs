@@ -32,9 +32,9 @@
     :prompt
     comp-prompt
     states
-    (<> (:text task) {:min-width 400, :height 28, :display :inline-block})
-    "Some text:"
-    (:text task)
+    {:trigger (<> (:text task) {:min-width 400, :height 28, :display :inline-block}),
+     :text "Some text:",
+     :initial (:text task)}
     (fn [result d! m!]
       (d!
        :task/update-text
@@ -65,11 +65,13 @@
    :confirm
    comp-confirm
    states
-   (div
-    {:style (merge ui/center {:cursor :pointer, :color :red}), :title (pr-str task)}
-    (comp-icon :android-close))
-   "Sure to delete Task?"
-   (fn [result d! m!] (when result (d! :task/remove-working (:id task)))))))
+   {:trigger (div
+              {:style (merge ui/center {:cursor :pointer, :color (hsl 0 70 80)}),
+               :title (pr-str task)}
+              (comp-icon :android-close)),
+    :style ui/center,
+    :text "Sure to delete Task?"}
+   (fn [e d! m!] (d! :task/remove-working (:id task))))))
 
 (defcomp
  comp-home
@@ -87,10 +89,8 @@
       :create
       comp-prompt
       states
-      (comp-icon :android-add)
-      "New task:"
-      ""
-      (fn [result d! m!] (d! :task/create result))))
+      {:trigger (comp-icon :android-add), :text "New task:", :initial ""}
+      (fn [result d! m!] (when (not (string/blank? result)) (d! :task/create result)))))
     (if (empty? tasks)
       (div
        {:style ui/row-parted}
