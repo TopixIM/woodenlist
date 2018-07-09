@@ -24,9 +24,9 @@
     :prompt
     comp-prompt
     states
-    (<> (:text task) {:display :inline-block, :min-width 100, :height 28})
-    "Update task:"
-    (or (:text task) "")
+    {:trigger (<> (:text task) {:display :inline-block, :min-width 100, :height 28}),
+     :text "Update task:",
+     :initial (or (:text task) "")}
     (fn [result d! m!]
       (d!
        :task/update-text
