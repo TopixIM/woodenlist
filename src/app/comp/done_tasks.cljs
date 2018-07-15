@@ -48,38 +48,37 @@
        months (:months router-data)
        tasks (:tasks router-data)]
    (div
-    {:style (merge ui/flex {:padding 16, :overflow :auto})}
+    {:style (merge ui/flex ui/row {:padding 16})}
+    (list->
+     {:style {:overflow :auto, :font-family ui/font-fancy, :max-height 320}}
+     (->> months
+          (map
+           (fn [year-month]
+             [year-month
+              (div
+               {:style (merge
+                        {:cursor :pointer, :padding "0 18px"}
+                        (when (= cursor year-month) {:background-color (hsl 0 0 90)})),
+                :on-click (fn [e d! m!] (d! :router/change {:name :done, :data year-month}))}
+               (<> year-month))]))))
+    (=< 16 nil)
     (div
-     {}
-     (<>
-      (str "Done Tasks(" (count tasks) ")")
-      {:font-size 24, :font-family ui/font-fancy, :font-weight 100})
-     (=< 16 nil)
-     (if (:editing? state)
-       (a
-        {:style ui/link,
-         :inner-text "Done",
-         :on-click (mutation-> (update state :editing? not))})
-       (a
-        {:style ui/link,
-         :inner-text "Edit",
-         :on-click (mutation-> (update state :editing? not))})))
-    (div
-     {:style ui/row}
-     (list->
-      {:style {:overflow :auto, :font-family ui/font-fancy, :max-height 320}}
-      (->> months
-           (map
-            (fn [year-month]
-              [year-month
-               (div
-                {:style (merge
-                         {:cursor :pointer, :padding "0 18px"}
-                         (when (= cursor year-month) {:background-color (hsl 0 0 90)})),
-                 :on-click (fn [e d! m!]
-                   (d! :router/change {:name :done, :data year-month}))}
-                (<> year-month))]))))
-     (=< 16 nil)
+     {:style ui/column}
+     (div
+      {}
+      (<>
+       (str "Done Tasks(" (count tasks) ")")
+       {:font-size 24, :font-family ui/font-fancy, :font-weight 100})
+      (=< 16 nil)
+      (if (:editing? state)
+        (a
+         {:style ui/link,
+          :inner-text "Done",
+          :on-click (mutation-> (update state :editing? not))})
+        (a
+         {:style ui/link,
+          :inner-text "Edit",
+          :on-click (mutation-> (update state :editing? not))})))
      (let [tasks-by-time (->> tasks
                               vals
                               (group-by (fn [task] (.format (dayjs (:time task)) "DD"))))]
