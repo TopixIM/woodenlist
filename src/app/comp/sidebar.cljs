@@ -8,41 +8,45 @@
 
 (def style-count (merge ui/center {:width 20, :font-size 14}))
 
-(def style-entry {:cursor :pointer, :color (hsl 0 0 60), :align-items :center, :height 40})
+(def style-entry
+  {:cursor :pointer, :color (hsl 0 0 60), :align-items :center, :height 40, :margin-right 24})
 
-(def style-icon (merge ui/center {:width 32}))
+(def style-icon (merge ui/center {:width 24}))
 
 (defcomp
  comp-sidebar
  (router logged-in? numbers)
  (div
-  {:style (merge
-           ui/column-parted
-           {:font-size 24,
-            :border-right (str "1px solid " (hsl 0 0 0 0.1)),
-            :font-family ui/font-fancy,
-            :padding "8 8px"})}
+  {:style {:flex-shrink 0, :border-bottom (str "1px solid " (hsl 0 0 90))}}
   (div
-   {:style {}}
+   {:style (merge
+            ui/row-parted
+            {:font-size 24,
+             :font-family ui/font-fancy,
+             :padding "8 8px",
+             :max-width 800,
+             :margin :auto})}
    (div
-    {:on-click (fn [e d! m!] (d! :router/change {:name :home})),
-     :style (merge ui/row style-entry (if (= :home (:name router)) {:color :black}))}
-    (div {:style style-icon} (comp-icon :home))
-    (<> (:working numbers) style-count))
+    {:style ui/row}
+    (div
+     {:on-click (fn [e d! m!] (d! :router/change {:name :home})),
+      :style (merge ui/row style-entry (if (= :home (:name router)) {:color :black}))}
+     (div {:style style-icon} (comp-icon :home))
+     (<> (:working numbers) style-count))
+    (div
+     {:on-click (fn [e d! m!] (d! :router/change {:name :pending})),
+      :style (merge ui/row style-entry (if (= :pending (:name router)) {:color :black}))}
+     (div {:style style-icon} (comp-icon :ios-time-outline))
+     (<> (:pending numbers) style-count))
+    (div
+     {:on-click (fn [e d! m!] (d! :router/change {:name :done})),
+      :style (merge ui/row style-entry (if (= :done (:name router)) {:color :black}))}
+     (div {:style style-icon} (comp-icon :social-buffer))
+     (<> (:done numbers) style-count)))
    (div
-    {:on-click (fn [e d! m!] (d! :router/change {:name :pending})),
-     :style (merge ui/row style-entry (if (= :pending (:name router)) {:color :black}))}
-    (div {:style style-icon} (comp-icon :ios-time-outline))
-    (<> (:pending numbers) style-count))
-   (div
-    {:on-click (fn [e d! m!] (d! :router/change {:name :done})),
-     :style (merge ui/row style-entry (if (= :done (:name router)) {:color :black}))}
-    (div {:style style-icon} (comp-icon :social-buffer))
-    (<> (:done numbers) style-count)))
-  (div
-   {:style ui/column}
-   (div
-    {:style (merge ui/row style-entry (if (= :profile (:name router)) {:color :black})),
-     :on-click (fn [e d! m!] (d! :router/change {:name :profile}))}
-    (div {:style style-icon} (if logged-in? (comp-icon :ios-contact) (comp-icon :log-in)))
-    (<> (:sessions numbers) style-count)))))
+    {:style ui/column}
+    (div
+     {:style (merge ui/row style-entry (if (= :profile (:name router)) {:color :black})),
+      :on-click (fn [e d! m!] (d! :router/change {:name :profile}))}
+     (div {:style style-icon} (if logged-in? (comp-icon :ios-contact) (comp-icon :log-in)))
+     (<> (:sessions numbers) style-count))))))
