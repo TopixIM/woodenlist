@@ -2,7 +2,24 @@
 (ns app.twig.container
   (:require [recollect.macros :refer [deftwig]]
             [app.twig.user :refer [twig-user]]
-            ["randomcolor" :as color]))
+            ["randomcolor" :as color]
+            ["dayjs" :as dayjs]))
+
+(deftwig
+ twig-done-tasks
+ (done-tasks year-month)
+ (let [year-months (->> done-tasks
+                        vals
+                        (map :time)
+                        (map (fn [x] (.format (dayjs x) "YYYY-MM")))
+                        distinct)
+       cursor (or year-month (apply max year-months))
+       reading-tasks (->> done-tasks
+                          (filter
+                           (fn [[k task]]
+                             (= cursor (.format (dayjs (:time task)) "YYYY-MM"))))
+                          (into {}))]
+   {:months year-months, :cursor cursor, :tasks reading-tasks}))
 
 (deftwig
  twig-container
@@ -21,7 +38,7 @@
                   (case (:name router)
                     :home (:working-tasks user)
                     :pending (:pending-tasks user)
-                    :done (:done-tasks user)
+                    :done (twig-done-tasks (:done-tasks user) (:data router))
                     {})),
          :numbers {:sessions (count (:sessions db)),
                    :working (count (:working-tasks user)),

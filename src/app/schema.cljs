@@ -14,7 +14,7 @@
 (def session
   {:user-id nil, :id nil, :nickname nil, :router {:name :home, :data nil}, :notifications []})
 
-(def task {:id nil, :text "", :text-time ""})
+(def task {:id nil, :text "", :mode nil, :time 0})
 
 (def user
   {:name nil,

@@ -49,17 +49,21 @@
    (if (nil? store)
      (comp-offline)
      (div
-      {:style (merge ui/global ui/fullscreen ui/row)}
+      {:style (merge ui/global ui/fullscreen ui/column)}
       (comp-sidebar (:router store) (:logged-in? store) (:numbers store))
-      (if (:logged-in? store)
-        (let [router (:router store)]
-          (case (:name router)
-            :profile (comp-profile (:user store))
-            :home (cursor-> :home comp-home states (:data router))
-            :pending (cursor-> :pending comp-pending states (:data router))
-            :done (cursor-> :done comp-done-tasks states (:data router))
-            (<> router nil)))
-        (comp-login states))
+      (div
+       {:style {:overflow :auto}}
+       (div
+        {:style {:margin "0 auto", :max-width 800}}
+        (if (:logged-in? store)
+          (let [router (:router store)]
+            (case (:name router)
+              :profile (comp-profile (:user store))
+              :home (cursor-> :home comp-home states (:data router))
+              :pending (cursor-> :pending comp-pending states (:data router))
+              :done (cursor-> :done comp-done-tasks states (:data router))
+              (<> router nil)))
+          (comp-login states))))
       (comp-msg-list (get-in store [:session :notifications]) :session/remove-notification)
       (comp-status-color (:color store))
       (if dev? (comp-inspect "Store" store style-debugger))
