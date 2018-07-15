@@ -2838,6 +2838,37 @@
                               :data {
                                "T" {:type :leaf, :by "root", :at 1521045635219, :text "->>", :id "Hye9Yg0IKG"}
                                "j" {:type :leaf, :by "root", :at 1524383273083, :text "tasks", :id "BJ2KeCUFf"}
+                               "n" {
+                                :type :expr, :by "root", :at 1531643301089, :id "HylasSFOmQ"
+                                :data {
+                                 "T" {:type :leaf, :by "root", :at 1531643307955, :text "sort-by", :id "HkpsHYOQ7"}
+                                 "j" {
+                                  :type :expr, :by "root", :at 1531643316211, :id "BJxn3SFOQ7"
+                                  :data {
+                                   "T" {:type :leaf, :by "root", :at 1531643316591, :text "fn", :id "SJ3hrtOmm"}
+                                   "j" {
+                                    :type :expr, :by "root", :at 1531643318704, :id "BJ1arKumQ"
+                                    :data {
+                                     "T" {:type :leaf, :by "root", :at 1531643326884, :text "task", :id "rJzIpSY_mX"}
+                                    }
+                                   }
+                                   "r" {
+                                    :type :expr, :by "root", :at 1531643335875, :id "S1xCSFuQ7"
+                                    :data {
+                                     "D" {:type :leaf, :by "root", :at 1531643352154, :text "unchecked-negate", :id "HkegCHKdXm"}
+                                     "T" {
+                                      :type :expr, :by "root", :at 1531643328882, :id "H1t6rtO7X"
+                                      :data {
+                                       "T" {:type :leaf, :by "root", :at 1531643330804, :text ":time", :id "H1t6rtO7Xleaf"}
+                                       "j" {:type :leaf, :by "root", :at 1531643331320, :text "task", :id "HJbopHFuXm"}
+                                      }
+                                     }
+                                    }
+                                   }
+                                  }
+                                 }
+                                }
+                               }
                                "r" {
                                 :type :expr, :by "root", :at 1521045639284, :id "SyNkqgRUtz"
                                 :data {

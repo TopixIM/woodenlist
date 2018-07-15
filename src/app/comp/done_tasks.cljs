@@ -102,6 +102,7 @@
                   (list->
                    {}
                    (->> tasks
+                        (sort-by (fn [task] (unchecked-negate (:time task))))
                         (map
                          (fn [task] [(:id task) (comp-done-task task (:editing? state))])))))]))))))
     (comment
