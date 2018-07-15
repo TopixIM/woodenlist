@@ -52,7 +52,7 @@
     (div
      {}
      (<>
-      (str "Done Tasks(" (count router-data) ")")
+      (str "Done Tasks(" (count tasks) ")")
       {:font-size 24, :font-family ui/font-fancy, :font-weight 100})
      (=< 16 nil)
      (if (:editing? state)
