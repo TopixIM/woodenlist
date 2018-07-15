@@ -17,14 +17,21 @@
  comp-task
  (states task)
  (div
-  {:style (merge ui/row {:margin "8px 0", :align-items :center, :width 400})}
+  {:style (merge ui/row {:margin "8px 0", :align-items :center})}
   (div
-   {:style (merge ui/flex {:padding "0 8px", :background-color (hsl 0 0 96), :height 28})}
+   {:style (merge
+            {:padding "0 8px", :background-color (hsl 0 0 96), :width 480, :overflow :auto})}
    (cursor->
     :prompt
     comp-prompt
     states
-    {:trigger (<> (:text task) {:display :inline-block, :min-width 100, :height 28}),
+    {:trigger (<>
+               (:text task)
+               {:display :inline-block,
+                :height 32,
+                :line-height "32px",
+                :overflow :auto,
+                :white-space :nowrap}),
      :text "Update task:",
      :initial (or (:text task) "")}
     (fn [result d! m!]

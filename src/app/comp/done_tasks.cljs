@@ -20,12 +20,15 @@
   {:style (merge ui/row {:margin "8px 0", :align-items :center})}
   (span
    {:style (merge
-            {:width 400,
+            {:width 480,
              :background-color (hsl 0 0 94),
              :padding "0 8px",
-             :min-height 28,
+             :height 32,
+             :line-height "32px",
              :margin-right 16,
-             :display :inline-block}),
+             :display :inline-block,
+             :overflow :auto,
+             :white-space :nowrap}),
     :inner-text (:text task)})
   (when editing?
     (div
@@ -50,7 +53,7 @@
    (div
     {:style (merge ui/flex ui/row {:padding 16})}
     (list->
-     {:style {:overflow :auto, :font-family ui/font-fancy, :max-height 320}}
+     {:style {:overflow :auto, :font-family ui/font-fancy, :max-height 320, :width 120}}
      (->> months
           (map
            (fn [year-month]
@@ -58,7 +61,8 @@
               (div
                {:style (merge
                         {:cursor :pointer, :padding "0 18px"}
-                        (when (= cursor year-month) {:background-color (hsl 0 0 90)})),
+                        (when (= cursor year-month) {:background-color (hsl 0 0 94)})),
+                :class-name "item",
                 :on-click (fn [e d! m!] (d! :router/change {:name :done, :data year-month}))}
                (<> year-month))]))))
     (=< 16 nil)
