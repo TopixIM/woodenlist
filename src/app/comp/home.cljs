@@ -31,7 +31,14 @@
     :prompt
     comp-prompt
     states
-    {:trigger (<> (:text task) {:min-width 400, :height 28, :display :inline-block}),
+    {:trigger (<>
+               (:text task)
+               {:width 480,
+                :height 32,
+                :line-height "32px",
+                :display :inline-block,
+                :overflow :auto,
+                :white-space :nowrap}),
      :text "Some text:",
      :initial (:text task)}
     (fn [result d! m!]

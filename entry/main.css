@@ -7,3 +7,7 @@ body {
 body * {
   box-sizing: border-box;
 }
+
+.item:hover {
+  background-color: hsl(0,0%,94%);
+}
