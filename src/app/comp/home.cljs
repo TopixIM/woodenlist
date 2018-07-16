@@ -11,7 +11,6 @@
             [respo.util.list :refer [map-val]]
             [clojure.string :as string]
             [respo-ui.comp.icon :refer [comp-icon]]
-            [keycode.core :as keycode]
             [respo-alerts.comp.alerts :refer [comp-prompt comp-alert comp-confirm]]))
 
 (defcomp

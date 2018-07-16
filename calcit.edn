@@ -3157,15 +3157,6 @@
           }
          }
         }
-        "yt" {
-         :type :expr, :by "root", :at 1521132078864, :id "ByeDEGm_KG"
-         :data {
-          "T" {:type :leaf, :by "root", :at 1521132079232, :text "[]", :id "ByeDEGm_KGleaf"}
-          "j" {:type :leaf, :by "root", :at 1521132080946, :text "keycode.core", :id "HJ7P4fXdYf"}
-          "r" {:type :leaf, :by "root", :at 1521132083897, :text ":as", :id "S17YEf7uFf"}
-          "v" {:type :leaf, :by "root", :at 1521132085016, :text "keycode", :id "SybnNM7_tz"}
-         }
-        }
         "yx" {
          :type :expr, :by "root", :at 1530457111096, :id "ryek72w8Mm"
          :data {
