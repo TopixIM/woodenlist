@@ -55,6 +55,7 @@
     (list->
      {:style {:overflow :auto, :font-family ui/font-fancy, :max-height 320, :width 120}}
      (->> months
+          (sort (fn [x y] (compare y x)))
           (map
            (fn [year-month]
              [year-month
