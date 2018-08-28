@@ -8453,7 +8453,7 @@
           :type :expr, :id "r1pbNcLee0S-", :by nil, :at 1500541010211
           :data {
            "T" {:type :leaf, :id "H10WV5IgxAHZ", :text ":icon", :by "root", :at 1500541010211}
-           "j" {:type :leaf, :id "Sk1GNc8exArZ", :text "|http://cdn.tiye.me/logo/cumulo.png", :by "root", :at 1508258797732}
+           "j" {:type :leaf, :id "Sk1GNc8exArZ", :text "|http://cdn.tiye.me/logo/woodenlist.png", :by "B1y7Rc-Zz", :at 1535478577406}
           }
          }
          "v" {

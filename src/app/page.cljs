@@ -7,7 +7,7 @@
 
 (def base-info
   {:title "Woodenlist",
-   :icon "http://cdn.tiye.me/logo/cumulo.png",
+   :icon "http://cdn.tiye.me/logo/woodenlist.png",
    :ssr nil,
    :inline-styles [(slurp "entry/main.css")]})
 
