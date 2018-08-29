@@ -10,7 +10,8 @@
     "page": "shadow-cljs clj-run build.main/page",
     "upload": "lumo -c cli -m build.upload",
     "serve": "http-server dist -s",
-    "repl": "rlwrap shadow-cljs clj-repl"
+    "repl": "rlwrap shadow-cljs clj-repl",
+    "ln": "cd target && rm -f entry && ln -s ../entry"
   },
   "repository": {
     "type": "git",
