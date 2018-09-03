@@ -3,7 +3,8 @@
   (:require [respo.render.html :refer [make-string]]
             [shell-page.core :refer [make-page spit slurp]]
             [app.comp.container :refer [comp-container]]
-            [cljs.reader :refer [read-string]]))
+            [cljs.reader :refer [read-string]]
+            [app.config :as config]))
 
 (def base-info
   {:title "Woodenlist",
@@ -14,7 +15,11 @@
 (defn dev-page []
   (make-page
    ""
-   (merge base-info {:styles ["http://localhost:8100/main.css"], :scripts ["/client.js"]})))
+   (merge
+    base-info
+    {:styles [(:dev-ui config/site) "/entry/main.css"],
+     :scripts ["/client.js"],
+     :inline-styles []})))
 
 (def preview? (= "preview" js/process.env.prod))
 

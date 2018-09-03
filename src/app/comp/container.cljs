@@ -3,7 +3,7 @@
   (:require [hsl.core :refer [hsl]]
             [respo-ui.core :as ui]
             [respo-ui.colors :as colors]
-            [respo.macros :refer [defcomp <> div span cursor-> button]]
+            [respo.macros :refer [defcomp <> div span cursor-> action-> button]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.comp.space :refer [=<]]
             [app.comp.sidebar :refer [comp-sidebar]]
@@ -14,18 +14,28 @@
             [app.comp.home :refer [comp-home]]
             [app.comp.pending :refer [comp-pending]]
             [app.comp.done-tasks :refer [comp-done-tasks]]
-            [app.schema :refer [dev?]]))
+            [app.schema :refer [dev?]]
+            [app.config :as config]))
 
 (defcomp
  comp-offline
  ()
  (div
-  {:style (merge ui/global ui/fullscreen ui/center)}
-  (span
-   {:style {:cursor :pointer}, :on-click (fn [e d! m!] (d! :effect/connect nil))}
-   (<>
-    "Socket broken! Click to retry!"
-    {:font-family ui/font-fancy, :font-weight 100, :font-size 32}))))
+  {:style (merge
+           ui/global
+           ui/fullscreen
+           ui/column-dispersive
+           {:background-color (:theme config/site)})}
+  (div {:style {:height 0}})
+  (div
+   {:style {:background-image (str "url(" (:icon config/site) ")"),
+            :width 128,
+            :height 128,
+            :background-size :contain}})
+  (div
+   {:style {:cursor :pointer, :line-height "32px"},
+    :on-click (action-> :effect/connect nil)}
+   (<> "No connection..." {:font-family ui/font-fancy, :font-size 24}))))
 
 (defcomp
  comp-status-color
