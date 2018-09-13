@@ -24,13 +24,14 @@
   (=< nil 32)
   (div
    {}
-   (div
-    {:style (merge
-             ui/button
-             {:color :red,
-              :border-radius "16px",
-              :background-color :white,
-              :border (str "1px solid " (hsl 0 80 70))}),
+   (button
+    {:style (merge ui/button),
+     :on-click (fn [e d! m!]
+       (.replace js/location (str js/location.origin "?time=" (.now js/Date))))}
+    (<> "Refresh"))
+   (=< 8 nil)
+   (button
+    {:style (merge ui/button {:color :red, :border (str "1px solid " (hsl 0 80 70))}),
      :on-click on-log-out}
     (<> "Log out")))))
 

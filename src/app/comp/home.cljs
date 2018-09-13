@@ -5,79 +5,116 @@
             [respo-ui.colors :as colors]
             [respo.macros
              :refer
-             [defcomp <> div span button input mutation-> action-> list-> cursor-> span]]
+             [defcomp
+              <>
+              div
+              span
+              button
+              input
+              mutation->
+              action->
+              list->
+              cursor->
+              span
+              input]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.comp.space :refer [=<]]
             [respo.util.list :refer [map-val]]
             [clojure.string :as string]
             [respo-ui.comp.icon :refer [comp-icon]]
-            [respo-alerts.comp.alerts :refer [comp-prompt comp-alert comp-confirm]]))
+            [respo-alerts.comp.alerts :refer [comp-prompt comp-alert comp-confirm]]
+            [app.util :refer [delay!]]
+            [inflow-popup.comp.dialog :refer [comp-dialog comp-menu-dialog]]))
+
+(defn on-select-menu! [task state]
+  (fn [result d! m!]
+    (let [new-state (assoc state :show-menu? false)]
+      (case result
+        :finish
+          (do
+           (d! :task/move-task {:id (:id task), :from :working-tasks, :to :done-tasks})
+           (m! new-state))
+        :postpone
+          (do
+           (d! :task/move-task {:id (:id task), :from :working-tasks, :to :pending-tasks})
+           (m! new-state))
+        :edit (m! (assoc new-state :show-editor? true))
+        :remove (m! (assoc new-state :show-confirm? true))
+        :touch (do (d! :task/touch-working (:id task)) (m! new-state))
+        nil (m! new-state)
+        :else))))
+
+(def style-item
+  {:line-height "32px",
+   :margin "8px 0px",
+   :position :absolute,
+   :width "100%",
+   :transition-duration "300ms",
+   :white-space :nowrap,
+   :height "32px",
+   :max-width 480,
+   :background-color (hsl 0 0 94),
+   :padding "0 8px"})
 
 (defcomp
  comp-task
  (states task idx)
- (div
-  {:style (merge
-           ui/row
-           {:line-height "32px",
-            :margin "8px 0px",
-            :position :absolute,
-            :top (+ 8 (* idx 48)),
-            :transition-duration "300ms"}),
-   :on-dblclick (action-> :task/touch-working (:id task))}
-  (div
-   {:style (merge ui/flex {:padding "0 8px", :background-color (hsl 0 0 96)})}
-   (cursor->
-    :prompt
-    comp-prompt
-    states
-    {:trigger (<>
-               (:text task)
-               {:width 480,
-                :height 32,
-                :line-height "32px",
-                :display :inline-block,
-                :overflow :auto,
-                :white-space :nowrap}),
-     :text "Some text:",
-     :initial (:text task)}
-    (fn [result d! m!]
-      (d!
-       :task/update-text
-       {:id (:id task), :text result, :group :working-tasks, :time (.now js/Date)}))))
-  (=< 16 nil)
-  (div
-   {:style (merge ui/center {:cursor :pointer}),
-    :on-click (action->
-               :task/move-task
-               {:id (:id task), :from :working-tasks, :to :done-tasks})}
-   (comp-icon :android-done))
-  (=< 16 nil)
-  (div
-   {:style (merge ui/center {:cursor :pointer}),
-    :on-click (action->
-               :task/move-task
-               {:id (:id task), :from :working-tasks, :to :pending-tasks}),
-    :title (pr-str task)}
-   (comp-icon :ios-time-outline))
-  (=< 16 nil)
-  (div
-   {:style (merge ui/center {:cursor :pointer}),
-    :on-click (action-> :task/touch-working (:id task)),
-    :title (pr-str task)}
-   (comp-icon :android-arrow-up))
-  (=< 32 nil)
-  (cursor->
-   :confirm
-   comp-confirm
-   states
-   {:trigger (div
-              {:style (merge ui/center {:cursor :pointer, :color (hsl 0 70 80)}),
-               :title (pr-str task)}
-              (comp-icon :android-close)),
-    :style ui/center,
-    :text "Sure to delete Task?"}
-   (fn [e d! m!] (d! :task/remove-working (:id task))))))
+ (let [state (or (:data states)
+                 {:show-menu? false,
+                  :show-editor? false,
+                  :show-confirm? false,
+                  :task-draft (:text task)})]
+   (div
+    {:style (merge ui/row style-item {:top (+ 8 (* idx 48))}),
+     :on-click (fn [e d! m!] (m! (assoc state :show-menu? true)))}
+    (<> (:text task))
+    (=< 32 nil)
+    (when (:show-menu? state)
+      (comp-menu-dialog
+       (on-select-menu! task state)
+       {:finish "Finish",
+        :edit "Edit",
+        :postpone "Postpone",
+        :touch "Touch",
+        :remove "Remove"}))
+    (when (:show-editor? state)
+      (comp-dialog
+       (fn [m!] (m! %cursor (assoc state :show-editor? false)))
+       (div
+        {}
+        (div
+         {}
+         (input
+          {:style (merge ui/textarea {:width 400}),
+           :value (or (:task-draft state) (:text task)),
+           :autofocus true,
+           :on-input (fn [e d! m!] (m! (assoc state :task-draft (:value e))))}))
+        (=< nil 16)
+        (div
+         {:style ui/row-parted}
+         (span {})
+         (button
+          {:style ui/button,
+           :on-click (fn [e d! m!]
+             (let [text (:task-draft state)]
+               (when (some? text)
+                 (m! (assoc state :task-draft nil :show-editor? false))
+                 (d!
+                  :task/update-text
+                  {:id (:id task), :text text, :group :working-tasks, :time (.now js/Date)})))),
+           :inner-text "Edit"})))))
+    (when (:show-confirm? state)
+      (comp-dialog
+       (fn [m!] (m! %cursor (assoc state :show-confirm? false)))
+       (div
+        {:style {:width 320}}
+        (div {} (<> "Confirm remove?"))
+        (div
+         {:style ui/row-parted}
+         (span {})
+         (button
+          {:style ui/button, :on-click (fn [e d! m!] (d! :task/remove-working (:id task)))}
+          (<> "Confirm")))))))))
 
 (defcomp
  comp-home
@@ -105,9 +142,9 @@
          :inner-text "Add",
          :on-click (fn [e d! m!]
            (d! :task/create "")
-           (js/setTimeout
-            (fn [] (let [el (.querySelector js/document ".cursor-task")] (.focus el)))
-            400))})))
+           (delay!
+            400
+            #((let [el (.querySelector js/document ".cursor-task")] (.focus el)))))})))
     (list->
      {:style {:position :relative, :height (+ 8 (* 48 (count tasks)))}}
      (->> tasks

@@ -20,8 +20,7 @@
   {:style (merge ui/row {:margin "8px 0", :align-items :center})}
   (span
    {:style (merge
-            {:width 480,
-             :background-color (hsl 0 0 94),
+            {:background-color (hsl 0 0 94),
              :padding "0 8px",
              :height 32,
              :line-height "32px",
@@ -53,7 +52,11 @@
    (div
     {:style (merge ui/flex ui/row {:padding 16})}
     (list->
-     {:style {:overflow :auto, :font-family ui/font-fancy, :max-height 320, :width 120}}
+     {:style {:overflow :auto,
+              :font-family ui/font-fancy,
+              :max-height 320,
+              :width 120,
+              :flex-shrink 0}}
      (->> months
           (sort (fn [x y] (compare y x)))
           (map
@@ -68,7 +71,7 @@
                (<> year-month))]))))
     (=< 16 nil)
     (div
-     {:style ui/column}
+     {:style (merge ui/flex ui/column {:overflow :auto})}
      (div
       {}
       (<>
