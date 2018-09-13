@@ -62,7 +62,7 @@
       {:style (merge ui/global ui/fullscreen ui/column)}
       (comp-sidebar (:router store) (:logged-in? store) (:numbers store))
       (div
-       {:style {:overflow :auto}}
+       {:style (merge ui/flex {:overflow :auto})}
        (div
         {:style {:margin "0 auto", :max-width 800}}
         (if (:logged-in? store)
