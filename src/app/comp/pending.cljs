@@ -17,10 +17,13 @@
  comp-task
  (states task)
  (div
-  {:style (merge ui/row {:margin "8px 0", :align-items :center})}
+  {:style (merge
+           ui/row
+           {:margin "8px 0", :align-items :center, :max-width 480, :width "100%"})}
   (div
    {:style (merge
-            {:padding "0 8px", :background-color (hsl 0 0 96), :width 480, :overflow :auto})}
+            ui/flex
+            {:padding "0 8px", :background-color (hsl 0 0 96), :overflow :auto})}
    (cursor->
     :prompt
     comp-prompt
@@ -45,7 +48,6 @@
                :task/move-task
                {:id (:id task), :from :pending-tasks, :to :working-tasks})}
    (comp-icon :navigate))
-  (=< 16 nil)
   (comment
    div
    {:style {:cursor :pointer},
