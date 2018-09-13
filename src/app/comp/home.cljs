@@ -16,7 +16,7 @@
               list->
               cursor->
               span
-              textarea]]
+              input]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.comp.space :refer [=<]]
             [respo.util.list :refer [map-val]]
@@ -28,19 +28,21 @@
 
 (defn on-select-menu! [task state]
   (fn [result d! m!]
-    (case result
-      :finish (d! :task/move-task {:id (:id task), :from :working-tasks, :to :done-tasks})
-      :postpone
-        (d! :task/move-task {:id (:id task), :from :working-tasks, :to :pending-tasks})
-      :edit
-        (let [text (js/prompt "Update text" (:text task))]
-          (when (some? text)
-            (d!
-             :task/update-text
-             {:id (:id task), :text text, :group :working-tasks, :time (.now js/Date)})))
-      :remove (d! :task/remove-working (:id task))
-      :touch (d! :task/touch-working (:id task))
-      :else)))
+    (let [new-state (assoc state :show-menu? false)]
+      (case result
+        :finish
+          (do
+           (d! :task/move-task {:id (:id task), :from :working-tasks, :to :done-tasks})
+           (m! new-state))
+        :postpone
+          (do
+           (d! :task/move-task {:id (:id task), :from :working-tasks, :to :pending-tasks})
+           (m! new-state))
+        :edit (m! (assoc new-state :show-editor? true))
+        :remove (m! (assoc new-state :show-confirm? true))
+        :touch (do (d! :task/touch-working (:id task)) (m! new-state))
+        nil (m! new-state)
+        :else))))
 
 (def style-item
   {:line-height "32px",
@@ -49,6 +51,7 @@
    :width "100%",
    :transition-duration "300ms",
    :white-space :nowrap,
+   :height "32px",
    :max-width 480,
    :background-color (hsl 0 0 94),
    :padding "0 8px"})
@@ -57,7 +60,10 @@
  comp-task
  (states task idx)
  (let [state (or (:data states)
-                 {:show-menu? false, :show-editor? false, :show-confirm? false})]
+                 {:show-menu? false,
+                  :show-editor? false,
+                  :show-confirm? false,
+                  :task-draft (:text task)})]
    (div
     {:style (merge ui/row style-item {:top (+ 8 (* idx 48))}),
      :on-click (fn [e d! m!] (m! (assoc state :show-menu? true)))}
@@ -66,7 +72,6 @@
     (when (:show-menu? state)
       (comp-menu-dialog
        (on-select-menu! task state)
-       (fn [m!] (m! %cursor (assoc state :show-menu? false)))
        {:finish "Finish",
         :edit "Edit",
         :postpone "Postpone",
@@ -77,11 +82,39 @@
        (fn [m!] (m! %cursor (assoc state :show-editor? false)))
        (div
         {}
-        (textarea {:style ui/textarea})
+        (div
+         {}
+         (input
+          {:style (merge ui/textarea {:width 400}),
+           :value (or (:task-draft state) (:text task)),
+           :autofocus true,
+           :on-input (fn [e d! m!] (m! (assoc state :task-draft (:value e))))}))
+        (=< nil 16)
         (div
          {:style ui/row-parted}
          (span {})
-         (button {:style ui/button, :inner-text "Edit"}))))))))
+         (button
+          {:style ui/button,
+           :on-click (fn [e d! m!]
+             (let [text (:task-draft state)]
+               (when (some? text)
+                 (m! (assoc state :task-draft nil :show-editor? false))
+                 (d!
+                  :task/update-text
+                  {:id (:id task), :text text, :group :working-tasks, :time (.now js/Date)})))),
+           :inner-text "Edit"})))))
+    (when (:show-confirm? state)
+      (comp-dialog
+       (fn [m!] (m! %cursor (assoc state :show-confirm? false)))
+       (div
+        {:style {:width 320}}
+        (div {} (<> "Confirm remove?"))
+        (div
+         {:style ui/row-parted}
+         (span {})
+         (button
+          {:style ui/button, :on-click (fn [e d! m!] (d! :task/remove-working (:id task)))}
+          (<> "Confirm")))))))))
 
 (defcomp
  comp-home
