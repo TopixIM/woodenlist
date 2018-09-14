@@ -66,4 +66,6 @@
    (<> (str "Pending Tasks(" (count router-data) ")")))
   (list->
    {:style {:width "100%"}}
-   (->> router-data (map-val (fn [task] (cursor-> (:id task) comp-task states task)))))))
+   (->> router-data
+        (sort-by (fn [[k task]] (unchecked-negate (:time task))))
+        (map-val (fn [task] (cursor-> (:id task) comp-task states task)))))))
