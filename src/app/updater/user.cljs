@@ -2,49 +2,43 @@
 (ns app.updater.user
   (:require [app.util :refer [find-first]] ["md5" :as md5] [app.schema :as schema]))
 
-(defn log-in [db op-data session-id op-id op-time]
+(defn log-in [db op-data sid op-id op-time]
   (let [[username password] op-data
         maybe-user (find-first
                     (fn [user] (and (= username (:name user))))
                     (vals (:users db)))]
     (update-in
      db
-     [:sessions session-id]
+     [:sessions sid]
      (fn [session]
        (if (some? maybe-user)
          (if (= (md5 password) (:password maybe-user))
            (assoc session :user-id (:id maybe-user))
            (update
             session
-            :notifications
-            (fn [notifications]
-              (conj
-               notifications
-               {:id op-id, :kind :attentive, :text (str "Wrong password for " username)}))))
+            :messages
+            (fn [messages]
+              (assoc messages op-id {:id op-id, :text (str "Wrong password for " username)}))))
          (update
           session
-          :notifications
-          (fn [notifications]
-            (conj
-             notifications
-             {:id op-id, :kind :attentive, :text (str "No user named: " username)}))))))))
+          :messages
+          (fn [messages]
+            (assoc messages op-id {:id op-id, :text (str "No user named: " username)}))))))))
 
 (defn log-out [db op-data session-id op-id op-time]
   (assoc-in db [:sessions session-id :user-id] nil))
 
-(defn sign-up [db op-data session-id op-id op-time]
+(defn sign-up [db op-data sid op-id op-time]
   (let [[username password] op-data
         maybe-user (find-first (fn [user] (= username (:name user))) (vals (:users db)))]
     (if (some? maybe-user)
       (update-in
        db
-       [:sessions session-id :notifications]
-       (fn [notifications]
-         (conj
-          notifications
-          {:id op-id, :kind :attentive, :text (str "Name is token: " username)})))
+       [:sessions sid :messages]
+       (fn [messages]
+         (assoc messages op-id {:id op-id, :text (str "Name is token: " username)})))
       (-> db
-          (assoc-in [:sessions session-id :user-id] op-id)
+          (assoc-in [:sessions sid :user-id] op-id)
           (assoc-in
            [:users op-id]
            (merge

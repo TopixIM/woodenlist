@@ -65,7 +65,12 @@
                   :show-confirm? false,
                   :task-draft (:text task)})]
    (div
-    {:style (merge ui/row style-item {:top (+ 8 (* idx 48))}),
+    {:style (merge
+             ui/row
+             style-item
+             {:top (+ 8 (* idx 48))}
+             (when (or (:show-menu? state) (:show-editor? state) (:show-confirm? state))
+               {:outline (str "2px solid " (hsl 240 80 86))})),
      :on-click (fn [e d! m!] (m! (assoc state :show-menu? true)))}
     (<> (:text task))
     (=< 32 nil)
@@ -81,11 +86,11 @@
       (comp-dialog
        (fn [m!] (m! %cursor (assoc state :show-editor? false)))
        (div
-        {}
+        {:style {:min-width 280}}
         (div
          {}
          (input
-          {:style (merge ui/textarea {:width 400}),
+          {:style (merge ui/input {:width "100%"}),
            :value (or (:task-draft state) (:text task)),
            :autofocus true,
            :on-input (fn [e d! m!] (m! (assoc state :task-draft (:value e))))}))
