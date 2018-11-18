@@ -38,7 +38,7 @@
      db
      [:users user-id :working-tasks]
      (fn [tasks]
-       (if (contains? tasks op-data) (assoc-in tasks [op-data :time] op-time) tasks)))))
+       (if (some? (get tasks op-data)) (assoc-in tasks [op-data :time] op-time) tasks)))))
 
 (defn update-text [db op-data sid op-id op-time]
   (let [user-id (get-in db [:sessions sid :user-id])]

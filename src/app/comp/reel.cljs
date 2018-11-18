@@ -3,7 +3,7 @@
   (:require [hsl.core :refer [hsl]]
             [respo-ui.core :as ui]
             [respo-ui.colors :as colors]
-            [respo.macros :refer [defcomp <> span button div]]
+            [respo.core :refer [defcomp <> span button div]]
             [respo.comp.space :refer [=<]]))
 
 (def style-click
