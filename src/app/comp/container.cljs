@@ -10,11 +10,11 @@
             [app.comp.profile :refer [comp-profile]]
             [app.comp.login :refer [comp-login]]
             [respo-message.comp.messages :refer [comp-messages]]
-            [app.comp.reel :refer [comp-reel]]
+            [cumulo-reel.comp.reel :refer [comp-reel]]
             [app.comp.home :refer [comp-home]]
             [app.comp.pending :refer [comp-pending]]
             [app.comp.done-tasks :refer [comp-done-tasks]]
-            [app.schema :refer [dev?]]
+            [app.config :refer [dev?]]
             [app.config :as config]))
 
 (defcomp

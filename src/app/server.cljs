@@ -4,7 +4,7 @@
             [app.service :refer [run-server! sync-clients!]]
             [app.updater :refer [updater]]
             [cljs.reader :refer [read-string]]
-            [app.reel :refer [reel-updater refresh-reel reel-schema]]
+            [cumulo-reel.reel :refer [reel-reducer refresh-reel reel-schema]]
             ["fs" :as fs]
             ["shortid" :as shortid]
             ["path" :as path]
@@ -25,9 +25,9 @@
 
 (defn dispatch! [op op-data sid]
   (let [op-id (.generate shortid), op-time (.valueOf (js/Date.))]
-    (println "Dispatch!" (str op) op-data sid)
+    (when node-env/dev? (println "Dispatch!" (str op) op-data sid))
     (try
-     (let [new-reel (reel-updater @*reel updater op op-data sid op-id op-time)]
+     (let [new-reel (reel-reducer @*reel updater op op-data sid op-id op-time)]
        (reset! *reel new-reel))
      (catch js/Error e (.error js/console e)))))
 

@@ -2,3 +2,5 @@
 (ns app.node-env (:require ["path" :as path]))
 
 (def configs {:storage-path (path/join js/__dirname "woodenlist.edn")})
+
+(def dev? (do ^boolean js/goog.DEBUG))

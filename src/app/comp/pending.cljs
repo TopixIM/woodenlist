@@ -6,7 +6,6 @@
             [respo.core :refer [defcomp <> div span cursor-> button list-> action-> input]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.comp.space :refer [=<]]
-            [app.comp.reel :refer [comp-reel]]
             [respo.util.list :refer [map-val]]
             [respo-ui.comp.icon :refer [comp-icon]]
             [respo-alerts.comp.alerts :refer [comp-prompt]]))

@@ -8,7 +8,6 @@
              [defcomp <> div span cursor-> mutation-> button list-> action-> input a pre]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.comp.space :refer [=<]]
-            [app.comp.reel :refer [comp-reel]]
             [respo.util.list :refer [map-val]]
             [respo-ui.comp.icon :refer [comp-icon]]
             ["dayjs" :as dayjs]))
