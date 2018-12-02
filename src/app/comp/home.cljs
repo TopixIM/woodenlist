@@ -72,7 +72,7 @@
              (when (or (:show-menu? state) (:show-editor? state) (:show-confirm? state))
                {:outline (str "2px solid " (hsl 240 80 86))})),
      :on-click (fn [e d! m!] (m! (assoc state :show-menu? true)))}
-    (<> (:text task))
+    (<> (:text task) {:text-overflow :ellipsis, :overflow :hidden, :max-width "100%"})
     (=< 32 nil)
     (when (:show-menu? state)
       (comp-menu-dialog
