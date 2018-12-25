@@ -1,64 +1,96 @@
 
 (ns app.server
   (:require [app.schema :as schema]
-            [app.service :refer [run-server! sync-clients!]]
             [app.updater :refer [updater]]
             [cljs.reader :refer [read-string]]
-            [cumulo-reel.reel :refer [reel-reducer refresh-reel reel-schema]]
+            [cumulo-reel.core :refer [reel-reducer refresh-reel reel-schema]]
             ["fs" :as fs]
-            ["shortid" :as shortid]
             ["path" :as path]
-            ["child_process" :as cp]
-            [app.node-env :as node-env]))
+            [app.config :as config]
+            [cumulo-util.file :refer [write-mildly! get-backup-path! merge-local-edn!]]
+            [cumulo-util.core :refer [id! repeat! unix-time! delay!]]
+            [app.twig.container :refer [twig-container]]
+            [recollect.diff :refer [diff-twig]]
+            [recollect.twig :refer [render-twig]]
+            [ws-edn.server :refer [wss-serve! wss-send! wss-each!]]))
 
-(def initial-db
-  (let [filepath (:storage-path node-env/configs)]
-    (if (fs/existsSync filepath)
-      (do
-       (println "Found storage at:" filepath)
-       (read-string (fs/readFileSync filepath "utf8")))
-      schema/database)))
+(defonce *client-caches (atom {}))
+
+(def storage-file (path/join js/__dirname (:storage-file config/site)))
+
+(defonce initial-db
+  (merge-local-edn!
+   schema/database
+   storage-file
+   (fn [found?] (if found? (println "Found local EDN data") (println "Found no data")))))
 
 (defonce *reel (atom (merge reel-schema {:base initial-db, :db initial-db})))
 
 (defonce *reader-reel (atom @*reel))
 
-(defn dispatch! [op op-data sid]
-  (let [op-id (.generate shortid), op-time (.valueOf (js/Date.))]
-    (when node-env/dev? (println "Dispatch!" (str op) op-data sid))
-    (try
-     (let [new-reel (reel-reducer @*reel updater op op-data sid op-id op-time)]
-       (reset! *reel new-reel))
-     (catch js/Error e (.error js/console e)))))
-
-(defn persist-edn! []
+(defn persist-db! []
   (let [file-content (pr-str (assoc (:db @*reel) :sessions {}))
-        now (js/Date.)
-        storage-path (:storage-path node-env/configs)
-        backup-path (path/join
-                     js/__dirname
-                     "backups"
-                     (str (inc (.getMonth now)))
-                     (str (.getDate now) "-storage.edn"))]
-    (fs/writeFileSync storage-path file-content)
-    (cp/execSync (str "mkdir -p " (path/dirname backup-path)))
-    (fs/writeFileSync backup-path file-content)
-    (println "Saved file in" storage-path "and saved backup in" backup-path)))
+        storage-path storage-file
+        backup-path (get-backup-path!)]
+    (write-mildly! storage-path file-content)
+    (write-mildly! backup-path file-content)))
 
-(defn on-exit! [code] (persist-edn!) (.exit js/process))
+(defn dispatch! [op op-data sid]
+  (let [op-id (id!), op-time (unix-time!)]
+    (if config/dev? (println "Dispatch!" (str op) op-data sid))
+    (try
+     (cond
+       (= op :effect/persist) (persist-db!)
+       :else (reset! *reel (reel-reducer @*reel updater op op-data sid op-id op-time)))
+     (catch js/Error error (js/console.error error)))))
 
-(defn proxy-dispatch! [& args] "Make dispatch hot relodable." (apply dispatch! args))
+(defn on-exit! [code]
+  (persist-db!)
+  (comment println "exit code is:" (pr-str code))
+  (js/process.exit))
+
+(defn sync-clients! [reel]
+  (wss-each!
+   (fn [sid socket]
+     (let [db (:db reel)
+           records (:records reel)
+           session (get-in db [:sessions sid])
+           old-store (or (get @*client-caches sid) nil)
+           new-store (render-twig (twig-container db session records) old-store)
+           changes (diff-twig old-store new-store {:key :id})]
+       (println "Changes for" sid ":" changes (count records))
+       (if (not= changes [])
+         (do
+          (wss-send! sid {:kind :patch, :data changes})
+          (swap! *client-caches assoc sid new-store)))))))
 
 (defn render-loop! []
-  (if (not (identical? @*reader-reel @*reel))
-    (do (reset! *reader-reel @*reel) (sync-clients! @*reader-reel)))
-  (js/setTimeout render-loop! 200))
+  (when (not (identical? @*reader-reel @*reel))
+    (reset! *reader-reel @*reel)
+    (sync-clients! @*reader-reel))
+  (delay! 0.2 render-loop!))
+
+(defn run-server! []
+  (wss-serve!
+   (:port config/site)
+   {:on-open (fn [sid socket]
+      (dispatch! :session/connect nil sid)
+      (js/console.info "New client.")),
+    :on-data (fn [sid action]
+      (case (:kind action)
+        :op (dispatch! (:op action) (:data action) sid)
+        (println "unknown data" action))),
+    :on-close (fn [sid event]
+      (js/console.warn "Client closed!")
+      (dispatch! :session/disconnect nil sid)),
+    :on-error (fn [error] (.error js/console error))}))
 
 (defn main! []
-  (run-server! proxy-dispatch! (:port schema/configs))
+  (println "Running mode:" (if config/dev? "dev" "release"))
+  (run-server!)
   (render-loop!)
-  (.on js/process "SIGINT" on-exit!)
-  (js/setInterval persist-edn! (* 1000 60 10))
+  (js/process.on "SIGINT" on-exit!)
+  (repeat! 600 #(persist-db!))
   (println "Server started."))
 
 (defn reload! []

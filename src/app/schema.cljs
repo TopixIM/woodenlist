@@ -1,8 +1,6 @@
 
 (ns app.schema )
 
-(def configs {:local-storage-key "woodenlist-storage", :port 11000})
-
 (def database {:sessions {}, :users {}})
 
 (def notification {:id nil, :kind nil, :text nil})

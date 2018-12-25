@@ -9,6 +9,11 @@ body * {
   flex-shrink: 0;
 }
 
+.dev-shadows,
+.dev-shadows * {
+  box-shadow: 0 0 1px hsla(0,0%,0%,0.3);
+}
+
 .item:hover {
   background-color: hsl(0,0%,94%);
 }

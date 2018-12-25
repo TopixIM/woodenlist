@@ -23,7 +23,7 @@
             [clojure.string :as string]
             [respo-ui.comp.icon :refer [comp-icon]]
             [respo-alerts.comp.alerts :refer [comp-prompt comp-alert comp-confirm]]
-            [app.util :refer [delay!]]
+            [cumulo-util.core :refer [delay!]]
             [inflow-popup.comp.dialog :refer [comp-dialog comp-menu-dialog]]))
 
 (defn on-select-menu! [task state]
@@ -148,7 +148,7 @@
          :on-click (fn [e d! m!]
            (d! :task/create "")
            (delay!
-            400
+            0.4
             #((let [el (.querySelector js/document ".cursor-task")] (.focus el)))))})))
     (list->
      {:style {:position :relative, :height (+ 8 (* 48 (count tasks)))}}

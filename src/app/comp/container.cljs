@@ -68,7 +68,7 @@
         (if (:logged-in? store)
           (let [router (:router store)]
             (case (:name router)
-              :profile (comp-profile (:user store))
+              :profile (comp-profile (:user store) (:data router))
               :home (cursor-> :home comp-home states (:data router))
               :pending (cursor-> :pending comp-pending states (:data router))
               :done (cursor-> :done comp-done-tasks states (:data router))

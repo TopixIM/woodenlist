@@ -22,6 +22,13 @@
    {:months year-months, :cursor cursor, :tasks reading-tasks}))
 
 (deftwig
+ twig-members
+ (sessions users)
+ (->> sessions
+      (map (fn [[k session]] [k (get-in users [(:user-id session) :name])]))
+      (into {})))
+
+(deftwig
  twig-container
  (db session records)
  (let [logged-in? (some? (:user-id session))
@@ -38,6 +45,7 @@
                   (case (:name router)
                     :home (:working-tasks user)
                     :pending (:pending-tasks user)
+                    :profile (twig-members (:sessions db) (:users db))
                     :done (twig-done-tasks (:done-tasks user) (:data router))
                     {})),
          :numbers {:sessions (count (:sessions db)),

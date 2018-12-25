@@ -5,6 +5,7 @@
             [respo.comp.inspect :refer [comp-inspect]]
             [respo-ui.core :as ui]
             [app.schema :as schema]
+            [app.config :as config]
             [app.style :as style]
             [respo-md.comp.md :refer [comp-md comp-md-block]]))
 
@@ -15,7 +16,7 @@
 (defn on-submit [username password signup?]
   (fn [e dispatch!]
     (dispatch! (if signup? :user/sign-up :user/log-in) [username password])
-    (.setItem js/localStorage (:local-storage-key schema/configs) [username password])))
+    (.setItem js/localStorage (:storage-key config/site) [username password])))
 
 (defcomp
  comp-login
