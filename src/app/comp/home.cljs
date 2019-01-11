@@ -63,7 +63,17 @@
                  {:show-menu? false,
                   :show-editor? false,
                   :show-confirm? false,
-                  :task-draft (:text task)})]
+                  :task-draft (:text task)})
+       on-submit (fn [d! m!]
+                   (let [text (:task-draft state)]
+                     (when (some? text)
+                       (m! (assoc state :task-draft nil :show-editor? false))
+                       (d!
+                        :task/update-text
+                        {:id (:id task),
+                         :text text,
+                         :group :working-tasks,
+                         :time (.now js/Date)}))))]
    (div
     {:style (merge
              ui/row
@@ -93,21 +103,14 @@
           {:style (merge ui/input {:width "100%"}),
            :value (or (:task-draft state) (:text task)),
            :autofocus true,
-           :on-input (fn [e d! m!] (m! (assoc state :task-draft (:value e))))}))
+           :on-input (fn [e d! m!] (m! (assoc state :task-draft (:value e)))),
+           :on-keydown (fn [e d! m!] (if (= 13 (:keycode e)) (on-submit d! m!)))}))
         (=< nil 16)
         (div
          {:style ui/row-parted}
          (span {})
          (button
-          {:style ui/button,
-           :on-click (fn [e d! m!]
-             (let [text (:task-draft state)]
-               (when (some? text)
-                 (m! (assoc state :task-draft nil :show-editor? false))
-                 (d!
-                  :task/update-text
-                  {:id (:id task), :text text, :group :working-tasks, :time (.now js/Date)})))),
-           :inner-text "Edit"})))))
+          {:style ui/button, :on-click (fn [e d! m!] (on-submit d! m!)), :inner-text "Edit"})))))
     (when (:show-confirm? state)
       (comp-dialog
        (fn [m!] (m! %cursor (assoc state :show-confirm? false)))
