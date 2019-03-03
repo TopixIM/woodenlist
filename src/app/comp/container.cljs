@@ -62,9 +62,9 @@
       {:style (merge ui/global ui/fullscreen ui/column)}
       (comp-sidebar (:router store) (:logged-in? store) (:numbers store))
       (div
-       {:style (merge ui/flex {:overflow :auto})}
+       {:style (merge ui/flex {:overflow :auto, :height "100%"})}
        (div
-        {:style {:margin "0 auto", :max-width 800}}
+        {:style {:margin "0 auto", :max-width 800, :height "100%", :overflow :auto}}
         (if (:logged-in? store)
           (let [router (:router store)]
             (case (:name router)
