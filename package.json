@@ -21,16 +21,16 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "dependencies": {
-    "dayjs": "^1.7.8",
+    "dayjs": "^1.8.8",
     "md5": "^2.2.1",
-    "randomcolor": "^0.5.3",
+    "randomcolor": "^0.5.4",
     "shortid": "^2.2.14",
-    "ws": "^6.1.2"
+    "ws": "^6.1.4"
   },
   "devDependencies": {
-    "feather-icons": "^4.10.0",
+    "feather-icons": "^4.19.0",
     "http-server": "^0.11.1",
-    "shadow-cljs": "^2.7.15",
+    "shadow-cljs": "^2.8.13",
     "source-map-support": "^0.5.10"
   }
 }

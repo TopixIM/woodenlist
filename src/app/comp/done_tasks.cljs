@@ -49,13 +49,9 @@
        months (:months router-data)
        tasks (:tasks router-data)]
    (div
-    {:style (merge ui/flex ui/row {:padding 16})}
+    {:style (merge ui/flex ui/row {:padding "16px 8px", :overflow :auto, :height "100%"})}
     (list->
-     {:style {:overflow :auto,
-              :font-family ui/font-fancy,
-              :max-height 320,
-              :width 120,
-              :flex-shrink 0}}
+     {:style {:overflow :auto, :font-family ui/font-fancy, :width 80, :flex-shrink 0}}
      (->> months
           (sort (fn [x y] (compare y x)))
           (map
@@ -63,14 +59,17 @@
              [year-month
               (div
                {:style (merge
-                        {:cursor :pointer, :padding "0 18px"}
+                        {:cursor :pointer, :padding "0 8px"}
                         (when (= cursor year-month) {:background-color (hsl 0 0 94)})),
                 :class-name "item",
                 :on-click (fn [e d! m!] (d! :router/change {:name :done, :data year-month}))}
                (<> year-month))]))))
-    (=< 16 nil)
+    (=< 8 nil)
     (div
-     {:style (merge ui/flex ui/column {:overflow :auto})}
+     {:style (merge
+              ui/flex
+              ui/column
+              {:overflow :auto, :height "100%", :padding-bottom 120})}
      (div
       {}
       (<>
