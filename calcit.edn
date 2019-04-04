@@ -9490,6 +9490,13 @@
               :type :expr, :by "root", :at 1545759248440, :id "JVGWFP_dc-J"
               :data {
                "T" {:type :leaf, :by "root", :at 1545759248440, :text "{}", :id "mV3TyrGbJWy"}
+               "b" {
+                :type :expr, :by "root", :at 1554397782795, :id "7vjJEU3q2"
+                :data {
+                 "T" {:type :leaf, :by "root", :at 1554397786079, :text ":manifest", :id "7vjJEU3q2leaf"}
+                 "j" {:type :leaf, :by "root", :at 1554397789162, :text "\"manifest.json", :id "hz9wAR1jc"}
+                }
+               }
                "j" {
                 :type :expr, :by "root", :at 1545759248440, :id "fc6U5YmtPvG"
                 :data {

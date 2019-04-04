@@ -33,7 +33,8 @@
      html-content
      (merge
       base-info
-      {:styles [(:release-ui config/site)],
+      {:manifest "manifest.json",
+       :styles [(:release-ui config/site)],
        :scripts (map #(-> % :output-name prefix-cdn) assets)}))))
 
 (defn main! []
