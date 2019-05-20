@@ -41,6 +41,10 @@
         :edit (m! (assoc new-state :show-editor? true))
         :remove (m! (assoc new-state :show-confirm? true))
         :touch (do (d! :task/touch-working (:id task)) (m! new-state))
+        :open
+          (do
+           (js/window.open (re-find (re-pattern "https?://\\S+") (:text task)))
+           (m! new-state))
         nil (m! new-state)
         :else))))
 
@@ -87,11 +91,13 @@
     (when (:show-menu? state)
       (comp-menu-dialog
        (on-select-menu! task state)
-       {:finish "Finish",
-        :edit "Edit",
-        :postpone "Postpone",
-        :touch "Touch",
-        :remove "Remove"}))
+       (merge
+        (if (re-find (re-pattern "https?://") (:text task)) {:open "Open Link"} nil)
+        {:finish "Finish",
+         :edit "Edit",
+         :postpone "Postpone",
+         :touch "Up",
+         :remove "Remove"})))
     (when (:show-editor? state)
       (comp-dialog
        (fn [m!] (m! %cursor (assoc state :show-editor? false)))
