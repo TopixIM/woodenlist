@@ -9,7 +9,7 @@
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.comp.space :refer [=<]]
             [respo.util.list :refer [map-val]]
-            [respo-ui.comp.icon :refer [comp-icon]]
+            [feather.core :refer [comp-i]]
             ["dayjs" :as dayjs]))
 
 (defcomp
@@ -32,14 +32,14 @@
     (div
      {:style {:cursor :pointer, :margin-right 16},
       :on-click (action-> :task/remove-done (:id task))}
-     (comp-icon :android-delete)))
+     (comp-i :trash 14 (hsl 0 0 50))))
   (when editing?
     (div
      {:style {:cursor :pointer},
       :on-click (action->
                  :task/move-task
                  {:id (:id task), :from :done-tasks, :to :working-tasks})}
-     (comp-icon :ios-loop)))))
+     (comp-i :repeat 14 (hsl 0 0 50))))))
 
 (defcomp
  comp-done-tasks
