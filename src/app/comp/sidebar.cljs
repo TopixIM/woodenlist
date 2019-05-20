@@ -2,7 +2,6 @@
 (ns app.comp.sidebar
   (:require [hsl.core :refer [hsl]]
             [respo-ui.core :as ui]
-            [respo-ui.colors :as colors]
             [respo.core :refer [defcomp <> span div]]
             [feather.core :refer [comp-i]]
             [app.config :as config]))

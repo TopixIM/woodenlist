@@ -4,7 +4,6 @@
             [app.schema :as schema]
             [app.config :as config]
             [respo-ui.core :as ui]
-            [respo-ui.colors :as colors]
             [respo.core :refer [defcomp list-> <> span button div a]]
             [respo.comp.space :refer [=<]]
             [app.style :as style]))
@@ -53,6 +52,6 @@
 (def style-trigger
   {:font-size 14,
    :cursor :pointer,
-   :background-color colors/motif-light,
+   :background-color (hsl 200 100 84),
    :color :white,
    :padding "0 8px"})

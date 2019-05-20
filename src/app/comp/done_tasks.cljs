@@ -2,7 +2,6 @@
 (ns app.comp.done-tasks
   (:require [hsl.core :refer [hsl]]
             [respo-ui.core :as ui]
-            [respo-ui.colors :as colors]
             [respo.core
              :refer
              [defcomp <> div span cursor-> mutation-> button list-> action-> input a pre]]

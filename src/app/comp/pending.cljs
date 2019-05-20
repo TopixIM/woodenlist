@@ -2,7 +2,6 @@
 (ns app.comp.pending
   (:require [hsl.core :refer [hsl]]
             [respo-ui.core :as ui]
-            [respo-ui.colors :as colors]
             [respo.core :refer [defcomp <> div span cursor-> button list-> action-> input]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.comp.space :refer [=<]]
