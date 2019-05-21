@@ -2,13 +2,12 @@
 (ns app.comp.pending
   (:require [hsl.core :refer [hsl]]
             [respo-ui.core :as ui]
-            [respo-ui.colors :as colors]
             [respo.core :refer [defcomp <> div span cursor-> button list-> action-> input]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.comp.space :refer [=<]]
             [respo.util.list :refer [map-val]]
-            [respo-ui.comp.icon :refer [comp-icon]]
-            [respo-alerts.comp.alerts :refer [comp-prompt]]))
+            [respo-alerts.comp.alerts :refer [comp-prompt]]
+            [feather.core :refer [comp-i]]))
 
 (defcomp
  comp-task
@@ -44,14 +43,14 @@
     :on-click (action->
                :task/move-task
                {:id (:id task), :from :pending-tasks, :to :working-tasks})}
-   (comp-icon :navigate))
+   (comp-i :corner-up-left 14 (hsl 0 0 50)))
   (comment
    div
    {:style {:cursor :pointer},
     :on-click (action->
                :task/move-task
                {:id (:id task), :from :pending-tasks, :to :done-tasks})}
-   (comp-icon :android-done))))
+   (comp-i :check 14 (hsl 0 0 50)))))
 
 (defcomp
  comp-pending

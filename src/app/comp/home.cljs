@@ -2,7 +2,6 @@
 (ns app.comp.home
   (:require [hsl.core :refer [hsl]]
             [respo-ui.core :as ui]
-            [respo-ui.colors :as colors]
             [respo.core
              :refer
              [defcomp
@@ -21,7 +20,7 @@
             [respo.comp.space :refer [=<]]
             [respo.util.list :refer [map-val]]
             [clojure.string :as string]
-            [respo-ui.comp.icon :refer [comp-icon]]
+            [feather.core :refer [comp-i]]
             [respo-alerts.comp.alerts :refer [comp-prompt comp-alert comp-confirm]]
             [cumulo-util.core :refer [delay!]]
             [inflow-popup.comp.dialog :refer [comp-dialog comp-menu-dialog]]))
@@ -41,6 +40,10 @@
         :edit (m! (assoc new-state :show-editor? true))
         :remove (m! (assoc new-state :show-confirm? true))
         :touch (do (d! :task/touch-working (:id task)) (m! new-state))
+        :open
+          (do
+           (js/window.open (re-find (re-pattern "https?://\\S+") (:text task)))
+           (m! new-state))
         nil (m! new-state)
         :else))))
 
@@ -87,11 +90,13 @@
     (when (:show-menu? state)
       (comp-menu-dialog
        (on-select-menu! task state)
-       {:finish "Finish",
-        :edit "Edit",
-        :postpone "Postpone",
-        :touch "Touch",
-        :remove "Remove"}))
+       (merge
+        (if (re-find (re-pattern "https?://") (:text task)) {:open "Open Link"} nil)
+        {:finish "Finish",
+         :edit "Edit",
+         :postpone "Postpone",
+         :touch "Up",
+         :remove "Remove"})))
     (when (:show-editor? state)
       (comp-dialog
        (fn [m!] (m! %cursor (assoc state :show-editor? false)))
@@ -140,7 +145,7 @@
       :create
       comp-prompt
       states
-      {:trigger (comp-icon :android-add), :text "New task:", :initial ""}
+      {:trigger (comp-i :plus 14 (hsl 0 0 50)), :text "New task:", :initial ""}
       (fn [result d! m!] (when (not (string/blank? result)) (d! :task/create result)))))
     (if (empty? tasks)
       (div
