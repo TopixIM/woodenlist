@@ -4564,6 +4564,47 @@
                }
               }
              }
+             "v" {
+              :type :expr, :by "B1y7Rc-Zz", :at 1566926211718, :id "XRnJbQuuc"
+              :data {
+               "T" {:type :leaf, :by "B1y7Rc-Zz", :at 1566926214338, :text ":draggable", :id "XRnJbQuucleaf"}
+               "j" {:type :leaf, :by "B1y7Rc-Zz", :at 1566926215393, :text "true", :id "U3-Lu__9g"}
+              }
+             }
+             "x" {
+              :type :expr, :by "B1y7Rc-Zz", :at 1566926226813, :id "4JPgaWvGU"
+              :data {
+               "T" {:type :leaf, :by "B1y7Rc-Zz", :at 1566926228061, :text ":on-dragend", :id "4JPgaWvGUleaf"}
+               "j" {
+                :type :expr, :by "B1y7Rc-Zz", :at 1566926258569, :id "jQSB52n5w"
+                :data {
+                 "T" {:type :leaf, :by "B1y7Rc-Zz", :at 1566926259073, :text "fn", :id "dwmd0eAR-9"}
+                 "j" {
+                  :type :expr, :by "B1y7Rc-Zz", :at 1566926259402, :id "KaBMDUxwbA"
+                  :data {
+                   "T" {:type :leaf, :by "B1y7Rc-Zz", :at 1566926259583, :text "e", :id "0eHmYtn9DF"}
+                   "j" {:type :leaf, :by "B1y7Rc-Zz", :at 1566926260272, :text "d!", :id "B4TsBusiZq"}
+                   "r" {:type :leaf, :by "B1y7Rc-Zz", :at 1566926261057, :text "m!", :id "TCDE-R5130"}
+                  }
+                 }
+                 "r" {
+                  :type :expr, :by "B1y7Rc-Zz", :at 1566926262042, :id "FtGzu6Q-bt"
+                  :data {
+                   "T" {:type :leaf, :by "B1y7Rc-Zz", :at 1566926262042, :text "d!", :id "xZSEu4qXxt"}
+                   "j" {:type :leaf, :by "B1y7Rc-Zz", :at 1566926262042, :text ":task/touch-working", :id "nzsUQFctdr"}
+                   "r" {
+                    :type :expr, :by "B1y7Rc-Zz", :at 1566926262042, :id "TLwcKviOc6"
+                    :data {
+                     "T" {:type :leaf, :by "B1y7Rc-Zz", :at 1566926262042, :text ":id", :id "XE2SvIm9HM"}
+                     "j" {:type :leaf, :by "B1y7Rc-Zz", :at 1566926262042, :text "task", :id "k7x81Juyvw"}
+                    }
+                   }
+                  }
+                 }
+                }
+               }
+              }
+             }
             }
            }
            "l" {
