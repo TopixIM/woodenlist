@@ -235,10 +235,10 @@ date-now@^0.1.4:
   resolved "https://registry.npm.taobao.org/date-now/download/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
   integrity sha1-6vQ5/U1ISK105cx9vvIAZyueNFs=
 
-dayjs@^1.8.15:
-  version "1.8.15"
-  resolved "https://registry.npm.taobao.org/dayjs/download/dayjs-1.8.15.tgz#7121bc04e6a7f2621ed6db566be4a8aaf8c3913e"
-  integrity sha1-cSG8BOan8mIe1ttWa+SoqvjDkT4=
+dayjs@^1.8.16:
+  version "1.8.16"
+  resolved "https://registry.npm.taobao.org/dayjs/download/dayjs-1.8.16.tgz#2a3771de537255191b947957af2fd90012e71e64"
+  integrity sha1-Kjdx3lNyVRkblHlXry/ZABLnHmQ=
 
 debug@^2.2.0:
   version "2.6.9"
@@ -247,10 +247,10 @@ debug@^2.2.0:
   dependencies:
     ms "2.0.0"
 
-debug@^3.2.6:
-  version "3.2.6"
-  resolved "https://registry.npm.taobao.org/debug/download/debug-3.2.6.tgz#e83d17de16d8a7efb7717edbe5fb10135eee629b"
-  integrity sha1-6D0X3hbYp++3cX7b5fsQE17uYps=
+debug@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.npm.taobao.org/debug/download/debug-4.1.1.tgz#3b72260255109c6b589cee050f1d516139664791"
+  integrity sha1-O3ImAlUQnGtYnO4FDx1RYTlmR5E=
   dependencies:
     ms "^2.1.1"
 
@@ -326,11 +326,11 @@ feather-icons@^4.24.1:
     core-js "^3.1.3"
 
 follow-redirects@^1.0.0:
-  version "1.7.0"
-  resolved "https://registry.npm.taobao.org/follow-redirects/download/follow-redirects-1.7.0.tgz#489ebc198dc0e7f64167bd23b03c4c19b5784c76"
-  integrity sha1-SJ68GY3A5/ZBZ70jsDxMGbV4THY=
+  version "1.8.0"
+  resolved "https://registry.npm.taobao.org/follow-redirects/download/follow-redirects-1.8.0.tgz#dcf34930bcfdb6c1eb22b8eb7c457ec95a3dcf40"
+  integrity sha1-3PNJMLz9tsHrIrjrfEV+yVo9z0A=
   dependencies:
-    debug "^3.2.6"
+    debug "^4.1.1"
 
 hash-base@^3.0.0:
   version "3.0.4"
@@ -723,10 +723,10 @@ shadow-cljs-jar@1.3.1:
   resolved "https://registry.npm.taobao.org/shadow-cljs-jar/download/shadow-cljs-jar-1.3.1.tgz#a5f8ab7664b40e11345837e4c6bce8e0ac9b2cc3"
   integrity sha1-pfirdmS0DhE0WDfkxrzo4KybLMM=
 
-shadow-cljs@^2.8.51:
-  version "2.8.51"
-  resolved "https://registry.npm.taobao.org/shadow-cljs/download/shadow-cljs-2.8.51.tgz#1d5b7ab6b1e035556ae6e8e4b0c866031867b352"
-  integrity sha1-HVt6trHgNVVq5ujksMhmAxhns1I=
+shadow-cljs@^2.8.52:
+  version "2.8.52"
+  resolved "https://registry.npm.taobao.org/shadow-cljs/download/shadow-cljs-2.8.52.tgz#56a4be5f0f22c6929a358ab3ace81ec0c34aab1b"
+  integrity sha1-VqS+Xw8ixpKaNYqzrOgewMNKqxs=
   dependencies:
     mkdirp "^0.5.1"
     node-libs-browser "^2.0.0"
