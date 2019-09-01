@@ -13,6 +13,8 @@
                 [respo/message          "0.3.4"]
                 [respo/feather          "0.1.1"]
                 [respo/markdown         "0.2.4"]
+                [medley                 "1.2.0"]
+                [appliedscience/js-interop  "0.1.20"]
                 [org.clojure/core.incubator "0.1.4"]]
  :open-file-command ["subl" ["%s:%s:%s" :file :line :column]]
  :dev-http {7000 "target/"}

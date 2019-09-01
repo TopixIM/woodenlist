@@ -9,11 +9,12 @@
             [respo.comp.space :refer [=<]]
             [respo.util.list :refer [map-val]]
             [feather.core :refer [comp-i]]
+            [respo-alerts.comp.alerts :refer [comp-confirm]]
             ["dayjs" :as dayjs]))
 
 (defcomp
  comp-done-task
- (task editing?)
+ (states task editing?)
  (div
   {:style (merge ui/row {:margin "8px 0", :align-items :center})}
   (span
@@ -28,10 +29,14 @@
              :white-space :nowrap}),
     :inner-text (:text task)})
   (when editing?
-    (div
-     {:style {:cursor :pointer, :margin-right 16},
-      :on-click (action-> :task/remove-done (:id task))}
-     (comp-i :trash 14 (hsl 0 0 50))))
+    (cursor->
+     :remove
+     comp-confirm
+     states
+     {:trigger (comp-i :trash 14 (hsl 0 0 50)),
+      :style {:cursor :pointer, :margin-right 16},
+      :text "Remove record forever?"}
+     (fn [e d! m!] (d! :task/remove-done (:id task)))))
   (when editing?
     (div
      {:style {:cursor :pointer},
@@ -108,7 +113,14 @@
                    (->> tasks
                         (sort-by (fn [task] (unchecked-negate (:time task))))
                         (map
-                         (fn [task] [(:id task) (comp-done-task task (:editing? state))])))))]))))))
+                         (fn [task]
+                           [(:id task)
+                            (cursor->
+                             (:id task)
+                             comp-done-task
+                             states
+                             task
+                             (:editing? state))])))))]))))))
     (comment
      if
      (pos? (count router-data))
