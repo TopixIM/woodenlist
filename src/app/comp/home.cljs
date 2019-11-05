@@ -21,31 +21,31 @@
             [respo.util.list :refer [map-val]]
             [clojure.string :as string]
             [feather.core :refer [comp-i]]
-            [respo-alerts.comp.alerts :refer [comp-prompt comp-alert comp-confirm]]
-            [cumulo-util.core :refer [delay!]]
-            [inflow-popup.comp.dialog :refer [comp-dialog comp-menu-dialog]]))
+            [respo-alerts.core
+             :refer
+             [comp-prompt comp-alert comp-confirm comp-modal comp-modal-menu]]
+            [cumulo-util.core :refer [delay!]]))
 
-(defn on-select-menu! [task state]
-  (fn [result d! m!]
-    (let [new-state (assoc state :show-menu? false)]
-      (case result
-        :finish
-          (do
-           (d! :task/move-task {:id (:id task), :from :working-tasks, :to :done-tasks})
-           (m! new-state))
-        :postpone
-          (do
-           (d! :task/move-task {:id (:id task), :from :working-tasks, :to :pending-tasks})
-           (m! new-state))
-        :edit (m! (assoc new-state :show-editor? true))
-        :remove (m! (assoc new-state :show-confirm? true))
-        :touch (do (d! :task/touch-working (:id task)) (m! new-state))
-        :open
-          (do
-           (js/window.open (re-find (re-pattern "https?://\\S+") (:text task)))
-           (m! new-state))
-        nil (m! new-state)
-        :else))))
+(defn on-select-menu! [task state result d! m!]
+  (let [new-state (assoc state :show-menu? false)]
+    (case result
+      :finish
+        (do
+         (d! :task/move-task {:id (:id task), :from :working-tasks, :to :done-tasks})
+         (m! new-state))
+      :postpone
+        (do
+         (d! :task/move-task {:id (:id task), :from :working-tasks, :to :pending-tasks})
+         (m! new-state))
+      :edit (m! (assoc new-state :show-editor? true))
+      :remove (m! (assoc new-state :show-confirm? true))
+      :touch (do (d! :task/touch-working (:id task)) (m! new-state))
+      :open
+        (do
+         (js/window.open (re-find (re-pattern "https?://\\S+") (:text task)))
+         (m! new-state))
+      nil (m! new-state)
+      :else)))
 
 (def style-item
   {:line-height "32px",
@@ -89,21 +89,27 @@
      :on-dragend (fn [e d! m!] (d! :task/touch-working (:id task)))}
     (<> (:text task) {:text-overflow :ellipsis, :overflow :hidden, :max-width "100%"})
     (=< 32 nil)
-    (when (:show-menu? state)
-      (comp-menu-dialog
-       (on-select-menu! task state)
-       (merge
-        (if (re-find (re-pattern "https?://") (:text task)) {:open "Open Link"} nil)
-        {:finish "Finish",
-         :edit "Edit",
-         :postpone "Postpone",
-         :touch "Up",
-         :remove "Remove"})))
-    (when (:show-editor? state)
-      (comp-dialog
-       (fn [m!] (m! %cursor (assoc state :show-editor? false)))
+    (comp-modal-menu
+     (:show-menu? state)
+     {:title "Operations", :style {:line-height "24px"}}
+     (concat
+      (if (re-find (re-pattern "https?://") (:text task))
+        [{:value :open, :display "Open Link"}]
+        nil)
+      [{:value :finish, :display "Finish"}
+       {:value :edit, :display "Edit"}
+       {:value :postpone, :display "Postpone"}
+       {:value :touch, :display "Up"}
+       {:value :remove, :display "Remove"}])
+     (fn [m!] (m! %cursor (assoc state :show-menu? false)))
+     (fn [item d! m!] (on-select-menu! task state (:value item) d! m!)))
+    (comp-modal
+     (:show-editor? state)
+     {:title "Edit task"}
+     (fn [m!] (m! %cursor (assoc state :show-editor? false)))
+     (fn []
        (div
-        {:style {:min-width 280}}
+        {:style {:min-width 280, :padding 16}}
         (div
          {}
          (input
@@ -118,11 +124,13 @@
          (span {})
          (button
           {:style ui/button, :on-click (fn [e d! m!] (on-submit d! m!)), :inner-text "Edit"})))))
-    (when (:show-confirm? state)
-      (comp-dialog
-       (fn [m!] (m! %cursor (assoc state :show-confirm? false)))
+    (comp-modal
+     (:show-confirm? state)
+     {:title "Sure to remove?", :style {:width 360}}
+     (fn [m!] (m! %cursor (assoc state :show-confirm? false)))
+     (fn []
        (div
-        {:style {:width 320}}
+        {:style {:padding 16}}
         (div {} (<> "Confirm remove?"))
         (div
          {:style ui/row-parted}

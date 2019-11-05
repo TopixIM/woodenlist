@@ -6,7 +6,7 @@
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.comp.space :refer [=<]]
             [respo.util.list :refer [map-val]]
-            [respo-alerts.comp.alerts :refer [comp-prompt]]
+            [respo-alerts.core :refer [comp-prompt]]
             [feather.core :refer [comp-i]]))
 
 (defcomp
