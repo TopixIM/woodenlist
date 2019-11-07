@@ -9,7 +9,7 @@
             [respo.comp.space :refer [=<]]
             [respo.util.list :refer [map-val]]
             [feather.core :refer [comp-i]]
-            [respo-alerts.comp.alerts :refer [comp-confirm]]
+            [respo-alerts.core :refer [comp-confirm]]
             ["dayjs" :as dayjs]))
 
 (defcomp

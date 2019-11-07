@@ -2,6 +2,10 @@
 body {
   margin: 0;
   overscroll-behavior-y: none;
+
+  font-family: Hind, Verdana, "Hiragino Sans GB", "WenQuanYi Micro Hei", "Microsoft Yahei", sans-serif;
+  font-size: 14px;
+  line-height: 24px;
 }
 
 body * {
