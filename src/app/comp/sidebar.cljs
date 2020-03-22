@@ -31,17 +31,17 @@
    (div
     {:style ui/row}
     (div
-     {:on-click (fn [e d! m!] (d! :router/change {:name :home})),
+     {:on-click (fn [e d!] (d! :router/change {:name :home})),
       :style (merge ui/row style-entry (if (= :home (:name router)) {:color :white}))}
      (div {:style style-icon} (comp-i :home 14 "white"))
      (<> (:working numbers) style-count))
     (div
-     {:on-click (fn [e d! m!] (d! :router/change {:name :pending})),
+     {:on-click (fn [e d!] (d! :router/change {:name :pending})),
       :style (merge ui/row style-entry (if (= :pending (:name router)) {:color :white}))}
      (div {:style style-icon} (comp-i :clock 14 "white"))
      (<> (:pending numbers) style-count))
     (div
-     {:on-click (fn [e d! m!] (d! :router/change {:name :done})),
+     {:on-click (fn [e d!] (d! :router/change {:name :done})),
       :style (merge ui/row style-entry (if (= :done (:name router)) {:color :white}))}
      (div {:style style-icon} (comp-i :package 14 "white"))
      (<> (:done numbers) style-count)))
@@ -49,7 +49,7 @@
     {:style ui/column}
     (div
      {:style (merge ui/row style-entry (if (= :profile (:name router)) {:color :white})),
-      :on-click (fn [e d! m!] (d! :router/change {:name :profile}))}
+      :on-click (fn [e d!] (d! :router/change {:name :profile}))}
      (div
       {:style style-icon}
       (if logged-in? (comp-i :user 14 "white") (comp-i :log-in 14 "white")))
