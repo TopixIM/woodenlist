@@ -2,9 +2,7 @@
 (ns app.comp.done-tasks
   (:require [hsl.core :refer [hsl]]
             [respo-ui.core :as ui]
-            [respo.core
-             :refer
-             [defcomp <> div span cursor-> mutation-> button list-> action-> input a pre]]
+            [respo.core :refer [defcomp <> div span button list-> >> input a pre]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.comp.space :refer [=<]]
             [respo.util.list :refer [map-val]]
@@ -29,27 +27,25 @@
              :white-space :nowrap}),
     :inner-text (:text task)})
   (when editing?
-    (cursor->
-     :remove
-     comp-confirm
-     states
+    (comp-confirm
+     (>> states :remove)
      {:trigger (comp-i :trash 14 (hsl 0 0 50)),
       :style {:cursor :pointer, :margin-right 16},
       :text "Remove record forever?"}
-     (fn [e d! m!] (d! :task/remove-done (:id task)))))
+     (fn [e d!] (d! :task/remove-done (:id task)))))
   (when editing?
     (div
      {:style {:cursor :pointer},
-      :on-click (action->
-                 :task/move-task
-                 {:id (:id task), :from :done-tasks, :to :working-tasks})}
+      :on-click (fn [e d!]
+        (d! :task/move-task {:id (:id task), :from :done-tasks, :to :working-tasks}))}
      (comp-i :repeat 14 (hsl 0 0 50))))))
 
 (defcomp
  comp-done-tasks
  (states router-data)
- (let [state (or (:data states) {:editing? false})
-       cursor (:cursor router-data)
+ (let [cursor (:cursor states)
+       state (or (:data states) {:editing? false})
+       day-cursor (:cursor router-data)
        months (:months router-data)
        tasks (:tasks router-data)]
    (div
@@ -64,9 +60,9 @@
               (div
                {:style (merge
                         {:cursor :pointer, :padding "0 8px"}
-                        (when (= cursor year-month) {:background-color (hsl 0 0 94)})),
+                        (when (= day-cursor year-month) {:background-color (hsl 0 0 94)})),
                 :class-name "item",
-                :on-click (fn [e d! m!] (d! :router/change {:name :done, :data year-month}))}
+                :on-click (fn [e d!] (d! :router/change {:name :done, :data year-month}))}
                (<> year-month))]))))
     (=< 8 nil)
     (div
@@ -84,11 +80,11 @@
         (a
          {:style ui/link,
           :inner-text "Done",
-          :on-click (mutation-> (update state :editing? not))})
+          :on-click (fn [e d!] (d! cursor (update state :editing? not)))})
         (a
          {:style ui/link,
           :inner-text "Edit",
-          :on-click (mutation-> (update state :editing? not))})))
+          :on-click (fn [e d!] (d! cursor (update state :editing? not)))})))
      (let [tasks-by-time (->> tasks
                               vals
                               (group-by (fn [task] (.format (dayjs (:time task)) "DD"))))]
@@ -115,16 +111,13 @@
                         (map
                          (fn [task]
                            [(:id task)
-                            (cursor->
-                             (:id task)
-                             comp-done-task
-                             states
-                             task
-                             (:editing? state))])))))]))))))
+                            (comp-done-task (>> states (:id task)) task (:editing? state))])))))]))))))
     (comment
      if
      (pos? (count router-data))
      (div
       {}
-      (button {:style ui/button, :on-click (action-> :task/clear-done nil)} (<> "Clear"))))
+      (button
+       {:style ui/button, :on-click (fn [e d!] (d! :task/clear-done nil))}
+       (<> "Clear"))))
     (=< nil 240))))

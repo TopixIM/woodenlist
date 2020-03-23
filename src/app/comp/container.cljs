@@ -2,7 +2,7 @@
 (ns app.comp.container
   (:require [hsl.core :refer [hsl]]
             [respo-ui.core :as ui]
-            [respo.core :refer [defcomp <> div span cursor-> action-> button]]
+            [respo.core :refer [defcomp <> div span >> button]]
             [respo.comp.inspect :refer [comp-inspect]]
             [respo.comp.space :refer [=<]]
             [app.comp.sidebar :refer [comp-sidebar]]
@@ -33,7 +33,7 @@
             :background-size :contain}})
   (div
    {:style {:cursor :pointer, :line-height "32px"},
-    :on-click (action-> :effect/connect nil)}
+    :on-click (fn [e d!] (d! :effect/connect nil))}
    (<> "No connection..." {:font-family ui/font-fancy, :font-size 24}))))
 
 (defcomp
@@ -68,15 +68,15 @@
           (let [router (:router store)]
             (case (:name router)
               :profile (comp-profile (:user store) (:data router))
-              :home (cursor-> :home comp-home states (:data router))
-              :pending (cursor-> :pending comp-pending states (:data router))
-              :done (cursor-> :done comp-done-tasks states (:data router))
+              :home (comp-home (>> states :home) (:data router))
+              :pending (comp-pending (>> states :pending) (:data router))
+              :done (comp-done-tasks (>> states :done) (:data router))
               (<> router nil)))
-          (comp-login states))))
+          (comp-login (>> states :login)))))
       (comp-messages
        (get-in store [:session :messages])
        {}
-       (fn [info d! m!] (d! :session/remove-message info)))
+       (fn [info d!] (d! :session/remove-message info)))
       (comp-status-color (:color store))
       (if dev? (comp-inspect "Store" store style-debugger))
       (if dev? (comp-reel (:reel-length store) {:bottom 24}))))))
