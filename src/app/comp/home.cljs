@@ -75,7 +75,9 @@
      :on-click (fn [e d!] (d! cursor (assoc state :show-menu? true))),
      :draggable true,
      :on-dragend (fn [e d!] (d! :task/touch-working (:id task)))}
-    (<> (:text task) {:text-overflow :ellipsis, :overflow :hidden, :max-width "100%"})
+    (<>
+     (:text task)
+     (merge ui/expand {:text-overflow :ellipsis, :overflow :hidden, :max-width "100%"}))
     (=< 32 nil)
     (comp-modal-menu
      {:title "Operations",
