@@ -9,7 +9,7 @@
     [cumulo/reel "0.2.0"]
     [cumulo/util "0.1.10"]
     [respo "0.12.1"]
-    [respo/alerts "0.5.0"]
+    [respo/alerts "0.5.1"]
     [respo/ui "0.3.14"]
     [respo/message "0.3.6"]
     [respo/feather "0.1.1"]
