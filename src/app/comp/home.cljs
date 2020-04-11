@@ -10,29 +10,8 @@
             [feather.core :refer [comp-i]]
             [respo-alerts.core
              :refer
-             [comp-prompt comp-alert comp-confirm comp-modal comp-modal-menu]]
+             [comp-prompt comp-alert comp-confirm comp-modal-menu use-confirm use-prompt]]
             [cumulo-util.core :refer [delay!]]))
-
-(defn on-select-menu! [task state result d! cursor]
-  (let [new-state (assoc state :show-menu? false)]
-    (case result
-      :finish
-        (do
-         (d! :task/move-task {:id (:id task), :from :working-tasks, :to :done-tasks})
-         (d! cursor new-state))
-      :postpone
-        (do
-         (d! :task/move-task {:id (:id task), :from :working-tasks, :to :pending-tasks})
-         (d! cursor new-state))
-      :edit (d! cursor (assoc new-state :show-editor? true))
-      :remove (d! cursor (assoc new-state :show-confirm? true))
-      :touch (do (d! :task/touch-working (:id task)) (d! cursor new-state))
-      :open
-        (do
-         (js/window.open (re-find (re-pattern "https?://\\S+") (:text task)))
-         (d! cursor new-state))
-      nil (d! cursor new-state)
-      :else)))
 
 (def style-item
   {:line-height "32px",
@@ -51,26 +30,17 @@
  (states task idx)
  (let [cursor (:cursor states)
        state (or (:data states)
-                 {:show-menu? false,
-                  :show-editor? false,
-                  :show-confirm? false,
-                  :task-draft (:text task)})
-       on-submit (fn [d!]
-                   (let [text (:task-draft state)]
-                     (when (some? text)
-                       (d! cursor (assoc state :task-draft nil :show-editor? false))
-                       (d!
-                        :task/update-text
-                        {:id (:id task),
-                         :text text,
-                         :group :working-tasks,
-                         :time (.now js/Date)}))))]
+                 {:show-menu? false, :show-editor? false, :task-draft (:text task)})
+       remove-plugin (use-confirm (>> states :remove) {:text "Sure to remove?"})
+       update-plugin (use-prompt
+                      (>> states :update)
+                      {:text "Edit task:", :initial (:text task), :button-text "Edit"})]
    (div
     {:style (merge
              ui/row
              style-item
              {:top (+ 8 (* idx 48))}
-             (when (or (:show-menu? state) (:show-editor? state) (:show-confirm? state))
+             (when (or (:show-menu? state) (:show-editor? state))
                {:outline (str "2px solid " (hsl 240 80 86))})),
      :on-click (fn [e d!] (d! cursor (assoc state :show-menu? true))),
      :draggable true,
@@ -93,43 +63,45 @@
                {:value :remove, :display "Remove"}])}
      (:show-menu? state)
      (fn [d!] (d! cursor (assoc state :show-menu? false)))
-     (fn [item d!] (on-select-menu! task state (:value item) d! cursor)))
-    (comp-modal
-     {:title "Edit task",
-      :render-body (fn []
-        (div
-         {:style {:min-width 280, :padding 16}}
-         (div
-          {}
-          (input
-           {:style (merge ui/input {:width "100%"}),
-            :value (or (:task-draft state) (:text task)),
-            :autofocus true,
-            :on-input (fn [e d!] (d! cursor (assoc state :task-draft (:value e)))),
-            :on-keydown (fn [e d!] (if (= 13 (:keycode e)) (on-submit d!)))}))
-         (=< nil 16)
-         (div
-          {:style ui/row-parted}
-          (span {})
-          (button
-           {:style ui/button, :on-click (fn [e d!] (on-submit d!)), :inner-text "Edit"}))))}
-     (:show-editor? state)
-     (fn [d!] (d! cursor (assoc state :show-editor? false))))
-    (comp-modal
-     {:title "Sure to remove?",
-      :style {:width 360},
-      :render-body (fn []
-        (div
-         {:style {:padding 16}}
-         (div {} (<> "Confirm remove?"))
-         (div
-          {:style ui/row-parted}
-          (span {})
-          (button
-           {:style ui/button, :on-click (fn [e d!] (d! :task/remove-working (:id task)))}
-           (<> "Confirm")))))}
-     (:show-confirm? state)
-     (fn [d!] (d! cursor (assoc state :show-confirm? false)))))))
+     (fn [item d!]
+       (let [new-state (assoc state :show-menu? false)]
+         (case (:value item)
+           :finish
+             (do
+              (d! :task/move-task {:id (:id task), :from :working-tasks, :to :done-tasks})
+              (d! cursor new-state))
+           :postpone
+             (do
+              (d!
+               :task/move-task
+               {:id (:id task), :from :working-tasks, :to :pending-tasks})
+              (d! cursor new-state))
+           :edit
+             (do
+              (d! cursor new-state)
+              ((:show update-plugin)
+               d!
+               (fn [text]
+                 (when (some? text)
+                   (d!
+                    :task/update-text
+                    {:id (:id task),
+                     :text text,
+                     :group :working-tasks,
+                     :time (.now js/Date)})))))
+           :remove
+             (do
+              (d! cursor new-state)
+              ((:show remove-plugin) d! (fn [] (d! :task/remove-working (:id task)))))
+           :touch (do (d! :task/touch-working (:id task)) (d! cursor new-state))
+           :open
+             (do
+              (js/window.open (re-find (re-pattern "https?://\\S+") (:text task)))
+              (d! cursor new-state))
+           nil (d! cursor new-state)
+           :else))))
+    (:ui remove-plugin)
+    (:ui update-plugin))))
 
 (defcomp
  comp-home
