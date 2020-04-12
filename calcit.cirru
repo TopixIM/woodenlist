@@ -1412,7 +1412,7 @@
                       |T $ {} (:type :leaf) (:by |root) (:at 1521737867023) (:text |{}) (:id |SJzG5xvZcG)
                       |j $ {} (:type :expr) (:by |root) (:at 1521737867389) (:id |BkGXcxDZqG)
                         :data $ {}
-                          |T $ {} (:type :leaf) (:by |root) (:at 1521737874516) (:text |:width) (:id |BJZm5eDWqz)
+                          |T $ {} (:type :leaf) (:by |B1y7Rc-Zz) (:at 1586710436683) (:text |:min-width) (:id |BJZm5eDWqz)
                           |j $ {} (:type :leaf) (:by |root) (:at 1521737916027) (:text |20) (:id |BkjqgDZ5M)
                       |r $ {} (:type :expr) (:by |root) (:at 1521737878586) (:id |By1ogPZcM)
                         :data $ {}
