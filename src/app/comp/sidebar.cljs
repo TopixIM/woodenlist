@@ -6,7 +6,7 @@
             [feather.core :refer [comp-i]]
             [app.config :as config]))
 
-(def style-count (merge ui/center {:width 20, :font-size 14}))
+(def style-count (merge ui/center {:min-width 20, :font-size 14}))
 
 (def style-entry
   {:cursor :pointer, :color (hsl 0 0 80), :align-items :center, :height 40, :margin-right 24})
