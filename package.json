@@ -24,7 +24,7 @@
     "md5": "^2.2.1",
     "randomcolor": "^0.5.4",
     "shortid": "^2.2.15",
-    "ws": "^7.2.3"
+    "ws": "^7.4.6"
   },
   "devDependencies": {
     "feather-icons": "^4.28.0",
