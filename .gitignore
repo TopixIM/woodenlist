@@ -8,3 +8,7 @@ dist/
 out-page/
 
 yarn-error.log
+
+backups/
+woodenlist.cirru
+storage.cirru

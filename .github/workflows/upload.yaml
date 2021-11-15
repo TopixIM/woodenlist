@@ -12,6 +12,18 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
+    - name: Get yarn cache
+      id: yarn-cache
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+
+    - uses: actions/cache@v2
+      name: Cache node modules of yarn
+      with:
+        path: ${{ steps.yarn-cache.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
     - name: ACTIONS_ALLOW_UNSECURE_COMMANDS
       id: ACTIONS_ALLOW_UNSECURE_COMMANDS
       run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
@@ -38,10 +50,14 @@ jobs:
         && git clone https://github.com/mvc-works/ws-edn.calcit.git
         && git clone https://github.com/Respo/respo-feather.calcit.git
         && git clone https://github.com/Respo/alerts.calcit.git
+        && git clone https://github.com/calcit-lang/calcit-wss.git
+        && git clone https://github.com/calcit-lang/calcit.std.git
 
-    - run: yarn && yarn compile-server && yarn compile-page && yarn release-page && yarn release-server
+    - run: cr --entry server --emit-ir -1
 
-    - run: mkdir -p dist-server && mv js-out/bundle.js dist-server && cp package.json dist-server/
+    - run: yarn && yarn compile-page && yarn release-page
+
+    - run: mkdir -p dist-server && cp compact.cirru dist-server && cp package.json dist-server/
       name: Copy server scripts
 
     - name: Upload web assets

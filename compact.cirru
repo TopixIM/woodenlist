@@ -1,8 +1,11 @@
 
 {} (:package |app)
-  :configs $ {} (:init-fn |app.server/main!) (:reload-fn |app.server/reload!)
+  :configs $ {} (:init-fn |app.client/main!) (:reload-fn |app.client/reload!)
     :modules $ [] |respo.calcit/ |lilac/ |recollect/ |memof/ |respo-ui.calcit/ |ws-edn.calcit/ |cumulo-util.calcit/ |respo-message.calcit/ |cumulo-reel.calcit/ |respo-feather.calcit/ |alerts.calcit/ |respo-markdown.calcit/
     :version nil
+  :entries $ {}
+    :server $ {} (:port 6001) (:storage-key |calcit.cirru) (:init-fn |app.server/main!) (:reload-fn |app.server/reload!)
+      :modules $ [] |lilac/ |recollect/ |memof/ |cumulo-util.calcit/ |cumulo-reel.calcit/ |calcit-wss/ |calcit.std/
   :files $ {}
     |app.comp.home $ {}
       :ns $ quote
@@ -262,33 +265,35 @@
       :ns $ quote
         ns app.server $ :require (app.schema :as schema)
           app.updater :refer $ updater
-          cljs.reader :refer $ read-string
           cumulo-reel.core :refer $ reel-reducer refresh-reel reel-schema
-          "\"fs" :as fs
-          "\"path" :as path
           app.config :as config
-          cumulo-util.file :refer $ write-mildly! get-backup-path! merge-local-edn!
-          cumulo-util.core :refer $ id! repeat! unix-time! delay!
           app.twig.container :refer $ twig-container
           recollect.diff :refer $ diff-twig
-          ws-edn.server :refer $ wss-serve! wss-send! wss-each!
+          wss.core :refer $ wss-serve! wss-send! wss-each!
           recollect.twig :refer $ new-twig-loop! clear-twig-caches!
+          app.$meta :refer $ calcit-dirname
+          calcit.std.fs :refer $ path-exists? check-write-file!
+          calcit.std.time :refer $ set-interval
+          calcit.std.date :refer $ get-time! extract-time
+          calcit.std.path :refer $ join-path
       :defs $ {}
         |*initial-db $ quote
-          defatom *initial-db $ merge-local-edn! schema/database storage-file
-            fn (found?)
-              if found? (println "\"Found local EDN data") (println "\"Found no data")
+          defatom *initial-db $ if
+            path-exists? $ w-log storage-file
+            do (println "\"Found local EDN data")
+              merge schema/database $ parse-cirru-edn (read-file storage-file)
+            do (println "\"Found no data") schema/database
         |persist-db! $ quote
           defn persist-db! () $ let
               file-content $ format-cirru-edn
                 assoc (:db @*reel) :sessions $ {}
               storage-path storage-file
               backup-path $ get-backup-path!
-            write-mildly! storage-path file-content
-            write-mildly! backup-path file-content
+            check-write-file! storage-path file-content
+            check-write-file! backup-path file-content
         |sync-clients! $ quote
           defn sync-clients! (reel)
-            wss-each! $ fn (sid socket)
+            wss-each! $ fn (sid)
               let
                   db $ :db reel
                   records $ :records reel
@@ -297,67 +302,77 @@
                   new-store $ twig-container db session records
                   changes $ diff-twig old-store new-store
                     {} $ :key :id
-                when config/dev? $ println "\"Changes for" sid "\":" changes (count records)
+                ; when config/dev? $ println "\"Changes for" sid "\":" changes (count records)
                 if
                   not= changes $ []
                   do
-                    wss-send! sid $ {} (:kind :patch) (:data changes)
+                    wss-send! sid $ format-cirru-edn
+                      {} (:kind :patch) (:data changes)
                     swap! *client-caches assoc sid new-store
             new-twig-loop!
         |storage-file $ quote
-          def storage-file $ path/join js/__dirname (:storage-file config/site)
+          def storage-file $ if (empty? calcit-dirname)
+            str calcit-dirname $ :storage-file config/site
+            str calcit-dirname "\"/" $ :storage-file config/site
         |*reader-reel $ quote (defatom *reader-reel @*reel)
         |*reel $ quote
           defatom *reel $ merge reel-schema
             {} (:base @*initial-db) (:db @*initial-db)
-        |*proxied-dispatch! $ quote (defatom *proxied-dispatch! dispatch!)
         |main! $ quote
           defn main! ()
             println "\"Running mode:" $ if config/dev? "\"dev" "\"release"
             let
-                port $ if (some? js/process.env.port) (js/parseInt js/process.env.port) (:port config/site)
+                p? $ get-env "\"port"
+                port $ if (some? p?) (parse-float p?) (:port config/site)
               run-server! port
               println $ str "\"Server started on port:" port
-            render-loop! *loop-trigger
-            js/process.on "\"SIGINT" on-exit!
-            repeat! 600 $ fn () (persist-db!)
-        |*loop-trigger $ quote (defatom *loop-trigger 0)
+            do (; "\"init it before doing multi-threading") (identity @*reader-reel)
+            set-interval 200 $ fn () (render-loop!)
+            set-interval 600000 $ fn () (persist-db!)
+            on-control-c on-exit!
+        |get-backup-path! $ quote
+          defn get-backup-path! () $ let
+              now $ extract-time (get-time!)
+            join-path calcit-dirname "\"backups"
+              str $ :month now
+              str (:day now) "\"-snapshot.cirru"
         |on-exit! $ quote
-          defn on-exit! (code _) (persist-db!)
-            ; println "\"exit code is:" $ pr-str code
-            js/process.exit
+          defn on-exit! () (persist-db!) (; println "\"exit code is...") (quit! 0)
         |dispatch! $ quote
           defn dispatch! (op op-data sid)
             let
-                op-id $ id!
-                op-time $ unix-time!
+                op-id $ generate-id!
+                op-time $ get-time!
               if config/dev? $ println "\"Dispatch!" (str op) op-data sid
               if (= op :effect/persist) (persist-db!)
                 reset! *reel $ reel-reducer @*reel updater op op-data sid op-id op-time config/dev?
         |run-server! $ quote
           defn run-server! (port)
-            wss-serve! port $ {}
-              :on-open $ fn (sid socket) (@*proxied-dispatch! :session/connect nil sid) (println "\"New client.")
-              :on-data $ fn (sid action)
-                case-default (:kind action) (println "\"unknown action:" action)
-                  :op $ @*proxied-dispatch! (:op action) (:data action) sid
-              :on-close $ fn (sid event) (println "\"Client closed!") (@*proxied-dispatch! :session/disconnect nil sid)
-              :on-error $ fn (error) (js/console.error error)
+            wss-serve! (&{} :port port)
+              fn (data)
+                key-match data
+                    :connect sid
+                    do (dispatch! :session/connect nil sid) (println "\"New client.")
+                  (:message sid msg)
+                    let
+                        action $ parse-cirru-edn msg
+                      case-default (:kind action) (println "\"unknown action:" action)
+                        :op $ dispatch! (:op action) (:data action) sid
+                  (:disconnect sid)
+                    do (println "\"Client closed!") (dispatch! :session/disconnect nil sid)
+                  _ $ println "\"unknown data:" data
         |render-loop! $ quote
-          defn render-loop! (*loop)
-            when
-              not $ identical? @*reader-reel @*reel
-              reset! *reader-reel @*reel
-              sync-clients! @*reader-reel
-            reset! *loop $ delay! 0.2
-              fn () $ render-loop! *loop
+          defn render-loop! () $ when
+            not $ identical? @*reader-reel @*reel
+            reset! *reader-reel @*reel
+            sync-clients! @*reader-reel
         |*client-caches $ quote
           defatom *client-caches $ {}
         |reload! $ quote
-          defn reload! () (println "\"Code updated.") (clear-twig-caches!) (reset! *proxied-dispatch! dispatch!)
+          defn reload! () (println "\"Code updated..")
+            if (not config/dev?) (raise "\"reloading only happens in dev mode")
+            clear-twig-caches!
             reset! *reel $ refresh-reel @*reel @*initial-db updater
-            js/clearTimeout @*loop-trigger
-            render-loop! *loop-trigger
             sync-clients! @*reader-reel
     |app.comp.sidebar $ {}
       :ns $ quote
@@ -446,8 +461,9 @@
       :ns $ quote
         ns app.twig.container $ :require
           [] app.twig.user :refer $ [] twig-user
-          [] "\"randomcolor" :as color
           [] "\"dayjs" :default dayjs
+          calcit.std.rand :refer $ rand-hex-color!
+          calcit.std.date :refer $ extract-time format-time
       :defs $ {}
         |twig-container $ quote
           defn twig-container (db session records)
@@ -473,24 +489,21 @@
                       :working $ count (:working-tasks user)
                       :pending $ count (:pending-tasks user)
                       :done $ count (:done-tasks user)
-                    :color $ color/randomColor
-                , nil
+                    :color $ rand-hex-color!
+                {}
         |twig-done-tasks $ quote
           defn twig-done-tasks (done-tasks year-month)
             let
                 year-months $ -> done-tasks (.to-list)
                   map $ fn (pair)
-                    -> pair (last) (get :time) (dayjs) (.!format "\"YYYY-MM")
-                  .distinct
-                cursor $ or year-month
-                  js/Math.max $ to-js-data year-months
+                    -> pair (last) (get :time) (format-time "\"%Y-%m")
+                  distinct
+                cursor $ or year-month (&list:max year-months)
                 reading-tasks $ -> done-tasks
                   filter $ fn (pair)
                     let
                         task $ last pair
-                      = cursor $ .!format
-                        dayjs $ :time task
-                        , "\"YYYY-MM"
+                      = cursor $ -> (:time task) (format-time "\"%Y-%m")
               {} (:months year-months) (:cursor cursor) (:tasks reading-tasks)
         |twig-members $ quote
           defn twig-members (sessions users)
@@ -671,7 +684,9 @@
                 {} (:id op-id) (:text op-data) (:mode :working) (:time op-time)
     |app.updater.user $ {}
       :ns $ quote
-        ns app.updater.user $ :require ([] "\"md5" :default md5) ([] app.schema :as schema)
+        ns app.updater.user $ :require
+          calcit.std.hash :refer $ md5
+          [] app.schema :as schema
       :defs $ {}
         |sign-up $ quote
           defn sign-up (db op-data sid op-id op-time)
@@ -763,7 +778,7 @@
                   {}
                     :style $ merge ui/button
                     :on-click $ fn (e d!)
-                      .replace js/location $ str js/location.origin "\"?time=" (.now js/Date)
+                      js/location.replace $ str js/location.origin "\"?time=" (js/Date.now)
                   <> "\"Refresh"
                 =< 8 nil
                 button
@@ -1073,13 +1088,7 @@
     |app.config $ {}
       :ns $ quote (ns app.config)
       :defs $ {}
-        |cdn? $ quote
-          def cdn? $ cond
-              exists? js/window
-              , false
-            (exists? js/process) (= "\"true" js/process.env.cdn)
-            :else false
         |dev? $ quote
           def dev? $ = "\"dev" (get-env "\"mode")
         |site $ quote
-          def site $ {} (:port 11000) (:title "\"Woodenlist") (:icon "\"http://cdn.tiye.me/logo/woodenlist.png") (:dev-ui "\"http://localhost:8100/main.css") (:release-ui "\"http://cdn.tiye.me/favored-fonts/main.css") (:cdn-url "\"http://cdn.tiye.me/woodenlist/") (:cdn-folder "\"tiye.me:cdn/woodenlist") (:upload-folder "\"tiye.me:repo/TopixIM/woodenlist/") (:server-folder "\"tiye.me:servers/woodenlist") (:theme "\"#4DB386") (:storage-key "\"woodenlist-storage") (:storage-file "\"woodenlist.cirru")
+          def site $ {} (:port 11000) (:title "\"Woodenlist") (:icon "\"http://cdn.tiye.me/logo/woodenlist.png") (:server-folder "\"tiye.me:servers/woodenlist") (:theme "\"#4DB386") (:storage-key "\"woodenlist-storage") (:storage-file "\"woodenlist.cirru")
