@@ -4,14 +4,9 @@
   "description": "A realtime todolist",
   "main": "index.js",
   "scripts": {
-    "watch-server": "cr --emit-js",
-    "build-server": "yarn webpack && node js-out/bundle.js",
-    "dev-server": "hot=true webpack --watch",
-    "compile-server": "cr --emit-js --once",
-    "compile-page": "cr --emit-js --once --init-fn app.client/main! --reload-fn app.client/reload! --emit-path out-page",
+    "compile-page": "cr --emit-js --once",
     "release-page": "vite build --base=./",
-    "release-server": "webpack",
-    "watch-page": "cr --emit-js --emit-path out-page/ --init-fn app.client/main! --reload-fn app.client/reload!"
+    "watch-page": "cr --emit-js/"
   },
   "repository": {
     "type": "git",
@@ -20,19 +15,14 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "dependencies": {
-    "@calcit/procs": "^0.4.20",
-    "dayjs": "^1.10.6",
-    "md5": "^2.3.0",
-    "randomcolor": "^0.6.2",
-    "shortid": "^2.2.16",
-    "ws": "^8.2.0"
+    "@calcit/procs": "^0.5.7",
+    "dayjs": "^1.10.7",
+    "shortid": "^2.2.16"
   },
   "devDependencies": {
     "bottom-tip": "^0.1.2",
     "feather-icons": "^4.28.0",
     "url-parse": "^1.5.3",
-    "vite": "^2.5.1",
-    "webpack": "^5.51.1",
-    "webpack-cli": "^4.8.0"
+    "vite": "^2.6.14"
   }
 }
