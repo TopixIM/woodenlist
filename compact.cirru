@@ -461,9 +461,8 @@
       :ns $ quote
         ns app.twig.container $ :require
           [] app.twig.user :refer $ [] twig-user
-          [] "\"dayjs" :default dayjs
           calcit.std.rand :refer $ rand-hex-color!
-          calcit.std.date :refer $ extract-time format-time
+          calcit.std.date :refer $ extract-time format-time Date
       :defs $ {}
         |twig-container $ quote
           defn twig-container (db session records)
@@ -494,16 +493,14 @@
         |twig-done-tasks $ quote
           defn twig-done-tasks (done-tasks year-month)
             let
-                year-months $ -> done-tasks (.to-list)
-                  map $ fn (pair)
-                    -> pair (last) (get :time) (format-time "\"%Y-%m")
+                year-months $ -> done-tasks
+                  &map:map-list $ fn (pair)
+                    -> pair (&list:nth 1) (&map:get :time) (wrap-format-time "\"%Y-%m")
                   distinct
                 cursor $ or year-month (&list:max year-months)
                 reading-tasks $ -> done-tasks
-                  filter $ fn (pair)
-                    let
-                        task $ last pair
-                      = cursor $ -> (:time task) (format-time "\"%Y-%m")
+                  &map:filter-kv $ fn (k task)
+                    &= cursor $ -> (&map:get task :time) (wrap-format-time "\"%Y-%m")
               {} (:months year-months) (:cursor cursor) (:tasks reading-tasks)
         |twig-members $ quote
           defn twig-members (sessions users)
@@ -511,6 +508,9 @@
               fn (k session)
                 [] k $ get-in users
                   [] (:user-id session) :name
+        |wrap-format-time $ quote
+          defn wrap-format-time (stamp format)
+            format-time (:: Date stamp) format
     |app.updater $ {}
       :ns $ quote
         ns app.updater $ :require ([] app.updater.session :as session) ([] app.updater.user :as user) ([] app.updater.router :as router) ([] app.updater.task :as task)
