@@ -493,16 +493,14 @@
         |twig-done-tasks $ quote
           defn twig-done-tasks (done-tasks year-month)
             let
-                year-months $ -> done-tasks (.to-list)
-                  map $ fn (pair)
-                    -> pair (last) (get :time) (wrap-format-time "\"%Y-%m")
+                year-months $ -> done-tasks
+                  &map:map-list $ fn (pair)
+                    -> pair (&list:nth 1) (&map:get :time) (wrap-format-time "\"%Y-%m")
                   distinct
                 cursor $ or year-month (&list:max year-months)
                 reading-tasks $ -> done-tasks
-                  filter $ fn (pair)
-                    let
-                        task $ last pair
-                      = cursor $ -> (:time task) (wrap-format-time "\"%Y-%m")
+                  &map:filter-kv $ fn (k task)
+                    &= cursor $ -> (&map:get task :time) (wrap-format-time "\"%Y-%m")
               {} (:months year-months) (:cursor cursor) (:tasks reading-tasks)
         |twig-members $ quote
           defn twig-members (sessions users)
