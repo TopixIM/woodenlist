@@ -4388,9 +4388,15 @@
                       |j $ {} (:type :expr) (:by |B1y7Rc-Zz) (:at 1629913374561)
                         :data $ {}
                           |T $ {} (:type :leaf) (:by |B1y7Rc-Zz) (:at 1629913374561) (:text |op-time)
-                          |j $ {} (:type :expr) (:by |B1y7Rc-Zz) (:at 1629913374561)
+                          |j $ {} (:type :expr) (:by |B1y7Rc-Zz) (:at 1637898916196)
                             :data $ {}
-                              |T $ {} (:type :leaf) (:by |B1y7Rc-Zz) (:at 1636953184736) (:text |get-time!)
+                              |T $ {} (:type :expr) (:by |B1y7Rc-Zz) (:at 1629913374561)
+                                :data $ {}
+                                  |T $ {} (:type :leaf) (:by |B1y7Rc-Zz) (:at 1636953184736) (:text |get-time!)
+                              |D $ {} (:type :leaf) (:by |B1y7Rc-Zz) (:at 1637898950132) (:text |->)
+                              |j $ {} (:type :expr) (:by |B1y7Rc-Zz) (:at 1637898950782)
+                                :data $ {}
+                                  |T $ {} (:type :leaf) (:by |B1y7Rc-Zz) (:at 1637898953735) (:text |.timestamp)
                   |r $ {} (:type :expr) (:by |B1y7Rc-Zz) (:at 1629913374561)
                     :data $ {}
                       |T $ {} (:type :leaf) (:by |B1y7Rc-Zz) (:at 1629913374561) (:text |if)
