@@ -23,6 +23,6 @@
     "bottom-tip": "^0.1.3",
     "feather-icons": "^4.29.0",
     "url-parse": "^1.5.10",
-    "vite": "^4.0.4"
+    "vite": "^4.0.5"
   }
 }
