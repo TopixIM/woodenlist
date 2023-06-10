@@ -14,39 +14,22 @@ jobs:
 
     - uses: actions/setup-node@v3
       with:
-        node-version: 16
+        node-version: 18
         cache: 'yarn'
 
-    - name: ACTIONS_ALLOW_UNSECURE_COMMANDS
-      id: ACTIONS_ALLOW_UNSECURE_COMMANDS
-      run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
+    - uses: supplypike/setup-bin@v3
+      with:
+        uri: 'https://github.com/calcit-lang/calcit/releases/download/0.7.0-a7/cr'
+        name: 'cr'
+        version: '0.7.0-a7'
 
-    - name: add cr
-      run: |
-        mkdir -p $GITHUB_WORKSPACE/bin
-        wget -O $GITHUB_WORKSPACE/bin/cr https://github.com/calcit-lang/calcit/releases/download/0.6.20/cr
-        chmod +x $GITHUB_WORKSPACE/bin/cr
-        echo "::add-path::$GITHUB_WORKSPACE/bin"
+    - uses: supplypike/setup-bin@v3
+      with:
+        uri: 'https://github.com/calcit-lang/calcit/releases/download/0.7.0-a7/caps'
+        name: 'caps'
+        version: '0.7.0-a7'
 
-    - name: "prepare modules"
-      run: >
-        mkdir -p ~/.config/calcit/modules/ && cd ~/.config/calcit/modules/
-        && git clone https://github.com/calcit-lang/lilac.git
-        && git clone https://github.com/calcit-lang/memof.git
-        && git clone https://github.com/calcit-lang/recollect.git
-        && git clone https://github.com/Respo/respo.calcit.git
-        && git clone https://github.com/Respo/respo-ui.calcit.git
-        && git clone https://github.com/Respo/respo-message.calcit.git
-        && git clone https://github.com/Respo/respo-markdown.calcit.git
-        && git clone https://github.com/Cumulo/cumulo-util.calcit.git
-        && git clone https://github.com/Cumulo/cumulo-reel.calcit.git
-        && git clone https://github.com/mvc-works/ws-edn.calcit.git
-        && git clone https://github.com/Respo/respo-feather.calcit.git
-        && git clone https://github.com/Respo/alerts.calcit.git
-        && git clone https://github.com/calcit-lang/calcit-wss.git
-        && git clone https://github.com/calcit-lang/calcit.std.git
-
-    - run: cr --entry server --emit-ir -1
+    - run: caps --ci && cr --entry server --emit-ir -1
 
     - run: yarn && yarn compile-page && yarn release-page
 
