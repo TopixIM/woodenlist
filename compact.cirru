@@ -830,7 +830,7 @@
           defn run-server! (port)
             wss-serve! (&{} :port port)
               fn (data)
-                key-match data
+                tag-match data
                     :connect sid
                     do (dispatch! :session/connect nil sid) (println "\"New client.")
                   (:message sid msg)
