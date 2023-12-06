@@ -320,8 +320,7 @@
               |j $ %{} :Leaf (:at 1629913386929) (:by |B1y7Rc-Zz) (:text |mount-target)
               |r $ %{} :Expr (:at 1629913386929) (:by |B1y7Rc-Zz)
                 :data $ {}
-                  |T $ %{} :Leaf (:at 1629913386929) (:by |B1y7Rc-Zz) (:text |.querySelector)
-                  |j $ %{} :Leaf (:at 1629913386929) (:by |B1y7Rc-Zz) (:text |js/document)
+                  |j $ %{} :Leaf (:at 1701878222969) (:by |B1y7Rc-Zz) (:text |js/document.querySelector)
                   |r $ %{} :Leaf (:at 1629913386929) (:by |B1y7Rc-Zz) (:text "|\".app")
         |on-server-data $ %{} :CodeEntry (:doc |)
           :code $ %{} :Expr (:at 1629913386929) (:by |B1y7Rc-Zz)

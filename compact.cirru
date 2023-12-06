@@ -60,7 +60,7 @@
               println "\"App started!"
         |mount-target $ %{} :CodeEntry (:doc |)
           :code $ quote
-            def mount-target $ .querySelector js/document "\".app"
+            def mount-target $ js/document.querySelector "\".app"
         |on-server-data $ %{} :CodeEntry (:doc |)
           :code $ quote
             defn on-server-data (data)

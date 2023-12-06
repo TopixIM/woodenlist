@@ -15,14 +15,16 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "dependencies": {
-    "@calcit/procs": "^0.8.3",
+    "@calcit/procs": "^0.8.14",
+    "cirru-color": "^0.2.3",
+    "copy-text-to-clipboard": "^3.2.0",
     "dayjs": "^1.11.10",
-    "nanoid": "^5.0.1"
+    "nanoid": "^5.0.4"
   },
   "devDependencies": {
     "bottom-tip": "^0.1.5",
     "feather-icons": "^4.29.1",
     "url-parse": "^1.5.10",
-    "vite": "^4.4.12"
+    "vite": "^5.0.6"
   }
 }
