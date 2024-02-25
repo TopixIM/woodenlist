@@ -2981,8 +2981,9 @@
                                       |T $ %{} :Leaf (:at 1629913866516) (:by |B1y7Rc-Zz) (:text |case-default)
                                       |j $ %{} :Expr (:at 1586594815264) (:by |B1y7Rc-Zz)
                                         :data $ {}
-                                          |T $ %{} :Leaf (:at 1586594815264) (:by |B1y7Rc-Zz) (:text |:value)
+                                          |T $ %{} :Leaf (:at 1708838234392) (:by |B1y7Rc-Zz) (:text |nth)
                                           |j $ %{} :Leaf (:at 1586594815264) (:by |B1y7Rc-Zz) (:text |item)
+                                          |n $ %{} :Leaf (:at 1708838235410) (:by |B1y7Rc-Zz) (:text |1)
                                       |n $ %{} :Leaf (:at 1629913868047) (:by |B1y7Rc-Zz) (:text |nil)
                                       |r $ %{} :Expr (:at 1586594791653) (:by |B1y7Rc-Zz)
                                         :data $ {}
@@ -3683,8 +3684,7 @@
                           |r $ %{} :Leaf (:at 1500541010211) (:by |root) (:text |password)
                   |v $ %{} :Expr (:at 1500541010211) (:by nil)
                     :data $ {}
-                      |T $ %{} :Leaf (:at 1500541010211) (:by |root) (:text |.setItem)
-                      |j $ %{} :Leaf (:at 1500541010211) (:by |root) (:text |js/localStorage)
+                      |j $ %{} :Leaf (:at 1708838107852) (:by |B1y7Rc-Zz) (:text |js/localStorage.setItem)
                       |r $ %{} :Expr (:at 1500541010211) (:by nil)
                         :data $ {}
                           |T $ %{} :Leaf (:at 1545759700951) (:by |root) (:text |:storage-key)

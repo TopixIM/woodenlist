@@ -6,7 +6,7 @@
   "scripts": {
     "compile-page": "cr --emit-js --once",
     "release-page": "vite build --base=./",
-    "watch-page": "cr --emit-js/"
+    "watch-page": "cr --emit-js"
   },
   "repository": {
     "type": "git",
@@ -15,16 +15,16 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "dependencies": {
-    "@calcit/procs": "^0.8.14",
-    "cirru-color": "^0.2.3",
+    "@calcit/procs": "^0.8.36",
+    "cirru-color": "^0.2.4",
     "copy-text-to-clipboard": "^3.2.0",
     "dayjs": "^1.11.10",
-    "nanoid": "^5.0.4"
+    "nanoid": "^5.0.6"
   },
   "devDependencies": {
     "bottom-tip": "^0.1.5",
     "feather-icons": "^4.29.1",
     "url-parse": "^1.5.10",
-    "vite": "^5.0.12"
+    "vite": "^5.1.4"
   }
 }

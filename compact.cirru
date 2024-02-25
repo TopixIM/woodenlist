@@ -441,7 +441,7 @@
                     fn (item d!)
                       let
                           new-state $ assoc state :show-menu? false
-                        case-default (:value item) nil
+                        case-default (nth item 1) nil
                           :finish $ do
                             d! :task/move-task $ {}
                               :id $ :id task
@@ -543,7 +543,7 @@
             defn on-submit (username password signup?)
               fn (e dispatch!)
                 dispatch! (if signup? :user/sign-up :user/log-in) ([] username password)
-                .setItem js/localStorage (:storage-key config/site)
+                js/localStorage.setItem (:storage-key config/site)
                   format-cirru-edn $ [] username password
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
