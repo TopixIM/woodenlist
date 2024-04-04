@@ -12,5 +12,5 @@
     |mvc-works/ws-edn.calcit |main
     |Respo/respo-feather.calcit |main
     |Respo/alerts.calcit |main
-    |calcit-lang/calcit-wss |0.2.3
-    |calcit-lang/calcit.std |0.2.2
+    |calcit-lang/calcit-wss |main
+    |calcit-lang/calcit.std |main

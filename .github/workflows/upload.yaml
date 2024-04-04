@@ -17,17 +17,9 @@ jobs:
         node-version: 20
         cache: 'yarn'
 
-    - uses: supplypike/setup-bin@v3
+    - uses: calcit-lang/setup-cr@0.0.3
       with:
-        uri: 'https://github.com/calcit-lang/calcit/releases/download/0.8.36/cr'
-        name: 'cr'
-        version: '0.8.36'
-
-    - uses: supplypike/setup-bin@v3
-      with:
-        uri: 'https://github.com/calcit-lang/calcit/releases/download/0.8.36/caps'
-        name: 'caps'
-        version: '0.8.36'
+        version: "0.8.46"
 
     - run: caps --ci && cr --entry server --emit-ir -1
 
