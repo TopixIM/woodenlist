@@ -4,9 +4,9 @@
   "description": "A realtime todolist",
   "main": "index.js",
   "scripts": {
-    "compile-page": "cr --emit-js --once",
+    "compile-page": "cr --once js",
     "release-page": "vite build --base=./",
-    "watch-page": "cr --emit-js"
+    "watch-page": "cr js"
   },
   "repository": {
     "type": "git",
@@ -15,16 +15,16 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "dependencies": {
-    "@calcit/procs": "^0.8.46",
+    "@calcit/procs": "^0.9.0-a1",
     "cirru-color": "^0.2.4",
     "copy-text-to-clipboard": "^3.2.0",
-    "dayjs": "^1.11.10",
-    "nanoid": "^5.0.6"
+    "dayjs": "^1.11.11",
+    "nanoid": "^5.0.7"
   },
   "devDependencies": {
     "bottom-tip": "^0.1.5",
-    "feather-icons": "^4.29.1",
+    "feather-icons": "^4.29.2",
     "url-parse": "^1.5.10",
-    "vite": "^5.2.8"
+    "vite": "^5.3.3"
   }
 }

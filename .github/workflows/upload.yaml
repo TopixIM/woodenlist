@@ -19,9 +19,9 @@ jobs:
 
     - uses: calcit-lang/setup-cr@0.0.3
       with:
-        version: "0.8.46"
+        version: "0.9.0-a1"
 
-    - run: caps --ci && cr --entry server --emit-ir -1
+    - run: caps --ci && cr --entry server -1 ir
 
     - run: yarn && yarn compile-page && yarn release-page
 
