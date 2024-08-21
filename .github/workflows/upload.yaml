@@ -17,9 +17,9 @@ jobs:
         node-version: 20
         cache: 'yarn'
 
-    - uses: calcit-lang/setup-cr@0.0.3
+    - uses: calcit-lang/setup-cr@0.0.4
       with:
-        version: "0.9.0-a1"
+        version: "0.9.4"
 
     - run: caps --ci && cr --entry server -1 ir
 

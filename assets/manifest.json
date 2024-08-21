@@ -7,7 +7,7 @@
       "sizes": "320x320"
     }
   ],
-  "start_url": "index.html",
+  "start_url": "/index.html",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#4DB386",
