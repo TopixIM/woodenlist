@@ -12,3 +12,5 @@ yarn-error.log
 backups/
 woodenlist.cirru
 storage.cirru
+
+.DS_Store
