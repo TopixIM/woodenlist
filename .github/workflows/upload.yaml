@@ -19,7 +19,7 @@ jobs:
 
     - uses: calcit-lang/setup-cr@0.0.8
 
-    - run: caps --ci && cr --entry server -1 ir
+    - run: caps --ci && cr compact.cirru --entry server ir
 
     - run: yarn && yarn compile-page && yarn release-page
 
