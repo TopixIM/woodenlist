@@ -1,12 +1,13 @@
 {
+  "packageManager": "yarn@4.12.0",
   "name": "woodenlist",
   "version": "0.1.0",
   "description": "A realtime todolist",
   "main": "index.js",
   "scripts": {
-    "compile-page": "cr js",
+    "compile-page": "calcit calcit.cirru js",
     "release-page": "vite build --base=./",
-    "watch-page": "cr js"
+    "watch-page": "calcit calcit.cirru js --watch"
   },
   "repository": {
     "type": "git",
@@ -15,7 +16,7 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "dependencies": {
-    "@calcit/procs": "^0.12.14",
+    "@calcit/procs": "0.13.77",
     "cirru-color": "^0.2.4",
     "copy-text-to-clipboard": "^3.2.1",
     "dayjs": "^1.11.18",
