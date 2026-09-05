@@ -1016,15 +1016,14 @@
           :schema $ :: 'Dynamic
         '*reel $ %{} 'CodeEntry (:doc |)
           :code $ quote
-            defatom *reel $ merge reel-schema
-              {} (:base @*initial-db) (:db @*initial-db)
+            defatom *reel $ struct-with reel-schema (:base @*initial-db) (:db @*initial-db)
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'Ref 'cumulo-reel.core/ReelState
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn dispatch! (op sid)
               let
-                  op-id $ generate-id!
+                  op-id $ turn-string (generate-id!)
                   op-time $ -> (get-time!) (.timestamp)
                 if config/dev? $ println |Dispatch! (str op) sid
                 tag-match op
@@ -1039,8 +1038,8 @@
             defn get-backup-path! () $ let
                 now $ extract-time (get-time!)
               join-path calcit-dirname |backups
-                str $ :month now
-                str (:day now) |-snapshot.cirru
+                str $ app.schema/read-field now :month
+                str (app.schema/read-field now :day) |-snapshot.cirru
           :examples $ []
           :schema $ :: 'Dynamic
         'main! $ %{} 'CodeEntry (:doc |)
@@ -1068,7 +1067,9 @@
           :code $ quote
             defn persist-db! () $ let
                 file-content $ format-cirru-edn
-                  assoc (:db @*reel) :sessions $ {}
+                  assoc
+                    :db $ unsafe-coerce @*reel 'cumulo-reel.core/ReelState
+                    , :sessions $ {}
                 storage-path storage-file
                 backup-path $ get-backup-path!
               check-write-file! storage-path file-content
@@ -1124,10 +1125,14 @@
             defn sync-clients! (reel)
               wss-each! $ fn (sid)
                 let
-                    db $ :db reel
-                    records $ :records reel
-                    session $ get-in db ([] :sessions sid)
-                    old-store $ or (get @*client-caches sid) nil
+                    db $ app.schema/read-field reel :db
+                    records $ app.schema/read-field reel :records
+                    session $
+                      get-in db $ [] :sessions sid
+                      , .unwrap-or schema/session
+                    old-store $
+                      get @*client-caches sid
+                      , .unwrap-or nil
                     new-store $ twig-container db session records
                     changes $ diff-twig old-store new-store
                       {} $ :key :id
@@ -1180,27 +1185,28 @@
           :code $ quote
             defn twig-container (db session records)
               let
-                  logged-in? $ some? (:user-id session)
-                  router $ :router session
+                  logged-in? $ some? (app.schema/read-field session :user-id)
+                  router $ app.schema/read-field session :router
                   base-data $ {} (:logged-in? logged-in?) (:session session)
                     :reel-length $ count records
                 merge base-data $ if logged-in?
                   let
-                      user $ get-in db
-                        [] :users $ :user-id session
+                      user $ ->
+                        get-in db $ [] :users (app.schema/read-field session :user-id)
+                        .unwrap-or schema/user
                     {}
                       :user $ twig-user user
                       :router $ assoc router :data
-                        case-default (:name router) ({})
-                          :home $ :working-tasks user
-                          :pending $ :pending-tasks user
-                          :profile $ twig-members (:sessions db) (:users db)
-                          :done $ twig-done-tasks (:done-tasks user) (:data router)
+                        case-default (app.schema/read-field router :name) ({})
+                          :home $ app.schema/read-field user :working-tasks
+                          :pending $ app.schema/read-field user :pending-tasks
+                          :profile $ twig-members (app.schema/read-field db :sessions) (app.schema/read-field db :users)
+                          :done $ twig-done-tasks (app.schema/read-field user :done-tasks) (app.schema/read-field router :data)
                       :numbers $ {}
-                        :sessions $ count (:sessions db)
-                        :working $ count (:working-tasks user)
-                        :pending $ count (:pending-tasks user)
-                        :done $ count (:done-tasks user)
+                        :sessions $ count (app.schema/read-field db :sessions)
+                        :working $ count (app.schema/read-field user :working-tasks)
+                        :pending $ count (app.schema/read-field user :pending-tasks)
+                        :done $ count (app.schema/read-field user :done-tasks)
                       :color $ rand-hex-color!
                   {}
           :examples $ []
@@ -1225,8 +1231,9 @@
             defn twig-members (sessions users)
               -> sessions $ map-kv
                 fn (k session)
-                  [] k $ get-in users
-                    [] (:user-id session) :name
+                  [] k $
+                    get-in users $ [] (app.schema/read-field session :user-id) :name
+                    , .unwrap-or nil
           :examples $ []
           :schema $ :: 'Dynamic
         'wrap-format-time $ %{} 'CodeEntry (:doc |)
@@ -1239,6 +1246,7 @@
         :code $ quote
           ns app.twig.container $ :require
             [] app.twig.user :refer $ [] twig-user
+            [] app.schema :as schema
             calcit.std.rand :refer $ rand-hex-color!
             calcit.std.date :refer $ extract-time format-time Date
     'app.twig.user $ %{} 'FileEntry
@@ -1307,8 +1315,10 @@
           :code $ quote
             defn remove-message (db op-data sid op-id op-time)
               update-in db ([] :sessions sid :messages)
-                fn (messages)
-                  dissoc messages $ :id op-data
+                fn (messages-option)
+                  dissoc
+                    option:unwrap-or messages-option $ {}
+                    app.schema/read-field op-data :id
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
@@ -1337,30 +1347,37 @@
           :code $ quote
             defn move-task (db op-data sid op-id op-time)
               let
-                  task-id $ :id op-data
-                  user-id $ get-in db ([] :sessions sid :user-id)
-                if
-                  some? $ get-in db
-                    [] :users user-id (:from op-data) task-id
-                  update-in db ([] :users user-id)
-                    fn (user)
-                      -> user
-                        assoc-in
-                          [] (:to op-data) task-id
-                          assoc
-                            get-in user $ [] (:from op-data) task-id
-                            , :time op-time
-                        update (:from op-data)
-                          fn (tasks) (dissoc tasks task-id)
-                  assoc-in db ([] :sessions sid :messages op-id)
-                    {} (:id op-id) (:text "|No such task")
+                  task-id $ app.schema/read-field op-data :id
+                  from-group $ app.schema/read-field op-data :from
+                  to-group $ app.schema/read-field op-data :to
+                  user-id $
+                    get-in db $ [] :sessions sid :user-id
+                    , .unwrap-or nil
+                  task-option $ get-in db ([] :users user-id from-group task-id)
+                match task-option
+                  (:some task)
+                    update-in db ([] :users user-id)
+                      fn (user-option)
+                        let
+                            user $ option:unwrap-or user-option schema/user
+                          -> user
+                            assoc-in ([] to-group task-id) (assoc task :time op-time)
+                            update from-group $ fn (tasks-option)
+                              dissoc
+                                option:unwrap-or tasks-option $ {}
+                                , task-id
+                  (:none)
+                    assoc-in db ([] :sessions sid :messages op-id)
+                      {} (:id op-id) (:text "|No such task")
           :examples $ []
           :schema $ :: 'Dynamic
         'remove-done $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn remove-done (db op-data sid op-id op-time)
               let
-                  user-id $ get-in db ([] :sessions sid :user-id)
+                  user-id $
+                    get-in db $ [] :sessions sid :user-id
+                    , .unwrap-or nil
                 dissoc-in db $ [] :users user-id :done-tasks op-data
           :examples $ []
           :schema $ :: 'Dynamic
@@ -1368,7 +1385,9 @@
           :code $ quote
             defn remove-working (db op-data sid op-id op-time)
               let
-                  user-id $ get-in db ([] :sessions sid :user-id)
+                  user-id $
+                    get-in db $ [] :sessions sid :user-id
+                    , .unwrap-or nil
                 dissoc-in db $ [] :users user-id :working-tasks op-data
           :examples $ []
           :schema $ :: 'Dynamic
@@ -1376,30 +1395,39 @@
           :code $ quote
             defn touch-working (db op-data sid op-id op-time)
               let
-                  user-id $ get-in db ([] :sessions sid :user-id)
+                  user-id $
+                    get-in db $ [] :sessions sid :user-id
+                    , .unwrap-or nil
                 update-in db ([] :users user-id :working-tasks)
-                  fn (tasks)
-                    if
-                      some? $ get tasks op-data
-                      assoc-in tasks ([] op-data :time) op-time
-                      , tasks
+                  fn (tasks-option)
+                    let
+                        tasks $ option:unwrap-or tasks-option ({})
+                      if
+                        option:some? $ get tasks op-data
+                        assoc-in tasks ([] op-data :time) op-time
+                        , tasks
           :examples $ []
           :schema $ :: 'Dynamic
         'update-text $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn update-text (db op-data sid op-id op-time)
               let
-                  user-id $ get-in db ([] :sessions sid :user-id)
+                  user-id $
+                    get-in db $ [] :sessions sid :user-id
+                    , .unwrap-or nil
                 update-in db
-                  [] :users user-id (:group op-data) (:id op-data)
-                  fn (task)
-                    assoc task :text (:text op-data) :time $ :time op-data
+                  [] :users user-id (app.schema/read-field op-data :group) (app.schema/read-field op-data :id)
+                  fn (task-option)
+                    -> (option:unwrap-or task-option schema/task)
+                      assoc :text $ app.schema/read-field op-data :text
+                      assoc :time $ app.schema/read-field op-data :time
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote
           ns app.updater.task $ :require
             [] medley.core :refer $ [] dissoc-in
+            [] app.schema :as schema
     'app.updater.user $ %{} 'FileEntry
       :defs $ {}
         'log-in $ %{} 'CodeEntry (:doc |)
@@ -1408,21 +1436,25 @@
               let-sugar
                     [] username password
                     , op-data
-                  maybe-user $ -> (:users db) (vals) (.to-list)
+                  maybe-user $ -> (app.schema/read-field db :users) (vals) (.to-list)
                     find $ fn (user)
-                      and $ = username (:name user)
+                      and $ = username (app.schema/read-field user :name)
                 update-in db ([] :sessions sid)
-                  fn (session)
-                    if (some? maybe-user)
-                      if
-                        = (md5 password) (:password maybe-user)
-                        assoc session :user-id $ :id maybe-user
-                        update session :messages $ fn (messages)
-                          assoc messages op-id $ {} (:id op-id)
-                            :text $ str "|Wrong password for " username
-                      update session :messages $ fn (messages)
-                        assoc messages op-id $ {} (:id op-id)
-                          :text $ str "|No user named: " username
+                  fn (session-option)
+                    let
+                        session $ option:unwrap-or session-option schema/session
+                      match maybe-user
+                        (:some user)
+                          if
+                            = (md5 password) (app.schema/read-field user :password)
+                            assoc session :user-id $ app.schema/read-field user :id
+                            assoc session :messages $ assoc (app.schema/read-field session :messages) op-id
+                              {} (:id op-id)
+                                :text $ str "|Wrong password for " username
+                        (:none)
+                          assoc session :messages $ assoc (app.schema/read-field session :messages) op-id
+                            {} (:id op-id)
+                              :text $ str "|No user named: " username
           :examples $ []
           :schema $ :: 'Dynamic
         'log-out $ %{} 'CodeEntry (:doc |)
@@ -1438,20 +1470,24 @@
                     [] username password
                     , op-data
                   maybe-user $ find
-                    vals $ :users db
+                    -> (app.schema/read-field db :users) vals .to-list
                     fn (user)
-                      = username $ :name user
-                if (some? maybe-user)
-                  update-in db ([] :sessions sid :messages)
-                    fn (messages)
-                      assoc messages op-id $ {} (:id op-id)
-                        :text $ str "|Name is taken: " username
-                  -> db
-                    assoc-in ([] :sessions sid :user-id) op-id
-                    assoc-in ([] :users op-id)
-                      {} (:id op-id) (:name username) (:nickname username)
-                        :password $ md5 password
-                        :avatar nil
+                      = username $ app.schema/read-field user :name
+                match maybe-user
+                  (:some _user)
+                    update-in db ([] :sessions sid :messages)
+                      fn (messages-option)
+                        assoc
+                          option:unwrap-or messages-option $ {}
+                          , op-id $ {} (:id op-id)
+                            :text $ str "|Name is taken: " username
+                  (:none)
+                    -> db
+                      assoc-in ([] :sessions sid :user-id) op-id
+                      assoc-in ([] :users op-id)
+                        {} (:id op-id) (:name username) (:nickname username)
+                          :password $ md5 password
+                          :avatar nil
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
