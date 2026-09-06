@@ -53,7 +53,7 @@
                     , .unwrap-or :unknown
                   , :states
                 js/console.log |Dispatch op
-              tag-match op
+              match op
                 (:states cursor s)
                   reset! *states $ update-states @*states cursor s
                 (:effect/connect) (connect!)
@@ -87,7 +87,7 @@
         'on-server-data $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn on-server-data (data)
-              tag-match data
+              match data
                 (:patch changes)
                   do
                     when config/dev? $ js/console.log |Changes changes
@@ -355,7 +355,7 @@
                                   :style $ {} (:font-size 16) (:font-weight 100) (:margin-top 16) (:line-height |24px)
                                 <> date
                               list-> ({})
-                                -> tasks
+                                -> (unsafe-coerce tasks 'List)
                                   .sort-by $ fn (task)
                                     negate $ assert-type (app.schema/read-field task :time) 'Number
                                   map $ fn (task)
@@ -424,7 +424,7 @@
                       fn (e d!)
                         .show create-plugin d! $ fn (result)
                           when
-                            not $ .blank? result
+                            not $ .blank? (unsafe-coerce result 'String)
                             d! :task/create result
                   if (empty? tasks)
                     div
@@ -433,14 +433,14 @@
                         :on-click $ fn (e d!)
                           .show create-plugin d! $ fn (result)
                             when
-                              not $ .blank? result
+                              not $ .blank? (unsafe-coerce result 'String)
                               d! :task/create result
                   list->
                     {} $ :style
                       {} (:position :relative)
                         :height $ + 8
                           * 48 $ count tasks
-                    -> tasks (.to-list)
+                    -> (unsafe-coerce tasks 'Map) (.to-list)
                       .sort-by $ fn (pair)
                         negate $ assert-type
                           app.schema/read-field
@@ -767,7 +767,7 @@
                   =< 8 nil
                   list->
                     {} $ :class-name css/row
-                    -> members (.to-list)
+                    -> (unsafe-coerce members 'Map) (.to-list)
                       .map-pair $ fn (k username)
                         [] k $ div
                           {} $ :class-name css-member-label
@@ -1026,7 +1026,7 @@
                   op-id $ turn-string (generate-id!)
                   op-time $ -> (get-time!) (.timestamp)
                 if config/dev? $ println |Dispatch! (str op) sid
-                tag-match op
+                match op
                   (:effect/persist) (persist-db!)
                   (:effect/ping)
                     wss-send! sid $ format-cirru-edn (:: :effect/pong)
@@ -1098,7 +1098,7 @@
             defn run-server! (port)
               wss-serve! (&{} :port port)
                 fn (data)
-                  tag-match data
+                  match data
                     (:connect sid)
                       do
                         dispatch! (:: :session/connect) sid
@@ -1265,7 +1265,7 @@
         'updater $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn updater (db op sid op-id op-time)
-              tag-match op
+              match op
                 (:session/connect) (session/connect db sid op-id op-time)
                 (:session/disconnect) (session/disconnect db sid op-id op-time)
                 (:user/log-in op-data) (user/log-in db op-data sid op-id op-time)
