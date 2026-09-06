@@ -10,25 +10,43 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.0
+      with:
+        persist-credentials: false
 
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
       with:
         node-version: 24
-        cache: 'yarn'
 
-    - uses: calcit-lang/setup-cr@0.0.8
+    - run: |
+        corepack enable
+        corepack prepare yarn@4.12.0 --activate
 
-    - run: caps --ci && cr compact.cirru --entry server ir
+    - uses: calcit-lang/setup-calcit@704b3f5cd6f9ce3bd1e0c926dbdd1d181adb8180 # v1
 
-    - run: yarn && yarn compile-page && yarn release-page
+    - run: |
+        caps --strict --ci
+        yarn install --immutable
+        caps verify --toolchain
+        calcit calcit.cirru edit format
+        git diff --exit-code -- calcit.cirru
+        calcit calcit.cirru --check-only
+        calcit calcit.cirru --entry server --check-only
+        calcit calcit.cirru analyze dynamic-methods --max 1
+        calcit calcit.cirru --entry server analyze dynamic-methods --max 0
+        calcit calcit.cirru analyze deprecated --summary-only
+        calcit calcit.cirru --entry server analyze deprecated --summary-only
+        calcit calcit.cirru analyze quality --baseline config/calcit-quality.cirru
 
-    - run: mkdir -p dist-server && cp compact.cirru dist-server && cp package.json dist-server/
+    - run: yarn compile-page && yarn release-page
+
+    - run: mkdir -p dist-server && cp calcit.cirru deps.cirru package.json dist-server/
       name: Copy server scripts
 
     - name: Upload web assets
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       id: deploy
-      uses: Pendect/action-rsyncer@v2.0.0
+      uses: Pendect/action-rsyncer@8e05ffa5c93e5d9c9b167796b26044d2c616b2b9 # v2.0.0
       env:
         DEPLOY_KEY: ${{secrets.rsync_private_key}}
       with:
@@ -39,11 +57,13 @@ jobs:
         dest: 'rsync-user@tiye.me:/web-assets/repo/${{ github.repository }}'
 
     - name: Display status from deploy
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: echo "${{ steps.deploy.outputs.status }}"
 
     - name: Upload server script
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       id: deploy-server
-      uses: Pendect/action-rsyncer@v2.0.0
+      uses: Pendect/action-rsyncer@8e05ffa5c93e5d9c9b167796b26044d2c616b2b9 # v2.0.0
       env:
         DEPLOY_KEY: ${{secrets.rsync_private_key}}
       with:
@@ -54,4 +74,5 @@ jobs:
         dest: 'rsync-user@tiye.me:/servers/woodenlist/'
 
     - name: Display status from deploy
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: echo "${{ steps.deploy-server.outputs.status }}"
