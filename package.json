@@ -16,7 +16,7 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "dependencies": {
-    "@calcit/procs": "0.13.77",
+    "@calcit/procs": "0.14.16",
     "cirru-color": "^0.2.4",
     "copy-text-to-clipboard": "^3.2.1",
     "dayjs": "^1.11.18",
