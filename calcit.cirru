@@ -1177,7 +1177,7 @@
           :schema $ :: 'Dynamic
         'wrap-format-time $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn wrap-format-time (stamp format)
-            format-time (:: Date stamp) format
+            format-time (:: calcit.std.date/Date0 stamp) format
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
