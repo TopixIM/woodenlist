@@ -70,10 +70,6 @@
             on-page-touch $ fn () $ if
               = @*store $ :: :offline
               connect!
-            visibility-heartbeat $ fn (e d)
-              if (map? @*store)
-                ws-send! $ :: :effect/ping
-                , &unit
             println "|App started!"
           :examples $ []
           :schema $ :: 'Dynamic
