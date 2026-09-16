@@ -977,7 +977,7 @@
           :code $ quote $ defn dispatch! (op sid)
             let
                 op-id $ turn-string $ generate-id!
-                op-time $ -> (get-time!) (.timestamp)
+                op-time $ calcit.std.date/get-timestamp $ get-time!
               if config/dev? $ println |Dispatch! (str op) sid
               match op
                 (:effect/persist) (persist-db!)
