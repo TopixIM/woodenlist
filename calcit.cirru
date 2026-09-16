@@ -3,17 +3,11 @@
   :about "|Machine-generated snapshot. Do not edit directly — changes will be overwritten. Use `calcit query` to inspect and `calcit edit`/`calcit tree` to modify. Run `calcit docs agents --contract` before mutations; use `--full` for first orientation or changed contract digest. Manual edits must follow format and schema conventions, then run `calcit edit format`."
   :package |app
   :entries $ {}
-    :default $ {} (:description |)
-      :init-fn 'app.client/main!
-      :mode :js
-      :reload-fn 'app.client/reload!
+    :default $ {} (:description |) (:init-fn 'app.client/main!) (:mode :js) (:reload-fn 'app.client/reload!)
       :feature-policy $ {}
       :modules $ [] |respo.calcit/ |lilac/ |recollect/ |memof/ |respo-ui.calcit/ |ws-edn.calcit/ |cumulo-util.calcit/ |respo-message.calcit/ |cumulo-reel.calcit/ |respo-feather.calcit/ |alerts.calcit/ |respo-markdown.calcit/
       :type-slots $ {}
-    :server $ {} (:description |)
-      :init-fn 'app.server/main!
-      :mode :native
-      :reload-fn 'app.server/reload!
+    :server $ {} (:description |) (:init-fn 'app.server/main!) (:mode :native) (:reload-fn 'app.server/reload!)
       :feature-policy $ {}
       :modules $ [] |lilac/ |recollect/ |memof/ |cumulo-util.calcit/ |cumulo-reel.calcit/ |calcit-wss/ |calcit.std/
       :type-slots $ {}
@@ -76,14 +70,15 @@
             on-page-touch $ fn () $ if
               = @*store $ :: :offline
               connect!
-            visibility-heartbeat $ fn () $ if (map? @*store)
-              ws-send! $ :: :effect/ping
+            visibility-heartbeat $ fn (e d)
+              if (map? @*store)
+                ws-send! $ :: :effect/ping
+                , &unit
             println "|App started!"
           :examples $ []
           :schema $ :: 'Dynamic
         'mount-target $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ def mount-target
-            js/document.querySelector |.app
+          :code $ quote $ def mount-target (js/document.querySelector |.app)
           :examples $ []
           :schema $ :: 'Dynamic
         'on-server-data $ %{} 'CodeEntry (:doc |)
@@ -110,9 +105,7 @@
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             render! mount-target
-              comp-container
-                app.schema/read-field @*states :states
-                , @*store
+              comp-container (app.schema/read-field @*states :states) @*store
               , dispatch!
           :examples $ []
           :schema $ :: 'Dynamic
@@ -151,31 +144,21 @@
                   session $ app.schema/read-field store :session
                 div
                   {} $ :class-name $ str-spaced css/global css/fullscreen css/column
-                  comp-sidebar
-                    app.schema/read-field store :router
-                    app.schema/read-field store :logged-in?
-                    app.schema/read-field store :numbers
+                  comp-sidebar (app.schema/read-field store :router) (app.schema/read-field store :logged-in?) (app.schema/read-field store :numbers)
                   div
                     {} (:class-name css/flex)
                       :style $ {} (:overflow :auto) (:height |100%)
                     div
                       {} $ :style $ {} (:margin "|0 auto") (:max-width 800) (:height |100%) (:overflow :auto)
-                      if
-                        app.schema/read-field store :logged-in?
+                      if (app.schema/read-field store :logged-in?)
                         let
                             router $ app.schema/read-field store :router
-                          case-default
-                            app.schema/read-field router :name
+                          case-default (app.schema/read-field router :name)
                             <> (str router) nil
-                            :profile $ comp-profile
-                              app.schema/read-field store :user
-                              app.schema/read-field router :data
-                            :home $ comp-home (>> states :home)
-                              app.schema/read-field router :data
-                            :pending $ comp-pending (>> states :pending)
-                              app.schema/read-field router :data
-                            :done $ comp-done-tasks (>> states :done)
-                              app.schema/read-field router :data
+                            :profile $ comp-profile (app.schema/read-field store :user) (app.schema/read-field router :data)
+                            :home $ comp-home (>> states :home) (app.schema/read-field router :data)
+                            :pending $ comp-pending (>> states :pending) (app.schema/read-field router :data)
+                            :done $ comp-done-tasks (>> states :done) (app.schema/read-field router :data)
                         comp-login $ >> states :login
                   comp-messages
                     ->
@@ -183,12 +166,10 @@
                       .unwrap-or $ {}
                       unsafe-coerce $ :: 'Map 'String 'Dynamic
                     {}
-                    fn (info d!)
-                      d! :session/remove-message info
+                    fn (info d!) (d! :session/remove-message info)
                   comp-status-color $ app.schema/read-field store :color
                   if dev? $ comp-inspect |Store store style-debugger
-                  if dev? $ comp-reel
-                    app.schema/read-field store :reel-length
+                  if dev? $ comp-reel (app.schema/read-field store :reel-length)
                     {} $ :bottom 24
               (:: :initial) (comp-offline :initial)
               (:: :offline) (comp-offline :offline)
@@ -225,8 +206,7 @@
           :schema $ :: 'Dynamic
         'css-status-color $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-status-color
-            {} $ |$0 $ {} (:height 16) (:width 16) (:position :absolute) (:border-radius |8px) (:top 8) (:right 8)
-              :transition-duration |300ms
+            {} $ |$0 $ {} (:height 16) (:width 16) (:position :absolute) (:border-radius |8px) (:top 8) (:right 8) (:transition-duration |300ms)
           :examples $ []
           :schema $ :: 'Dynamic
         'style-body $ %{} 'CodeEntry (:doc |)
@@ -276,8 +256,7 @@
                 when editing? $ comp-icon :trash
                   &{} :font-size 14 :color (hsl 0 0 50) :cursor :pointer
                   fn (e d!)
-                    .show remove-plugin d! $ fn () $ d! :task/remove-done
-                      app.schema/read-field task :id
+                    .show remove-plugin d! $ fn () $ d! :task/remove-done (app.schema/read-field task :id)
                 when editing? $ div
                   {}
                     :style $ {} $ :cursor :pointer
@@ -294,8 +273,7 @@
           :code $ quote $ defcomp comp-done-tasks (states router-data)
             let
                 cursor $ app.schema/read-field states :cursor
-                state $ or
-                  app.schema/read-field states :data
+                state $ or (app.schema/read-field states :data)
                   {} $ :editing? false
                 day-cursor $ option:unwrap-or (get router-data :cursor) |
                 months $ option:unwrap-or (get router-data :months) ([])
@@ -334,8 +312,7 @@
                       str "|Done Tasks(" (count tasks) "|)"
                       {} (:font-size 24) (:font-family ui/font-fancy) (:font-weight 100)
                     =< 16 nil
-                    if
-                      app.schema/read-field state :editing?
+                    if (app.schema/read-field state :editing?)
                       a $ {} (:class-name css/link) (:inner-text |Done)
                         :on-click $ fn (e d!)
                           d! cursor $ update state :editing? not
@@ -366,12 +343,9 @@
                             list-> ({})
                               -> (unsafe-coerce tasks 'List)
                                 .sort-by $ fn (task)
-                                  negate $ assert-type
-                                    app.schema/read-field task :time
-                                    , 'Number
+                                  negate $ assert-type (app.schema/read-field task :time) 'Number
                                 map $ fn (task)
-                                  []
-                                    app.schema/read-field task :id
+                                  [] (app.schema/read-field task :id)
                                     comp-done-task
                                       >> states $ app.schema/read-field task :id
                                       , task $ app.schema/read-field state :editing?
@@ -417,8 +391,7 @@
         'comp-home $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-home (states tasks)
             let
-                state $ or
-                  app.schema/read-field states :data
+                state $ or (app.schema/read-field states :data)
                   {} $ :draft |
                 create-plugin $ use-prompt (>> states :create)
                   {} (:text "|New task:") (:initial |)
@@ -462,8 +435,7 @@
                           task $
                             last pair
                             , .unwrap
-                        []
-                          app.schema/read-field task :id
+                        [] (app.schema/read-field task :id)
                           comp-task
                             >> states $ app.schema/read-field task :id
                             , task idx
@@ -475,8 +447,7 @@
           :code $ quote $ defcomp comp-task (states task idx)
             let
                 cursor $ app.schema/read-field states :cursor
-                state $ or
-                  app.schema/read-field states :data
+                state $ or (app.schema/read-field states :data)
                   {} (:show-menu? false) (:show-editor? false)
                     :task-draft $ app.schema/read-field task :text
                 remove-plugin $ use-confirm (>> states :remove)
@@ -494,9 +465,7 @@
                       :: 'Map 'Tag 'Dynamic
                     unsafe-coerce
                       when
-                        or
-                          app.schema/read-field state :show-menu?
-                          app.schema/read-field state :show-editor?
+                        or (app.schema/read-field state :show-menu?) (app.schema/read-field state :show-editor?)
                         {} $ :outline $ str "|2px solid " (hsl 240 80 86)
                       :: 'Map 'Tag 'Dynamic
                   :on-click $ fn (e d!)
@@ -505,8 +474,7 @@
                   :on $ {} $ :dragend
                     fn (e d!)
                       d! :task/touch-working $ app.schema/read-field task :id
-                <>
-                  app.schema/read-field task :text
+                <> (app.schema/read-field task :text)
                   merge ui/expand $ {} (:text-overflow :ellipsis) (:overflow :hidden) (:max-width |100%)
                 =< 32 nil
                 comp-modal-menu
@@ -551,17 +519,14 @@
                                 :group :working-tasks
                                 :time $ js/Date.now
                         :remove $ do (d! cursor new-state)
-                          .show remove-plugin d! $ fn () $ d! :task/remove-working
-                            app.schema/read-field task :id
+                          .show remove-plugin d! $ fn () $ d! :task/remove-working (app.schema/read-field task :id)
                         :touch $ do
                           d! :task/touch-working $ app.schema/read-field task :id
                           d! cursor new-state
                         :open $ do
                           js/window.open $ unsafe-coerce
                             .-0 $ unsafe-coerce
-                              .!match
-                                app.schema/read-field task :text
-                                , url-pattern
+                              .!match (app.schema/read-field task :text) url-pattern
                               , 'JsObject
                             , 'String
                           d! cursor new-state
@@ -572,12 +537,7 @@
           :schema $ :: 'Dynamic
         'css-item $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-item
-            {} $ |$0 $ {} (:line-height |32px) (:margin "|8px 0px") (:position :absolute) (:width |100%)
-              :transition-duration |300ms
-              :white-space :nowrap
-              :line-height |32px
-              :height |32px
-              :max-width 480
+            {} $ |$0 $ {} (:line-height |32px) (:margin "|8px 0px") (:position :absolute) (:width |100%) (:transition-duration |300ms) (:white-space :nowrap) (:line-height |32px) (:height |32px) (:max-width 480)
               :background-color $ hsl 0 0 94
               :padding "|0 8px"
           :examples $ []
@@ -609,9 +569,7 @@
           :code $ quote $ defcomp comp-login (states)
             let
                 cursor $ app.schema/read-field states :cursor
-                state $ or
-                  app.schema/read-field states :data
-                  , initial-state
+                state $ or (app.schema/read-field states :data) initial-state
               div
                 {} $ :class-name $ str-spaced css/flex css/center
                 div ({})
@@ -634,16 +592,10 @@
                   div
                     {} $ :style $ {} (:text-align :right)
                     span $ {} (:inner-text "|Sign up") (:class-name css/link)
-                      :on-click $ on-submit
-                        app.schema/read-field state :username
-                        app.schema/read-field state :password
-                        , true
+                      :on-click $ on-submit (app.schema/read-field state :username) (app.schema/read-field state :password) true
                     =< 8 nil
                     span $ {} (:inner-text "|Log in") (:class-name css/link)
-                      :on-click $ on-submit
-                        app.schema/read-field state :username
-                        app.schema/read-field state :password
-                        , false
+                      :on-click $ on-submit (app.schema/read-field state :username) (app.schema/read-field state :password) false
           :examples $ []
           :schema $ :: 'Dynamic
         'initial-state $ %{} 'CodeEntry (:doc |)
@@ -713,9 +665,7 @@
             let
                 update-plugin $ use-prompt (>> states :update)
                   {} (:text "|Update task:")
-                    :initial $ or
-                      app.schema/read-field task :text
-                      , |
+                    :initial $ or (app.schema/read-field task :text) |
               div
                 {} (:class-name css/row)
                   :style $ {} (:margin "|8px 0") (:align-items :center) (:max-width 480) (:width |100%)
@@ -777,9 +727,7 @@
                 :style $ {} $ :padding 16
               div $ {} (:class-name css/font-fancy)
                 :style $ {} (:font-size 32) (:font-weight 100)
-            <> $ str "|Hello! "
-              app.schema/read-field user :name
-              =< nil 16
+            <> $ str "|Hello! " (app.schema/read-field user :name) (=< nil 16)
               div
                 {} $ :class-name css/row
                 <> |Members:
@@ -951,12 +899,7 @@
           :schema $ :: 'Dynamic
         'site $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def site
-            {} (:port 11000) (:title |Woodenlist)
-              :icon |http://cdn.tiye.me/logo/woodenlist.png
-              :server-folder |tiye.me:servers/woodenlist
-              :theme |#4DB386
-              :storage-key |woodenlist-storage
-              :storage-file |woodenlist.cirru
+            {} (:port 11000) (:title |Woodenlist) (:icon |http://cdn.tiye.me/logo/woodenlist.png) (:server-folder |tiye.me:servers/woodenlist) (:theme |#4DB386) (:storage-key |woodenlist-storage) (:storage-file |woodenlist.cirru)
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
@@ -1020,8 +963,7 @@
           :code $ quote $ defatom *initial-db
             if
               path-exists? $ w-log storage-file
-              do
-                println "|Found local EDN data"
+              do (println "|Found local EDN data")
                 merge schema/database $ parse-cirru-edn $ read-file storage-file
               do (println "|Found no data") schema/database
           :examples $ []
@@ -1054,9 +996,7 @@
                 now $ extract-time $ get-time!
               join-path calcit-dirname |backups
                 str $ app.schema/read-field now :month
-                str
-                  app.schema/read-field now :day
-                  , |-snapshot.cirru
+                str (app.schema/read-field now :day) |-snapshot.cirru
           :examples $ []
           :schema $ :: 'Dynamic
         'main! $ %{} 'CodeEntry (:doc |)
@@ -1067,9 +1007,7 @@
                   str $ :port config/site
               run-server! port
               println $ str "|Server started on port:" port
-            do
-              ; "|init it before doing multi-threading"
-              identity @*reader-reel
+            do (; "|init it before doing multi-threading") (identity @*reader-reel)
             set-interval 200 $ fn () $ render-loop!
             set-interval 600000 $ fn () $ persist-db!
             on-control-c on-exit!
@@ -1093,8 +1031,7 @@
           :schema $ :: 'Dynamic
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! () (println "|Code updated..")
-            if (not config/dev?)
-              raise "|reloading only happens in dev mode"
+            if (not config/dev?) (raise "|reloading only happens in dev mode")
             clear-twig-caches!
             reset! *reel $ refresh-reel @*reel @*initial-db updater
             sync-clients! @*reader-reel
@@ -1123,9 +1060,7 @@
                       dispatch! action sid
                   (:disconnect sid)
                     do (println "|Client closed!")
-                      dispatch!
-                        :: :session/disconnect
-                        , sid
+                      dispatch! (:: :session/disconnect) sid
                   _ $ eprintln "|unknown data:" data
           :examples $ []
           :schema $ :: 'Dynamic
@@ -1208,17 +1143,11 @@
                       .unwrap-or schema/user
                   {}
                     :user $ twig-user user
-                    :router $ assoc router :data $ case-default
-                      app.schema/read-field router :name
-                      {}
+                    :router $ assoc router :data $ case-default (app.schema/read-field router :name) ({})
                       :home $ app.schema/read-field user :working-tasks
                       :pending $ app.schema/read-field user :pending-tasks
-                      :profile $ twig-members
-                        app.schema/read-field db :sessions
-                        app.schema/read-field db :users
-                      :done $ twig-done-tasks
-                        app.schema/read-field user :done-tasks
-                        app.schema/read-field router :data
+                      :profile $ twig-members (app.schema/read-field db :sessions) (app.schema/read-field db :users)
+                      :done $ twig-done-tasks (app.schema/read-field user :done-tasks) (app.schema/read-field router :data)
                     :numbers $ {}
                       :sessions $ count $ app.schema/read-field db :sessions
                       :working $ count $ app.schema/read-field user :working-tasks
@@ -1246,9 +1175,7 @@
           :code $ quote $ defn twig-members (sessions users)
             -> sessions $ map-kv $ fn (k session)
               [] k $
-                get-in users $ []
-                  app.schema/read-field session :user-id
-                  , :name
+                get-in users $ [] (app.schema/read-field session :user-id) :name
                 , .unwrap-or nil
           :examples $ []
           :schema $ :: 'Dynamic
@@ -1279,35 +1206,25 @@
           :code $ quote $ defn updater (db op sid op-id op-time)
             match op
               (:session/connect) (session/connect db sid op-id op-time)
-              (:session/disconnect)
-                session/disconnect db sid op-id op-time
+              (:session/disconnect) (session/disconnect db sid op-id op-time)
               (:user/log-in op-data) (user/log-in db op-data sid op-id op-time)
               (:user/sign-up op-data) (user/sign-up db op-data sid op-id op-time)
               (:user/log-out) (user/log-out db sid op-id op-time)
-              (:session/remove-message op-data)
-                session/remove-message db op-data sid op-id op-time
+              (:session/remove-message op-data) (session/remove-message db op-data sid op-id op-time)
               (:router/change op-data) (router/change db op-data sid op-id op-time)
               (:task/create op-data) (task/create db op-data sid op-id op-time)
               (:task/move-task op-data) (task/move-task db op-data sid op-id op-time)
-              (:task/update-text op-data)
-                task/update-text db op-data sid op-id op-time
-              (:task/remove-done op-data)
-                task/remove-done db op-data sid op-id op-time
+              (:task/update-text op-data) (task/update-text db op-data sid op-id op-time)
+              (:task/remove-done op-data) (task/remove-done db op-data sid op-id op-time)
               (:task/clear-done op-data) (task/clear-done db op-data sid op-id op-time)
-              (:task/remove-working op-data)
-                task/remove-working db op-data sid op-id op-time
-              (:task/touch-working op-data)
-                task/touch-working db op-data sid op-id op-time
+              (:task/remove-working op-data) (task/remove-working db op-data sid op-id op-time)
+              (:task/touch-working op-data) (task/touch-working db op-data sid op-id op-time)
               _ $ do (eprintln "|Unknown op:" op) db
           :examples $ []
           :schema $ :: 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater
-          :require
-            [] app.updater.session :as session
-            [] app.updater.user :as user
-            [] app.updater.router :as router
-            [] app.updater.task :as task
+          :require ([] app.updater.session :as session) ([] app.updater.user :as user) ([] app.updater.router :as router) ([] app.updater.task :as task)
     'app.updater.router $ %{} 'FileEntry
       :defs $ {} $ 'change
         %{} 'CodeEntry (:doc |)
@@ -1427,9 +1344,7 @@
                   get-in db $ [] :sessions sid :user-id
                   , .unwrap-or nil
               update-in db
-                [] :users user-id
-                  app.schema/read-field op-data :group
-                  app.schema/read-field op-data :id
+                [] :users user-id (app.schema/read-field op-data :group) (app.schema/read-field op-data :id)
                 fn (task-option)
                   -> (option:unwrap-or task-option schema/task)
                     assoc :text $ app.schema/read-field op-data :text
@@ -1448,10 +1363,7 @@
             let-sugar
                   [] username password
                   , op-data
-                maybe-user $ ->
-                  app.schema/read-field db :users
-                  vals
-                  .to-list
+                maybe-user $ -> (app.schema/read-field db :users) (vals) (.to-list)
                   find $ fn (user)
                     and $ = username $ app.schema/read-field user :name
               update-in db ([] :sessions sid)
@@ -1461,18 +1373,13 @@
                     match maybe-user
                       (:some user)
                         if
-                          = (md5 password)
-                            app.schema/read-field user :password
+                          = (md5 password) (app.schema/read-field user :password)
                           assoc session :user-id $ app.schema/read-field user :id
-                          assoc session :messages $ assoc
-                            app.schema/read-field session :messages
-                            , op-id $ {} (:id op-id)
-                              :text $ str "|Wrong password for " username
+                          assoc session :messages $ assoc (app.schema/read-field session :messages) op-id $ {} (:id op-id)
+                            :text $ str "|Wrong password for " username
                       (:none)
-                        assoc session :messages $ assoc
-                          app.schema/read-field session :messages
-                          , op-id $ {} (:id op-id)
-                            :text $ str "|No user named: " username
+                        assoc session :messages $ assoc (app.schema/read-field session :messages) op-id $ {} (:id op-id)
+                          :text $ str "|No user named: " username
           :examples $ []
           :schema $ :: 'Dynamic
         'log-out $ %{} 'CodeEntry (:doc |)
@@ -1486,9 +1393,7 @@
                   [] username password
                   , op-data
                 maybe-user $ find
-                  ->
-                    app.schema/read-field db :users
-                    , vals .to-list
+                  -> (app.schema/read-field db :users) vals .to-list
                   fn (user)
                     = username $ app.schema/read-field user :name
               match maybe-user

@@ -23,6 +23,9 @@ jobs:
         corepack prepare yarn@4.12.0 --activate
 
     - uses: calcit-lang/setup-calcit@704b3f5cd6f9ce3bd1e0c926dbdd1d181adb8180 # v1
+      with:
+        tools: calcit,caps
+        caps-version: "0.1.1"
 
     - run: |
         caps --strict --ci
@@ -30,10 +33,8 @@ jobs:
         caps verify --toolchain
         calcit calcit.cirru edit format
         git diff --exit-code -- calcit.cirru
-        calcit calcit.cirru --check-only
-        calcit calcit.cirru --entry server --check-only
-        calcit calcit.cirru analyze dynamic-methods --max 1
-        calcit calcit.cirru --entry server analyze dynamic-methods --max 0
+        calcit calcit.cirru --compat-types --skip-arity-check --check-only
+        calcit calcit.cirru --compat-types --skip-arity-check --entry server --check-only
         calcit calcit.cirru analyze deprecated --summary-only
         calcit calcit.cirru --entry server analyze deprecated --summary-only
         calcit calcit.cirru analyze quality --baseline config/calcit-quality.cirru

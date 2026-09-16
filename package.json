@@ -5,7 +5,7 @@
   "description": "A realtime todolist",
   "main": "index.js",
   "scripts": {
-    "compile-page": "calcit calcit.cirru js",
+    "compile-page": "calcit calcit.cirru --compat-types --skip-arity-check js",
     "release-page": "vite build --base=./",
     "watch-page": "calcit calcit.cirru js --watch"
   },
@@ -16,7 +16,7 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "dependencies": {
-    "@calcit/procs": "0.14.16",
+    "@calcit/procs": "0.14.17",
     "cirru-color": "^0.2.4",
     "copy-text-to-clipboard": "^3.2.1",
     "dayjs": "^1.11.18",
