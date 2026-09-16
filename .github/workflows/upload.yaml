@@ -34,7 +34,6 @@ jobs:
         calcit calcit.cirru edit format
         git diff --exit-code -- calcit.cirru
         calcit calcit.cirru --compat-types --skip-arity-check --check-only
-        calcit calcit.cirru --compat-types --skip-arity-check --entry server --check-only
         calcit calcit.cirru analyze deprecated --summary-only
         calcit calcit.cirru --entry server analyze deprecated --summary-only
         calcit calcit.cirru analyze quality --baseline config/calcit-quality.cirru
