@@ -1,12 +1,17 @@
 {
-  "packageManager": "yarn@4.12.0",
+  "packageManager": "yarn@4.18.0",
   "name": "woodenlist",
   "version": "0.1.1",
   "description": "A realtime todolist",
   "main": "index.js",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
-    "compile-page": "calcit calcit.cirru --compat-types --skip-arity-check js",
-    "release-page": "vite build --base=./",
+    "check": "calcit calcit.cirru --check-only && calcit calcit.cirru --entry server --check-only && calcit calcit.cirru analyze deprecated --summary-only && calcit calcit.cirru --entry server analyze deprecated --summary-only",
+    "compile-page": "calcit calcit.cirru js",
+    "release-page": "vite build --base=${VITE_BASE_URL:-./}",
+    "server": "calcit calcit.cirru --entry server",
     "watch-page": "calcit calcit.cirru js --watch"
   },
   "repository": {
@@ -16,7 +21,7 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "dependencies": {
-    "@calcit/procs": "0.18.1",
+    "@calcit/procs": "0.27.0",
     "cirru-color": "^0.2.4",
     "copy-text-to-clipboard": "^3.2.1",
     "dayjs": "^1.11.18",
