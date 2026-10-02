@@ -3,8 +3,12 @@
 .calcit-error.cirru
 
 js-out/
+.calcit/
+compact.cirru
+package.cirru
 node_modules/
 dist/
+dist-server/
 out-page/
 
 yarn-error.log
