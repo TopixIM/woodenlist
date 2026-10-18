@@ -283,22 +283,6 @@
           :examples $ []
           :ffi $ {} (:backend :js) (:kind :external-object)
           :schema $ :: 'Trait
-        'as-list $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn as-list (value)
-            unsafe-coerce value $ :: 'List 'Dynamic
-          :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
-            :return $ :: 'List 'Dynamic
-        'as-map $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn as-map (value)
-            unsafe-coerce value $ :: 'Map 'Dynamic 'Dynamic
-          :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
-            :return $ :: 'Map 'Dynamic 'Dynamic
         'comp-done-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-done-task (states task editing?)
             let
@@ -310,33 +294,54 @@
                 {} (:class-name css/row)
                   :style $ {} (:margin "|8px 0") (:align-items :center)
                 span $ {} (:class-name css-done-content)
-                  :inner-text $ app.schema/read-field task :text
+                  :inner-text $ :text task
                 when editing? $ comp-icon :trash
                   &{} :font-size 14 :color (hsl 0 0 50) :cursor :pointer
                   fn (e d!)
-                    .show remove-plugin d! $ fn () $ d! :task/remove-done (app.schema/read-field task :id)
+                    hint-fn $ {}
+                      :args $ [] (:: 'Map 'Tag 'Dynamic)
+                        :: 'Fn $ {}
+                          :args $ [] 'Enum
+                          :return 'Unit
+                      :return 'Unit
+                      :features $ #{} :js-ffi
+                    .show remove-plugin d! $ fn ()
+                      hint-fn $ {}
+                        :args $ []
+                        :return 'Unit
+                      d! $ :: :task/remove-done $ :id task
+                      , &unit
+                    , &unit
                 when editing? $ div
                   {}
                     :style $ {} $ :cursor :pointer
                     :on-click $ fn (e d!)
-                      d! :task/move-task $ {}
-                        :id $ app.schema/read-field task :id
+                      hint-fn $ {}
+                        :args $ [] (:: 'Map 'Tag 'Dynamic)
+                          :: 'Fn $ {}
+                            :args $ [] 'Enum
+                            :return 'Unit
+                        :return 'Unit
+                        :features $ #{} :js-ffi
+                      d! $ :: :task/move-task $ {}
+                        :id $ :id task
                         :from :done-tasks
                         :to :working-tasks
+                      , &unit
                   comp-i :repeat 14 $ hsl 0 0 50
                 .render remove-plugin
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
+            :args $ [] 'Dynamic 'app.schema/Task 'Bool
         'comp-done-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-done-tasks (states router-data)
             let
-                cursor $ app.schema/read-field states :cursor
-                state $ or (app.schema/read-field states :data)
-                  {} $ :editing? false
-                day-cursor $ option:unwrap-or (get router-data :cursor) |
-                months $ as-list $ option:unwrap-or (get router-data :months) ([])
-                tasks $ as-map $ option:unwrap-or (get router-data :tasks) ({})
+                cursor $ decode-map-as (app.schema/read-field states :cursor) (:: 'List 'Dynamic)
+                state $ app.schema/read-done-tasks-state $ app.schema/read-field states :data
+                view $ app.schema/decode-done-tasks-view router-data
+                day-cursor $ :cursor view
+                months $ :months view
+                tasks $ :tasks view
               div
                 {}
                   :class-name $ str-spaced css/flex css/row
@@ -349,17 +354,21 @@
                     map $ fn (year-month)
                       [] year-month $ div
                         {}
-                          :style $ merge
-                            unsafe-coerce
-                              {} (:cursor :pointer) (:padding "|0 8px")
-                              :: 'Map 'Tag 'Dynamic
-                            unsafe-coerce
-                              when (= day-cursor year-month)
-                                {} $ :background-color $ hsl 0 0 94
-                              :: 'Map 'Tag 'Dynamic
+                          :style $ if (= day-cursor year-month)
+                            {} (:cursor :pointer) (:padding "|0 8px")
+                              :background-color $ hsl 0 0 94
+                            {} (:cursor :pointer) (:padding "|0 8px")
                           :class-name |item
                           :on-click $ fn (e d!)
-                            d! :router/change $ {} (:name :done) (:data year-month)
+                            hint-fn $ {}
+                              :args $ [] (:: 'Map 'Tag 'Dynamic)
+                                :: 'Fn $ {}
+                                  :args $ [] 'Enum
+                                  :return 'Unit
+                              :return 'Unit
+                              :features $ #{} :js-ffi
+                            d! $ :: :router/change $ {} (:name :done) (:data year-month)
+                            , &unit
                         <> year-month
                 =< 8 nil
                 div
@@ -371,41 +380,57 @@
                       str "|Done Tasks(" (count tasks) "|)"
                       {} (:font-size 24) (:font-family ui/font-fancy) (:font-weight 100)
                     =< 16 nil
-                    if (app.schema/read-field state :editing?)
+                    if (:editing? state)
                       a $ {} (:class-name css/link) (:inner-text |Done)
                         :on-click $ fn (e d!)
-                          d! cursor $ update state :editing? not
+                          hint-fn $ {}
+                            :args $ [] (:: 'Map 'Tag 'Dynamic)
+                              :: 'Fn $ {}
+                                :args $ [] 'Enum
+                                :return 'Unit
+                            :return 'Unit
+                            :features $ #{} :js-ffi
+                          d! $ :: :states cursor $ &struct:to-map
+                            assoc state :editing? $ not $ :editing? state
+                          , &unit
                       a $ {} (:class-name css/link) (:inner-text |Edit)
                         :on-click $ fn (e d!)
-                          d! cursor $ update state :editing? not
+                          hint-fn $ {}
+                            :args $ [] (:: 'Map 'Tag 'Dynamic)
+                              :: 'Fn $ {}
+                                :args $ [] 'Enum
+                                :return 'Unit
+                            :return 'Unit
+                            :features $ #{} :js-ffi
+                          d! $ :: :states cursor $ &struct:to-map
+                            assoc state :editing? $ not $ :editing? state
+                          , &unit
                   let
-                      tasks-by-time $ -> tasks (.to-list) (map last)
-                        group-by $ fn (task)
-                          format-day $ app.schema/read-field
-                            option:unwrap $ unsafe-coerce task $ :: 'Option 'Dynamic
-                            , :time
+                      tasks-by-time $ group-by
+                        map-list-kv tasks $ fn (id task) task
+                        fn (task)
+                          format-day $ :time task
                     list-> ({})
-                      -> tasks-by-time (.to-list)
-                        .sort $ fn (pair-a pair-b)
-                          &compare
-                              first pair-b
-                              , .unwrap
-                            (first pair-a) .unwrap
-                        .map-pair $ fn (date tasks)
-                          [] date $ div ({})
-                            div
-                              {} (:class-name css/font-fancy)
-                                :style $ {} (:font-size 16) (:font-weight 100) (:margin-top 16) (:line-height |24px)
-                              <> date
-                            list-> ({})
-                              -> (as-list tasks)
-                                .sort-by $ fn (task)
-                                  negate $ assert-type (app.schema/read-field task :time) 'Number
-                                map $ fn (task)
-                                  [] (app.schema/read-field task :id)
-                                    comp-done-task
-                                      >> states $ app.schema/read-field task :id
-                                      , task $ app.schema/read-field state :editing?
+                      ->
+                        map-list-kv tasks-by-time $ fn (date items) date
+                        sort $ fn (a b) (&compare b a)
+                        map $ fn (date)
+                          let
+                              tasks $ .unwrap $ get tasks-by-time date
+                            [] date $ div ({})
+                              div
+                                {} (:class-name css/font-fancy)
+                                  :style $ {} (:font-size 16) (:font-weight 100) (:margin-top 16) (:line-height |24px)
+                                <> date
+                              list-> ({})
+                                -> tasks
+                                  .sort-by $ fn (task)
+                                    negate $ :time task
+                                  map $ fn (task)
+                                    [] (:id task)
+                                      comp-done-task
+                                        >> states $ :id task
+                                        , task $ :editing? state
                 ; if
                   pos? $ count router-data
                   div ({})
@@ -415,7 +440,7 @@
                       <> |Clear
                 =< nil 240
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
         'css-done-content $ %{} 'CodeEntry (:doc |)
@@ -438,7 +463,7 @@
               .format value |DD
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'Dynamic
+            :args $ [] 'Number
             :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.done-tasks
@@ -478,10 +503,9 @@
           :ffi $ {} (:backend :js) (:kind :external-object)
           :schema $ :: 'Trait
         'comp-home $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defcomp comp-home (states tasks)
+          :code $ quote $ defcomp comp-home (states raw-tasks)
             let
-                state $ or (app.schema/read-field states :data)
-                  {} $ :draft |
+                task-positions $ app.schema/working-task-positions raw-tasks
                 create-plugin $ use-prompt (>> states :create)
                   {} (:text "|New task:") (:initial |)
               div
@@ -489,83 +513,108 @@
                   :style $ {} (:padding 16) (:overflow :auto)
                 div ({})
                   <>
-                    str "|Working(" (count tasks) "|)"
+                    str "|Working(" (count task-positions) "|)"
                     {} (:font-size 24) (:font-family ui/font-fancy) (:font-weight 100)
                   =< 16 nil
                   comp-icon :plus
                     &{} :font-size 14 :color (hsl 0 0 50) :cursor :ponter
                     fn (e d!)
+                      hint-fn $ {}
+                        :args $ [] (:: 'Map 'Tag 'Dynamic)
+                          :: 'Fn $ {}
+                            :args $ [] 'Enum
+                            :return 'Unit
+                        :return 'Unit
+                        :features $ #{} :js-ffi
                       .show create-plugin d! $ fn (result)
+                        hint-fn $ {}
+                          :args $ [] 'String
+                          :return 'Unit
                         when
-                          not $ .blank? $ unsafe-coerce result 'String
-                          d! :task/create result
-                if (empty? tasks)
+                          not $ .blank? result
+                          d! $ :: :task/create result
+                        , &unit
+                      , &unit
+                if (empty? task-positions)
                   div
                     {} $ :class-name css/row-parted
                     button $ {} (:class-name css/button) (:inner-text |Add)
                       :on-click $ fn (e d!)
+                        hint-fn $ {}
+                          :args $ [] (:: 'Map 'Tag 'Dynamic)
+                            :: 'Fn $ {}
+                              :args $ [] 'Enum
+                              :return 'Unit
+                          :return 'Unit
+                          :features $ #{} :js-ffi
                         .show create-plugin d! $ fn (result)
+                          hint-fn $ {}
+                            :args $ [] 'String
+                            :return 'Unit
                           when
-                            not $ .blank? $ unsafe-coerce result 'String
-                            d! :task/create result
+                            not $ .blank? result
+                            d! $ :: :task/create result
+                          , &unit
+                        , &unit
                 list->
                   {} $ :style $ {} (:position :relative)
-                    :height $ + 8 $ * 48 (count tasks)
-                  -> (unsafe-coerce tasks 'Map) (.to-list)
-                    .sort-by $ fn (pair)
-                      negate $ assert-type
-                        app.schema/read-field
-                            last pair
-                            , .unwrap
-                          , :time
-                        , 'Number
-                    .map-indexed $ fn (idx pair)
-                      let
-                          task $
-                            last pair
-                            , .unwrap
-                        [] (app.schema/read-field task :id)
-                          comp-task
-                            >> states $ app.schema/read-field task :id
-                            , task idx
-                    .sort-by first
+                    :height $ + 8 $ * 48 (count task-positions)
+                  map task-positions $ fn (position)
+                    let
+                        task $ :task position
+                      [] (:id task)
+                        comp-task
+                          >> states $ :id task
+                          , task $ :index position
                 .render create-plugin
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
         'comp-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-task (states task idx)
             let
-                cursor $ app.schema/read-field states :cursor
-                state $ or (app.schema/read-field states :data)
-                  {} (:show-menu? false) (:show-editor? false)
-                    :task-draft $ app.schema/read-field task :text
+                cursor $ decode-map-as (app.schema/read-field states :cursor) (:: 'List 'Dynamic)
+                state $ app.schema/read-task-card-state (app.schema/read-field states :data) (:text task)
                 remove-plugin $ use-confirm (>> states :remove)
                   {} $ :text "|Sure to remove?"
                 update-plugin $ use-prompt (>> states :update)
                   {} (:text "|Edit task:")
-                    :initial $ app.schema/read-field task :text
+                    :initial $ :text task
                     :button-text |Edit
               div
                 {}
                   :class-name $ str-spaced css/row css-item
-                  :style $ merge
-                    unsafe-coerce
-                      {} $ :top $ + 8 (* idx 48)
-                      :: 'Map 'Tag 'Dynamic
-                    unsafe-coerce
-                      when
-                        or (app.schema/read-field state :show-menu?) (app.schema/read-field state :show-editor?)
-                        {} $ :outline $ str "|2px solid " (hsl 240 80 86)
-                      :: 'Map 'Tag 'Dynamic
+                  :style $ let
+                      top $ + 8 $ * idx 48
+                    if
+                      or (:show-menu? state) (:show-editor? state)
+                      {} (:top top)
+                        :outline $ str "|2px solid " $ hsl 240 80 86
+                      {} $ :top top
                   :on-click $ fn (e d!)
-                    d! cursor $ assoc state :show-menu? true
+                    hint-fn $ {}
+                      :args $ [] (:: 'Map 'Tag 'Dynamic)
+                        :: 'Fn $ {}
+                          :args $ [] 'Enum
+                          :return 'Unit
+                      :return 'Unit
+                      :features $ #{} :js-ffi
+                    d! $ :: :states cursor $ &struct:to-map (assoc state :show-menu? true)
+                    , &unit
                   :draggable true
                   :on $ {} $ :dragend
                     fn (e d!)
-                      d! :task/touch-working $ app.schema/read-field task :id
-                <> (app.schema/read-field task :text)
+                      hint-fn $ {}
+                        :args $ [] (:: 'Map 'Tag 'Dynamic)
+                          :: 'Fn $ {}
+                            :args $ [] 'Enum
+                            :return 'Unit
+                        :return 'Unit
+                        :features $ #{} :js-ffi
+                      d! $ :: :task/touch-working $ :id task
+                      , &unit
+                <> (:text task)
                   merge ui/expand $ {} (:text-overflow :ellipsis) (:overflow :hidden) (:max-width |100%)
                 =< 32 nil
                 comp-modal-menu
@@ -573,59 +622,85 @@
                     :style $ {} $ :line-height |24px
                     :items $ &list:concat
                       if
-                        .!test http-pattern $ app.schema/read-field task :text
+                        .!test http-pattern $ :text task
                         [] $ {} (:value :open) (:display "|Open Link")
-                        , nil
+                        []
                       []
                         {} (:value :finish) (:display |Finish)
                         {} (:value :edit) (:display |Edit)
                         {} (:value :postpone) (:display |Postpone)
                         {} (:value :touch) (:display |Up)
                         {} (:value :remove) (:display |Remove)
-                  app.schema/read-field state :show-menu?
+                  :show-menu? state
                   fn (d!)
-                    d! cursor $ assoc state :show-menu? false
+                    hint-fn $ {}
+                      :args $ [] $ :: 'Fn
+                        {}
+                          :args $ [] 'Enum
+                          :return 'Unit
+                      :return 'Unit
+                    d! $ :: :states cursor $ &struct:to-map (assoc state :show-menu? false)
+                    , &unit
                   fn (item d!)
+                    hint-fn $ {}
+                      :args $ [] 'Dynamic $ :: 'Fn
+                        {}
+                          :args $ [] 'Enum
+                          :return 'Unit
+                      :return 'Unit
+                      :features $ #{} :js-ffi
                     let
                         new-state $ assoc state :show-menu? false
-                      case-default
-                        option:unwrap-or (nth item 1) nil
-                        , nil
-                          :finish $ do
-                            d! :task/move-task $ {}
-                              :id $ app.schema/read-field task :id
-                              :from :working-tasks
-                              :to :done-tasks
-                            d! cursor new-state
-                          :postpone $ do
-                            d! :task/move-task $ {}
-                              :id $ app.schema/read-field task :id
-                              :from :working-tasks
-                              :to :pending-tasks
-                            d! cursor new-state
-                          :edit $ do (d! cursor new-state)
-                            .show update-plugin d! $ fn (text)
-                              when
-                                option:some? $ unsafe-coerce text $ :: 'Option 'String
-                                d! :task/update-text $ {}
-                                  :id $ app.schema/read-field task :id
-                                  :text $ option:unwrap $ unsafe-coerce text (:: 'Option 'String)
-                                  :group :working-tasks
-                                  :time $ js/Date.now
-                          :remove $ do (d! cursor new-state)
-                            .show remove-plugin d! $ fn () $ d! :task/remove-working (app.schema/read-field task :id)
-                          :touch $ do
-                            d! :task/touch-working $ app.schema/read-field task :id
-                            d! cursor new-state
-                          :open $ do
-                            js/window.open $ first-match (app.schema/read-field task :text) url-pattern
-                            d! cursor new-state
-                          nil $ d! cursor new-state
+                      match
+                        if (enum? item)
+                          option:unwrap-or (nth item 1) nil
+                          , nil
+                        :finish $ do
+                          d! $ :: :task/move-task $ {}
+                            :id $ :id task
+                            :from :working-tasks
+                            :to :done-tasks
+                          d! $ :: :states cursor $ &struct:to-map new-state
+                        :postpone $ do
+                          d! $ :: :task/move-task $ {}
+                            :id $ :id task
+                            :from :working-tasks
+                            :to :pending-tasks
+                          d! $ :: :states cursor $ &struct:to-map new-state
+                        :edit $ do
+                          d! $ :: :states cursor $ &struct:to-map new-state
+                          .show update-plugin d! $ fn (text)
+                            hint-fn $ {}
+                              :args $ [] 'String
+                              :return 'Unit
+                            d! $ :: :task/update-text $ {}
+                              :id $ :id task
+                              :text text
+                              :group :working-tasks
+                              :time $ unix-time-ms
+                            , &unit
+                        :remove $ do
+                          d! $ :: :states cursor $ &struct:to-map new-state
+                          .show remove-plugin d! $ fn ()
+                            hint-fn $ {}
+                              :args $ []
+                              :return 'Unit
+                            d! $ :: :task/remove-working $ :id task
+                            , &unit
+                        :touch $ do
+                          d! $ :: :task/touch-working $ :id task
+                          d! $ :: :states cursor $ &struct:to-map new-state
+                        :open $ do
+                          js/window.open $ first-match (:text task) url-pattern
+                          d! $ :: :states cursor $ &struct:to-map new-state
+                        nil $ d! $ :: :states cursor (&struct:to-map new-state)
+                        _ nil
+                    , &unit
                 .render remove-plugin
                 .render update-plugin
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic 'Dynamic
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
+            :args $ [] 'Dynamic 'app.schema/Task 'Number
             :features $ #{} :js-ffi
         'css-item $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-item
@@ -741,39 +816,30 @@
     'app.comp.pending $ %{} 'FileEntry
       :defs $ {}
         'comp-pending $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defcomp comp-pending (states router-data)
-            div
-              {} (:class-name css/flex)
-                :style $ {} (:padding 16) (:overflow :auto)
+          :code $ quote $ defcomp comp-pending (states raw-tasks)
+            let
+                tasks $ app.schema/decode-tasks raw-tasks
+                task-keys $ ->
+                  map-list-kv tasks $ fn (key task) key
+                  .sort-by $ fn (key)
+                    negate $ :time $ .unwrap (get tasks key)
               div
-                {} (:class-name css/font-fancy)
-                  :style $ {} (:font-size 24) (:font-weight 100)
-                <> $ str "|Pending Tasks(" (count router-data) "|)"
-              list->
-                {} $ :style $ {} (:width |100%)
-                ->
-                  unsafe-coerce router-data $ :: 'Map 'Dynamic 'Dynamic
-                  .to-list
-                  .sort $ fn (pair-a pair-b)
-                    &compare
-                      assert-type
-                        app.schema/read-field
-                            last pair-b
-                            , .unwrap
-                          , :time
-                        , 'Number
-                      assert-type
-                        app.schema/read-field
-                            last pair-a
-                            , .unwrap
-                          , :time
-                        , 'Number
-                  .map-pair $ fn (k task)
-                    [] k $ comp-task
-                      >> states $ app.schema/read-field task :id
-                      , task
+                {} (:class-name css/flex)
+                  :style $ {} (:padding 16) (:overflow :auto)
+                div
+                  {} (:class-name css/font-fancy)
+                    :style $ {} (:font-size 24) (:font-weight 100)
+                  <> $ str "|Pending Tasks(" (count tasks) "|)"
+                list->
+                  {} $ :style $ {} (:width |100%)
+                  map task-keys $ fn (key)
+                    let
+                        task $ .unwrap $ get tasks key
+                      [] key $ comp-task
+                        >> states $ :id task
+                        , task
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
             :args $ [] 'Dynamic 'Dynamic
             :features $ #{} :js-ffi
         'comp-task $ %{} 'CodeEntry (:doc |)
@@ -781,7 +847,7 @@
             let
                 update-plugin $ use-prompt (>> states :update)
                   {} (:text "|Update task:")
-                    :initial $ or (app.schema/read-field task :text) |
+                    :initial $ or (:text task) |
               div
                 {} (:class-name css/row)
                   :style $ {} (:margin "|8px 0") (:align-items :center) (:max-width 480) (:width |100%)
@@ -791,24 +857,44 @@
                       :background-color $ hsl 0 0 96
                       :overflow :auto
                   span $ {}
-                    :inner-text $ app.schema/read-field task :text
+                    :inner-text $ :text task
                     :style $ {} (:display :block) (:height 32) (:line-height |32px) (:overflow :auto) (:white-space :nowrap)
                     :on-click $ fn (e d!)
+                      hint-fn $ {}
+                        :args $ [] (:: 'Map 'Tag 'Dynamic)
+                          :: 'Fn $ {}
+                            :args $ [] 'Enum
+                            :return 'Unit
+                        :return 'Unit
+                        :features $ #{} :js-ffi
                       .show update-plugin d! $ fn (result)
-                        d! :task/update-text $ {}
-                          :id $ app.schema/read-field task :id
+                        hint-fn $ {}
+                          :args $ [] 'String
+                          :return 'Unit
+                        d! $ :: :task/update-text $ {}
+                          :id $ :id task
                           :text result
                           :group :pending-tasks
-                          :time $ js/Date.now
+                          :time $ unix-time-ms
+                        , &unit
+                      , &unit
                 =< 16 nil
                 div
                   {}
                     :style $ {} $ :cursor :pointer
                     :on-click $ fn (e d!)
-                      d! :task/move-task $ {}
-                        :id $ app.schema/read-field task :id
+                      hint-fn $ {}
+                        :args $ [] (:: 'Map 'Tag 'Dynamic)
+                          :: 'Fn $ {}
+                            :args $ [] 'Enum
+                            :return 'Unit
+                        :return 'Unit
+                        :features $ #{} :js-ffi
+                      d! $ :: :task/move-task $ {}
+                        :id $ :id task
                         :from :pending-tasks
                         :to :working-tasks
+                      , &unit
                   comp-i :corner-up-left 14 $ hsl 0 0 50
                 ; div
                   {}
@@ -820,8 +906,8 @@
                   comp-i :check 14 $ hsl 0 0 50
                 .render update-plugin
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
+          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
+            :args $ [] 'Dynamic 'app.schema/Task
             :features $ #{} :js-ffi
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.pending
@@ -1038,10 +1124,28 @@
         :code $ quote $ ns app.config
     'app.schema $ %{} 'FileEntry
       :defs $ {}
+        'DoneTasksState $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct DoneTasksState (:editing? 'Bool)
+          :examples $ []
+          :schema $ :: 'StructDef
+        'DoneTasksView $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct DoneTasksView (:cursor 'String)
+            :months $ :: 'List 'String
+            :tasks $ :: 'Map 'String 'app.schema/Task
+          :examples $ []
+          :schema $ :: 'StructDef
         'Task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct Task (:id 'String) (:text 'String) (:time 'Number)
             :mode $ :: 'Option 'Tag
             :extra $ :: 'Map 'Tag 'Dynamic
+          :examples $ []
+          :schema $ :: 'StructDef
+        'TaskCardState $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct TaskCardState (:show-menu? 'Bool) (:show-editor? 'Bool) (:task-draft 'String)
+          :examples $ []
+          :schema $ :: 'StructDef
+        'TaskPosition $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct TaskPosition (:index 'Number) (:task 'app.schema/Task)
           :examples $ []
           :schema $ :: 'StructDef
         'database $ %{} 'CodeEntry (:doc |)
@@ -1051,6 +1155,22 @@
               :users $ {}
           :examples $ []
           :schema $ :: 'Dynamic
+        'decode-done-tasks-view $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn decode-done-tasks-view (raw)
+            let
+                fields $ decode-map-as raw $ :: 'Map 'Tag 'Dynamic
+              DoneTasksView :cursor
+                decode-map-as
+                  .unwrap $ get fields :cursor
+                  , 'String
+                , :months
+                  decode-map-as
+                    .unwrap $ get fields :months
+                    :: 'List 'String
+                  , :tasks $ decode-tasks $ .unwrap (get fields :tasks)
+          :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'app.schema/DoneTasksView)
+            :args $ [] 'Dynamic
         'decode-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-task (raw)
             let
@@ -1100,12 +1220,36 @@
             {} (:id nil) (:kind nil) (:text nil)
           :examples $ []
           :schema $ :: 'Dynamic
+        'read-done-tasks-state $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn read-done-tasks-state (raw)
+            decode-map-as
+              merge
+                {} $ :editing? false
+                decode-map-as
+                  or raw $ {}
+                  :: 'Map 'Tag 'Dynamic
+              , 'app.schema/DoneTasksState
+          :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'app.schema/DoneTasksState)
+            :args $ [] 'Dynamic
         'read-field $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-field (value field)
             option:unwrap-or (get value field) nil
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
             :args $ [] 'Dynamic 'Tag
+        'read-task-card-state $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn read-task-card-state (raw text)
+            decode-map-as
+              merge
+                {} (:show-menu? false) (:show-editor? false) (:task-draft text)
+                decode-map-as
+                  or raw $ {}
+                  :: 'Map 'Tag 'Dynamic
+              , 'app.schema/TaskCardState
+          :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'app.schema/TaskCardState)
+            :args $ [] 'Dynamic 'String
         'router $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def router
             {} (:name nil) (:title nil)
@@ -1120,6 +1264,17 @@
               :messages $ {}
           :examples $ []
           :schema $ :: 'Dynamic
+        'sorted-task-values $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn sorted-task-values (raw)
+            ->
+              map-list-kv (decode-tasks raw)
+                fn (id task) task
+              .sort-by $ fn (task)
+                negate $ :time task
+          :examples $ []
+          :schema $ :: 'Fn $ {}
+            :args $ [] 'Dynamic
+            :return $ :: 'List 'app.schema/Task
         'task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def task
             {} (:id nil) (:text |) (:mode nil) (:time 0)
@@ -1155,6 +1310,33 @@
               :done-tasks $ {}
           :examples $ []
           :schema $ :: 'Dynamic
+        'working-task-positions $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn working-task-positions (raw)
+            -> (sorted-task-values raw)
+              .map-indexed $ fn (idx task) (TaskPosition :index idx :task task)
+              .sort-by $ fn (position)
+                :id $ :task position
+          :examples $ []
+          :schema $ :: 'Fn $ {}
+            :args $ [] 'Dynamic
+            :return $ :: 'List 'app.schema/TaskPosition
+          :tests $ [] $ %{} 'TestEntry (:name |preserve-time-position-and-key-render-order)
+            :code $ quote $ let
+                tasks $ {}
+                  |a $ {} (:id |a) (:text |A) (:mode nil) (:time 1)
+                  |z $ {} (:id |z) (:text |Z) (:mode nil) (:time 3)
+                  |m $ {} (:id |m) (:text |M) (:mode nil) (:time 2)
+              assert= ([] |z |m |a)
+                map (sorted-task-values tasks)
+                  fn (task) (:id task)
+              assert=
+                [] ([] |a 2) ([] |m 1) ([] |z 0)
+                map (working-task-positions tasks)
+                  fn (position)
+                    []
+                      :id $ :task position
+                      :index position
+            :tags $ #{} :unit
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.schema
     'app.server $ %{} 'FileEntry

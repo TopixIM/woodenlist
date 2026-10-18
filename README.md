@@ -40,15 +40,28 @@ Task现在是具体Struct：id/text为String、time为Number、mode为Option<Tag
 为nil，错误的必要字段类型明确拒绝。前端分发入口检查Enum，并真正解码混合键状态游标为List，
 不将它伪装成纯Tag路径；分发/渲染回调按实际副作用返回Unit。
 
-当前3/3原生附带测试通过，包括站点配置、任务及扩展字段往返、实际日期FFI下的指定月份/最新月份/
-空列表选择。schema全部12/12公开定义通过；当前生成JS另通过Unicode、0时间戳、nil/有值mode和
+当前4/4原生附带测试通过，包括站点配置、任务及扩展字段往返、实际日期FFI下的指定月份/最新月份/
+空列表选择，以及按时间计算位置后按id稳定渲染。任务相关三个视图namespace与schema合计38/38
+公开定义通过；当前生成JS另通过Unicode、0时间戳、nil/有值mode和
 扩展字段往返。该JS验收只生成纯任务编解码入口到临时目录，不代表完整前端构建或浏览器端到端。
 没有将临时脚本、入口或产物纳入仓库。
 
-当前新工具链可达检查为 browser416通过/2失败/5阻塞、native60通过/1失败/9阻塞/2级联；
-不把局部测试通过等同于完整类型或业务验收。尚需迁移任务组件/列表、完整数据库、账户、历史回放与
-Alerts交互；现存27处unsafe-coerce和198处schema Dynamic（85个定义的组合扫描）仍需逐项处理，
-没有放宽基线或声称债务清零。当前服务端失败已推进到twig-container的账户/session类型边界。
+工作中、待办、已完成视图均消费真实Task；工作位置和渲染次序分开保留，待办的原Map key仍作为
+渲染键，不假定它必定等于任务id。任务卡和已完成页本地状态使用具体Struct，写回Respo时仍是原Map。
+三种视图内的事件改为单Enum dispatch、Confirm零参数成功任务、Prompt String任务；不再把Prompt
+提交文字强转为Option。删除已无消费者的as-list/as-map helper，不增加兼容包装或维护额外runner。
+
+当前生成JS的合成VDOM回放通过新建、工作/待办编辑、菜单Clear、拦截的Confirm操作、完成分组、
+编辑开关与移回工作。所有业务dispatch均被测试截获，没有连接服务或删除数据库；不是浏览器端到端
+验收。日期标签仍用原dayjs本地日期行为，不为清零计数改成UTC；对应外部对象边界尚保留待审阅。
+Prompt公开合同仍擦除回调类型的缺口已用错误Number回调可通过门禁的最小形状报告到
+[Alerts #104](https://github.com/Respo/alerts.calcit/issues/104)，不增加编译器迁移规则。
+
+当前新工具链可达检查为 browser417通过/1失败/3阻塞、native60通过/1失败/9阻塞/2级联；
+不把局部测试通过等同于完整类型或业务验收。尚需迁移容器/账户/session、完整数据库、updater、历史
+回放和其他页面交互；现存14处unsafe-coerce和186处schema Dynamic（88个定义的组合扫描）仍需逐项
+处理，没有放宽基线或声称债务清零。前端失败在容器reel-length的Number合同，服务端失败在
+twig-container的账户/session类型边界。
 正式依赖图还需干净CI核对。生产连接仍是 `wss://wood.topix.im/ws`，不能套用其他应用地址；
 存档格式和后端部署目录也不因COS前端迁移而改变。尚未推送、提交PR、合并或部署。
 
