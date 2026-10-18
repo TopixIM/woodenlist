@@ -60,19 +60,25 @@
             :features $ #{} :js-ffi
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
-            when
-              and config/dev? $ not=
-                  first op
-                  , .unwrap-or :unknown
-                , :states
-              js/console.log |Dispatch op
-            match op
-              (:states cursor s)
-                reset! *states $ update-states @*states cursor s
-              (:effect/connect) (connect!)
-              _ $ ws-send! op
+            if (enum? op)
+              do
+                when
+                  and config/dev? $ not=
+                      first op
+                      , .unwrap-or :unknown
+                    , :states
+                  js/console.log |Dispatch op
+                match op
+                  (:states cursor s)
+                    reset! *states $ update-states @*states
+                      decode-map-as cursor $ :: 'List 'Dynamic
+                      , s
+                  (:effect/connect) (connect!)
+                  _ $ ws-send! op
+              raise "|Expected a client action enum"
+            , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
+          :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ [] 'Dynamic
             :features $ #{} :js-ffi
         'main! $ %{} 'CodeEntry (:doc |)
@@ -128,7 +134,7 @@
               comp-container (app.schema/read-field @*states :states) @*store
               , dispatch!
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
+          :schema $ :: 'Fn $ {} (:return 'Unit)
             :args $ []
             :features $ #{} :js-ffi
         'simulate-login! $ %{} 'CodeEntry (:doc |)
@@ -1032,6 +1038,12 @@
         :code $ quote $ ns app.config
     'app.schema $ %{} 'FileEntry
       :defs $ {}
+        'Task $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct Task (:id 'String) (:text 'String) (:time 'Number)
+            :mode $ :: 'Option 'Tag
+            :extra $ :: 'Map 'Tag 'Dynamic
+          :examples $ []
+          :schema $ :: 'StructDef
         'database $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def database
             {}
@@ -1039,6 +1051,50 @@
               :users $ {}
           :examples $ []
           :schema $ :: 'Dynamic
+        'decode-task $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn decode-task (raw)
+            let
+                fields $ decode-map-as raw $ :: 'Map 'Tag 'Dynamic
+              Task :id
+                decode-map-as
+                  .unwrap $ get fields :id
+                  , 'String
+                , :text
+                  decode-map-as
+                    .unwrap $ get fields :text
+                    , 'String
+                  , :time
+                    decode-map-as
+                      .unwrap $ get fields :time
+                      , 'Number
+                    , :mode
+                      match (get fields :mode)
+                        (:some value)
+                          if (nil? value) (Option :none)
+                            Option :some $ decode-map-as value 'Tag
+                        (:none) (Option :none)
+                      , :extra $ -> fields (dissoc :id) (dissoc :text) (dissoc :time) (dissoc :mode)
+          :examples $ []
+          :schema $ :: 'Fn $ {} (:return 'app.schema/Task)
+            :args $ [] 'Dynamic
+          :tests $ [] $ %{} 'TestEntry (:name |legacy-task-roundtrip-preserves-extension)
+            :code $ quote $ let
+                raw $ {} (:id |t1) (:text "|迁移任务🐈") (:mode nil) (:time 0) (:custom false)
+                task $ decode-task raw
+              assert= raw $ task-to-wire task
+              assert= "|迁移任务🐈" $ :text task
+              assert= (Option :none) (:mode task)
+            :tags $ #{} :unit
+        'decode-tasks $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn decode-tasks (raw)
+            filter-map-kv
+              decode-map-as raw $ :: 'Map 'String 'Dynamic
+              fn (id value)
+                MapEntryDecision :keep id $ decode-task value
+          :examples $ []
+          :schema $ :: 'Fn $ {}
+            :args $ [] 'Dynamic
+            :return $ :: 'Map 'String 'app.schema/Task
         'notification $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def notification
             {} (:id nil) (:kind nil) (:text nil)
@@ -1069,6 +1125,28 @@
             {} (:id nil) (:text |) (:mode nil) (:time 0)
           :examples $ []
           :schema $ :: 'Dynamic
+        'task-to-wire $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn task-to-wire (task)
+            merge (:extra task)
+              {}
+                :id $ :id task
+                :text $ :text task
+                :time $ :time task
+                :mode $ match (:mode task)
+                  (:some value) value
+                  (:none) nil
+          :examples $ []
+          :schema $ :: 'Fn $ {}
+            :args $ [] 'app.schema/Task
+            :return $ :: 'Map 'Tag 'Dynamic
+        'tasks-to-wire $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn tasks-to-wire (tasks)
+            filter-map-kv tasks $ fn (id task)
+              MapEntryDecision :keep id $ task-to-wire task
+          :examples $ []
+          :schema $ :: 'Fn $ {}
+            :args $ [] $ :: 'Map 'String 'app.schema/Task
+            :return $ :: 'Map 'String $ :: 'Map 'Tag 'Dynamic
         'user $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def user
             {} (:name nil) (:id nil) (:nickname nil) (:avatar nil) (:password nil)
@@ -1271,14 +1349,6 @@
             respo-ui.core :as ui
     'app.twig.container $ %{} 'FileEntry
       :defs $ {}
-        'as-string-list $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn as-string-list (value)
-            unsafe-coerce value $ :: 'List 'String
-          :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'Dynamic
-            :features $ #{} :js-ffi
-            :return $ :: 'List 'String
         'as-tag-map $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn as-tag-map (value)
             unsafe-coerce value $ :: 'Map 'Tag 'Dynamic
@@ -1318,26 +1388,49 @@
             :args $ [] (:: 'Map 'Tag 'Dynamic) (:: 'Map 'Tag 'Dynamic) (:: 'List 'Dynamic)
             :return $ :: 'Map 'Tag 'Dynamic
         'twig-done-tasks $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn twig-done-tasks (done-tasks year-month)
+          :code $ quote $ defn twig-done-tasks (raw-done-tasks year-month)
             let
-                year-months $ as-string-list $ -> done-tasks
-                  &map:map-list $ fn (pair)
-                    -> pair (&list:nth 1) (&map:get :time) (wrap-format-time |%Y-%m)
-                  distinct
-                cursor $ or year-month $ -> year-months
-                  sort $ fn (a b) (.compare b a)
-                  get 0
-                  .unwrap-or |
-                reading-tasks $ -> done-tasks $ &map:filter-kv
-                  fn (k task)
-                    &= cursor $ -> (&map:get task :time) (wrap-format-time |%Y-%m)
-              {} (:months year-months) (:cursor cursor) (:tasks reading-tasks)
+                done-tasks $ schema/decode-tasks raw-done-tasks
+                year-months $ distinct $ map-list-kv done-tasks
+                  fn (id task)
+                    wrap-format-time (:time task) |%Y-%m
+                cursor $ if (nil? year-month)
+                  -> year-months
+                    sort $ fn (a b) (.compare b a)
+                    get 0
+                    .unwrap-or |
+                  decode-map-as year-month 'String
+                reading-tasks $ filter-map-kv done-tasks $ fn (id task)
+                  if
+                    = cursor $ wrap-format-time (:time task) |%Y-%m
+                    MapEntryDecision :keep id task
+                    MapEntryDecision :drop
+              {} (:months year-months) (:cursor cursor)
+                :tasks $ schema/tasks-to-wire reading-tasks
           :examples $ []
           :schema $ :: 'Fn $ {}
-            :args $ []
-              :: 'Map 'Dynamic $ :: 'Map 'Tag 'Dynamic
-              , 'Dynamic
+            :args $ [] 'Dynamic 'Dynamic
             :return $ :: 'Map 'Tag 'Dynamic
+          :tests $ [] $ %{} 'TestEntry (:name |legacy-month-selection-and-wire-format)
+            :code $ quote $ let
+                september $ {} (:id |s) (:text |September) (:mode :working) (:time 1789732800000)
+                october $ {} (:id |o) (:text |October) (:mode :working) (:time 1792324800000) (:custom |retained)
+                tasks $ {} (|s september) (|o october)
+                selected $ twig-done-tasks tasks |2026-09
+                latest $ twig-done-tasks tasks nil
+                empty-result $ twig-done-tasks ({}) nil
+              assert= |2026-09 $ .unwrap $ get selected :cursor
+              assert=
+                {} $ |s september
+                .unwrap $ get selected :tasks
+              assert= |2026-10 $ .unwrap $ get latest :cursor
+              assert=
+                {} $ |o october
+                .unwrap $ get latest :tasks
+              assert= | $ .unwrap $ get empty-result :cursor
+              assert= ({})
+                .unwrap $ get empty-result :tasks
+            :tags $ #{} :unit
         'twig-members $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn twig-members (sessions users)
             filter-map-kv sessions $ fn (k session)
@@ -1352,18 +1445,17 @@
             :return $ :: 'Map 'Dynamic 'String
         'wrap-format-time $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn wrap-format-time (stamp format)
-            format-time (:: calcit.std.date/Date0 stamp) format
+            format-time (calcit.std.date/Date0 :date stamp) (Option :some format)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Dynamic)
-            :args $ [] 'Dynamic 'Dynamic
-            :features $ #{} :js-ffi
+          :schema $ :: 'Fn $ {} (:return 'String)
+            :args $ [] 'Number 'String
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.twig.container
           :require
             app.twig.user :refer $ twig-user
             app.schema :as schema
             calcit.std.rand :refer $ rand-hex-color!
-            calcit.std.date :refer $ extract-time format-time Date
+            calcit.std.date :refer $ extract-time format-time
     'app.twig.user $ %{} 'FileEntry
       :defs $ {} $ 'twig-user
         %{} 'CodeEntry (:doc |)
