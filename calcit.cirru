@@ -5,11 +5,11 @@
   :entries $ {}
     :default $ {} (:description |) (:init-fn 'app.client/main!) (:mode :js) (:reload-fn 'app.client/reload!) (:target :browser)
       :feature-policy $ {}
-      :modules $ [] |respo.calcit/ |lilac/ |recollect/ |memof/ |respo-ui.calcit/ |ws-edn.calcit/ |cumulo-util.calcit/ |respo-message.calcit/ |cumulo-reel.calcit/ |respo-feather.calcit/ |alerts.calcit/ |respo-markdown.calcit/
+      :modules $ [] |respo.calcit/ |recollect/ |memof/ |respo-ui.calcit/ |ws-edn.calcit/ |cumulo-util.calcit/ |respo-message.calcit/ |cumulo-reel.calcit/ |respo-feather.calcit/ |alerts.calcit/ |respo-markdown.calcit/
       :type-slots $ {}
     :server $ {} (:description |) (:init-fn 'app.server/main!) (:mode :native) (:reload-fn 'app.server/reload!) (:target :native)
       :feature-policy $ {}
-      :modules $ [] |lilac/ |recollect/ |memof/ |cumulo-util.calcit/ |cumulo-reel.calcit/ |calcit-wss/ |calcit.std/
+      :modules $ [] |recollect/ |memof/ |cumulo-util.calcit/ |cumulo-reel.calcit/ |calcit-wss/ |calcit.std/
       :type-slots $ {}
   :files $ {}
     'app.client $ %{} 'FileEntry
@@ -45,7 +45,7 @@
                 port-value $ .-port query
                 host $ if (js-present? host-value) (unsafe-coerce host-value 'String) js/location.hostname
                 port $ if (js-present? port-value) (unsafe-coerce port-value 'String)
-                  str $ app.schema/read-field config/site :port
+                  str $ :port config/site
               ws-connect!
                 if config/dev? (str |ws:// host |: port) |wss://wood.topix.im/ws
                 {}
@@ -211,9 +211,7 @@
                 {} $ :height 0
               div $ {} $ :style
                 {}
-                  :background-image $ str "|url("
-                    option:unwrap-or (:icon config/site) |
-                    , "|)"
+                  :background-image $ str "|url(" (:icon config/site) "|)"
                   :width 128
                   :height 128
                   :background-size :contain
@@ -1006,6 +1004,10 @@
             app.config :as config
     'app.config $ %{} 'FileEntry
       :defs $ {}
+        'SiteConfig $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct SiteConfig (:port 'Number) (:title 'String) (:icon 'String) (:server-folder 'String) (:theme 'String) (:storage-key 'String) (:storage-file 'String)
+          :examples $ []
+          :schema $ :: 'StructDef
         'dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def dev?
             = |dev $ option:unwrap-or (get-env |mode) |release
@@ -1013,9 +1015,19 @@
           :schema $ :: 'Dynamic
         'site $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def site
-            {} (:port 11000) (:title |Woodenlist) (:icon |http://cdn.tiye.me/logo/woodenlist.png) (:server-folder |tiye.me:servers/woodenlist) (:theme |#4DB386) (:storage-key |woodenlist-storage) (:storage-file |woodenlist.cirru)
+            SiteConfig :port 11000 :title |Woodenlist :icon |http://cdn.tiye.me/logo/woodenlist.png :server-folder |tiye.me:servers/woodenlist :theme |#4DB386 :storage-key |woodenlist-storage :storage-file |woodenlist.cirru
           :examples $ []
-          :schema $ :: 'Dynamic
+          :schema $ :: 'app.config/SiteConfig
+          :tests $ [] $ %{} 'TestEntry (:name |preserve-seven-original-site-values)
+            :code $ quote $ do
+              assert= 11000 $ :port site
+              assert= |Woodenlist $ :title site
+              assert= |http://cdn.tiye.me/logo/woodenlist.png $ :icon site
+              assert= |tiye.me:servers/woodenlist $ :server-folder site
+              assert= |#4DB386 $ :theme site
+              assert= |woodenlist-storage $ :storage-key site
+              assert= |woodenlist.cirru $ :storage-file site
+            :tags $ #{} :unit
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.config
     'app.schema $ %{} 'FileEntry
@@ -1123,7 +1135,7 @@
             let
                 port $ result:unwrap-or
                   parse-float $ option:unwrap-or (get-env |port)
-                    str $ option:unwrap-or (:port config/site) 11000
+                    str $ :port config/site
                   , 11000
               run-server! port
               println $ str "|Server started on port:" port
@@ -1195,8 +1207,8 @@
         'storage-file $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def storage-file
             if (empty? calcit-dirname)
-              str calcit-dirname $ option:unwrap-or (:storage-file config/site) |woodenlist.cirru
-              str calcit-dirname |/ $ option:unwrap-or (:storage-file config/site) |woodenlist.cirru
+              str calcit-dirname $ :storage-file config/site
+              str calcit-dirname |/ $ :storage-file config/site
           :examples $ []
           :schema $ :: 'Dynamic
         'sync-clients! $ %{} 'CodeEntry (:doc |)
@@ -1255,8 +1267,8 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.style
           :require
-            [] respo-ui.core :refer $ [] hsl
-            [] respo-ui.core :as ui
+            respo-ui.core :refer $ hsl
+            respo-ui.core :as ui
     'app.twig.container $ %{} 'FileEntry
       :defs $ {}
         'as-string-list $ %{} 'CodeEntry (:doc |)
@@ -1348,8 +1360,8 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.twig.container
           :require
-            [] app.twig.user :refer $ [] twig-user
-            [] app.schema :as schema
+            app.twig.user :refer $ twig-user
+            app.schema :as schema
             calcit.std.rand :refer $ rand-hex-color!
             calcit.std.date :refer $ extract-time format-time Date
     'app.twig.user $ %{} 'FileEntry
@@ -1387,7 +1399,7 @@
             :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater
-          :require ([] app.updater.session :as session) ([] app.updater.user :as user) ([] app.updater.router :as router) ([] app.updater.task :as task)
+          :require (app.updater.session :as session) (app.updater.user :as user) (app.updater.router :as router) (app.updater.task :as task)
     'app.updater.router $ %{} 'FileEntry
       :defs $ {} $ 'change
         %{} 'CodeEntry (:doc |)
@@ -1425,7 +1437,7 @@
             :args $ [] 'Dynamic 'Dynamic 'Dynamic 'Dynamic 'Dynamic
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater.session
-          :require $ [] app.schema :as schema
+          :require $ app.schema :as schema
     'app.updater.task $ %{} 'FileEntry
       :defs $ {}
         'clear-done $ %{} 'CodeEntry (:doc |)
@@ -1528,8 +1540,8 @@
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater.task
           :require
-            [] medley.core :refer $ [] dissoc-in
-            [] app.schema :as schema
+            medley.core :refer $ dissoc-in
+            app.schema :as schema
     'app.updater.user $ %{} 'FileEntry
       :defs $ {}
         'log-in $ %{} 'CodeEntry (:doc |)
@@ -1594,4 +1606,4 @@
         :code $ quote $ ns app.updater.user
           :require
             calcit.std.hash :refer $ md5
-            [] app.schema :as schema
+            app.schema :as schema

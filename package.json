@@ -8,7 +8,9 @@
     "node": ">=24"
   },
   "scripts": {
-    "check": "calcit calcit.cirru --check-only && calcit calcit.cirru --entry server --check-only && calcit calcit.cirru analyze deprecated --summary-only && calcit calcit.cirru --entry server analyze deprecated --summary-only",
+    "check": "yarn check-client && yarn check-server",
+    "check-client": "calcit calcit.cirru --check-only --ns 'app.$meta' --ns app.client --ns app.comp.container --ns app.comp.done-tasks --ns app.comp.home --ns app.comp.login --ns app.comp.pending --ns app.comp.profile --ns app.comp.sidebar --ns app.config --ns app.schema --ns app.style",
+    "check-server": "calcit calcit.cirru --entry server --check-only --ns 'app.$meta' --ns app.config --ns app.schema --ns app.server --ns app.twig.container --ns app.twig.user --ns app.updater --ns app.updater.router --ns app.updater.session --ns app.updater.task --ns app.updater.user",
     "compile-page": "calcit calcit.cirru js",
     "release-page": "vite build --base=${VITE_BASE_URL:-./}",
     "server": "calcit calcit.cirru --entry server",
@@ -21,7 +23,7 @@
   "author": "jiyinyiyong",
   "license": "MIT",
   "dependencies": {
-    "@calcit/procs": "0.27.0",
+    "@calcit/procs": "0.30.1-alpha.5",
     "cirru-color": "^0.2.4",
     "copy-text-to-clipboard": "^3.2.1",
     "dayjs": "^1.11.18",
