@@ -15,15 +15,15 @@ https://github.com/Cumulo/calcium-workflow
 当前迁移候选配对已发布 Calcit / `@calcit/procs` **0.30.1-alpha.5（预发布，不是正式0.30.1）**、
 Caps 0.1.1、Node.js 24、Yarn 4.18.0，保留原 browser/native 入口目标。所有模块改为精确正式版本，
 不使用 hash、浮动 main 或模块 alpha。没有消费者的 Lilac 已移除。
-**源码迁移尚未完成，当前候选不能部署或视为CI通过。**
+**本地迁移门禁已通过，但未验收生产后端环境，不能仅凭本地或PR绿灯直接合并部署。**
 
 CI 保留 strict workflow 和工具链门禁，使用当前 `--check-only --ns` 检查两种目标的所有应用定义，
 以及定义附带的原生回归测试；不维护额外统计脚本或测试框架。本地不运行 Caps，干净模块安装与
-新 native 构建仍需未来 PR Actions 验证。
+新 native 构建仍需 PR Actions 验证。
 
 COS 只上传前端 `dist/`。生产 CDN 路径仍为 `https://cos-sh.tiye.me/TopixIM/woodenlist/`，同仓库 PR 使用 `pr/<编号>/<run-id>/<attempt>/` 隔离资源；fork PR 只构建。`worktools/cos-upload-action@v1.2.0` 用 `public-base-url` 和内置 `verify-*` 默认配置校验，无额外脚本。
 
-生产运行排队且不取消进行中的上传，一次 main SHA 预检跳过旧提交，不保证原子发布。原 web rsync 及 `/servers/woodenlist/` 服务端部署目录保持不变，`dist-server/` 不上传 COS。不启动服务或改变持久化数据；生成目录和旧 Snapshot 不入库。
+生产运行排队且不取消进行中的上传，一次 main SHA 预检跳过旧提交，不保证原子发布。原 web rsync 及 `/servers/woodenlist/` 服务端部署目录保持不变，`dist-server/` 不上传 COS。不启动生产服务或改变生产持久化数据；生成目录和旧 Snapshot 不入库。
 
 ### 迁移证据与尚未完成的部分
 
@@ -40,9 +40,9 @@ Task现在是具体Struct：id/text为String、time为Number、mode为Option<Tag
 为nil，错误的必要字段类型明确拒绝。前端分发入口检查Enum，并真正解码混合键状态游标为List，
 不将它伪装成纯Tag路径；分发/渲染回调按实际副作用返回Unit。
 
-当前6/6原生附带测试通过，包括站点配置、任务及扩展字段往返、实际日期FFI下的指定月份/最新月份/
-空列表选择，以及按时间计算位置后按id稳定渲染。任务相关三个视图namespace与schema合计38/38
-公开定义通过；当前生成JS另通过Unicode、0时间戳、nil/有值mode和
+当前8/8原生附带测试通过，包括站点配置、任务及扩展字段往返、实际日期FFI下的指定月份/最新月份/
+空列表选择、按时间计算位置后按id稳定渲染、用户/会话/数据库往返、当前会话用户创建任务，以及
+有八条实际操作记录的账户/任务生命周期和Reel历史重放。当前生成JS另通过Unicode、0时间戳、nil/有值mode和
 扩展字段往返。该JS验收只生成纯任务编解码入口到临时目录，不代表完整前端构建或浏览器端到端。
 没有将临时脚本、入口或产物纳入仓库。
 
@@ -63,18 +63,31 @@ Recollect补丁和缓存仍保留原Map协议。修复个人页按钮被文本�
 现有共享接口，删除无消费者的三个定义和url-parse依赖；正常查询参数对比9例通过，但畸形百分号
 编码采用URL标准处理，与旧库并非完全相同，读取存储异常现在按共享接口返回缺失值。
 
-当前前端全部80/80公开定义及419/419可达定义通过，配对JS生成、CDN构建和immutable安装通过。
+当前前端全部98/98公开定义及419/419可达定义、服务端全部96/96公开定义及68/68可达定义通过，
+完整strict为0诊断、0迁移建议。配对JS生成、CDN构建和immutable安装通过。
 实际生成JS另通过访客/账户/路由/登录表单/退出的VDOM回放，以及真实补丁处理函数的初始、增量补丁
 和pong回放。存储只使用内存mock，分发被截获，没有注册账户或启动服务，不是浏览器端到端验收。
 原有大包构建警告仍保留，没有额外维护runner或放宽门禁。
 
-新增任务回归暴露原业务代码把get-in的Option直接作为用户Map key；现已解包并真正解码String，
-测试确认任务写入当前会话用户，而不是影子key。这里只修复候选代码，未审计或修复生产历史数据。
-原生入口仍为60通过/1失败/9阻塞/2级联；完整服务端namespace检查71项中59通过、12未通过、
-18条诊断。数据库、session、updater和历史回放仍需迁移，完整strict尚未通过。组合扫描仍有
-6处unsafe-coerce和171处schema Dynamic（84个定义），没有放宽基线或声称债务清零。
+服务端现在使用真实User、Session、Database、Credentials及ServerOp，任务组仅接受三类已知组，
+移动/编辑操作有具体字段合同。Reel按Database实例化，历史回放重新检查操作和sid/id/time，兼容旧
+匿名枚举及已解码的凭据/任务操作Struct。读入旧Map存档，写出仍是旧Map；任务、用户、会话和根
+扩展字段保留。旧注册用户缺少的任务集合规范化为空Map，可选昵称/头像缺失规范化为nil；显式错误
+类型不静默修补。新建和清空任务不再把Option作为用户Map key；编辑不存在的任务现在明确失败，
+不再生成id=nil的伪任务。任务移动保留原mode和刷新时间行为，编辑沿用客户端提供的时间。
+这里只修复候选代码，未审计、删除或修复生产中的旧影子key、无效任务或错误存档。
+
+删除无消费者的旧user/task/router/notification模板和as-tag-map。RegExp方法按实际外部对象方法
+声明，match返回JsNullish再转Option，删除结果强转；真实生成JS通过无匹配、空串、Unicode和多个URL
+的首个链接选择。仍保留三个局部外部宿主信任边界（RegExp构造、String匹配能力、dayjs返回对象），
+不把它们称为已检查的数据转换。组合扫描仍有76处schema Dynamic（69个定义），包括扩展字段、
+异构UI/样式、网络Map和历史边界；unresolved type slot为0，没有放宽基线或声称债务清零。
+
+另在专用临时目录、空存档和仅回环绑定的实际native服务上，通过浏览器访客页面及使用配对JS
+runtime解码的匿名session补丁/ping/pong。没有注册账户或创建业务任务，不等于账户/任务浏览器
+端到端验收。测试服务已停止，生成JS已恢复主候选配置，隔离数据和证据保留。
 正式依赖图还需干净CI核对。生产连接仍是 `wss://wood.topix.im/ws`，不能套用其他应用地址；
-存档格式和后端部署目录也不因COS前端迁移而改变。尚未推送、提交PR、合并或部署。
+存档格式和后端部署目录也不因COS前端迁移而改变。未合并或部署。
 
 ### License
 
