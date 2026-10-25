@@ -669,7 +669,7 @@
                         new-state $ assoc state :show-menu? false
                       match
                         if (enum? item)
-                          option:unwrap-or (nth item 1) nil
+                          .unwrap-or (nth item 1) nil
                           , nil
                         :finish $ do
                           d! $ :: :task/move-task $ {}
@@ -1202,7 +1202,7 @@
           :schema $ :: 'StructDef
         'dev? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def dev?
-            = |dev $ option:unwrap-or (get-env |mode) |release
+            = |dev $ .unwrap-or (get-env |mode) |release
           :examples $ []
           :schema $ :: 'Dynamic
         'site $ %{} 'CodeEntry (:doc |)
@@ -1639,7 +1639,8 @@
           :code $ quote $ defn decode-task-group (raw)
             let
                 group $ decode-map-as raw 'Tag
-              case-default group (raise |Unknown-task-group) (:working-tasks group) (:pending-tasks group) (:done-tasks group)
+              match group (:working-tasks group) (:pending-tasks group) (:done-tasks group)
+                _ $ raise |Unknown-task-group
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Tag)
             :args $ [] 'Dynamic
@@ -1751,7 +1752,7 @@
             :args $ [] 'Dynamic
         'read-field $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-field (value field)
-            option:unwrap-or (get value field) nil
+            .unwrap-or (get value field) nil
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'Dynamic)
             :args $ [] 'Dynamic 'Tag
@@ -1942,7 +1943,7 @@
             println "|Running mode:" $ if config/dev? |dev |release
             let
                 port $ result:unwrap-or
-                  parse-float $ option:unwrap-or (get-env |port)
+                  parse-float $ .unwrap-or (get-env |port)
                     str $ :port config/site
                   :port config/site
               run-server! port
@@ -2106,13 +2107,14 @@
                           route-data $ match route
                             (:none) ({})
                             (:some name)
-                              case-default name ({})
+                              match name
                                 :home $ schema/tasks-to-wire $ :working-tasks user
                                 :pending $ schema/tasks-to-wire $ :pending-tasks user
                                 :profile $ twig-members (:sessions db) (:users db)
                                 :done $ twig-done-tasks
                                   schema/tasks-to-wire $ :done-tasks user
                                   schema/read-field router :data
+                                _ $ {}
                         merge base-data $ {} (:logged-in? true)
                           :user $ twig-user user
                           :router $ assoc router :data route-data
@@ -2395,10 +2397,11 @@
             :args $ [] 'app.schema/Database 'Number
         'group-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn group-tasks (user group)
-            case-default group (raise |Unknown-task-group)
+            match group
               :working-tasks $ :working-tasks user
               :pending-tasks $ :pending-tasks user
               :done-tasks $ :done-tasks user
+              _ $ raise |Unknown-task-group
           :examples $ []
           :schema $ :: 'Fn $ {}
             :args $ [] 'app.schema/User 'Tag
@@ -2483,10 +2486,11 @@
             :args $ [] 'app.schema/Database 'app.schema/EditTask 'Number 'String 'Number
         'with-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn with-tasks (user group tasks)
-            case-default group (raise |Unknown-task-group)
+            match group
               :working-tasks $ struct-with user $ :working-tasks tasks
               :pending-tasks $ struct-with user $ :pending-tasks tasks
               :done-tasks $ struct-with user $ :done-tasks tasks
+              _ $ raise |Unknown-task-group
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.schema/User)
             :args $ [] 'app.schema/User 'Tag $ :: 'Map 'String 'app.schema/Task

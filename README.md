@@ -12,20 +12,37 @@ https://github.com/Cumulo/calcium-workflow
 
 ### 构建与部署
 
-当前迁移候选配对已发布 Calcit / `@calcit/procs` **0.30.1-alpha.5（预发布，不是正式0.30.1）**、
+当前迁移候选精确配对正式 Calcit / `@calcit/procs` **0.30.1**、
 Caps 0.1.1、Node.js 24、Yarn 4.18.0，保留原 browser/native 入口目标。所有模块改为精确正式版本，
 不使用 hash、浮动 main 或模块 alpha。没有消费者的 Lilac 已移除。
 **本地迁移门禁已通过，但未验收生产后端环境，不能仅凭本地或PR绿灯直接合并部署。**
 
 CI 保留 strict workflow 和工具链门禁，使用当前 `--check-only --ns` 检查两种目标的所有应用定义，
 以及定义附带的原生回归测试；不维护额外统计脚本或测试框架。本地不运行 Caps，干净模块安装与
-新 native 构建仍需 PR Actions 验证。
+新 native 构建由独立 Linux CI 验证。
 
 COS 只上传前端 `dist/`。生产 CDN 路径仍为 `https://cos-sh.tiye.me/TopixIM/woodenlist/`，同仓库 PR 使用 `pr/<编号>/<run-id>/<attempt>/` 隔离资源；fork PR 只构建。`worktools/cos-upload-action@v1.2.0` 用 `public-base-url` 和内置 `verify-*` 默认配置校验，无额外脚本。
 
 生产运行排队且不取消进行中的上传，一次 main SHA 预检跳过旧提交，不保证原子发布。原 web rsync 及 `/servers/woodenlist/` 服务端部署目录保持不变，`dist-server/` 不上传 COS。不启动生产服务或改变生产持久化数据；生成目录和旧 Snapshot 不入库。
 
-### 迁移证据与尚未完成的部分
+### 本次正式版迁移
+
+四处 `option:unwrap-or` 改为 `.unwrap-or`，四处 Tag `case-default` 改为字面量 `match`，
+保留原参数、默认值、分支顺序和未知值处理。不改业务协议、存档格式、公开 schema、原测试或 HUD。
+十二个模块配对兼容的精确正式 tag；Memof 没有本仓库直接调用，不冒称其新 API 已有业务验收。
+移除过期的 procs 0.27.0 npm 豁免，不降低默认依赖隔离。原 workflow 完全不变。
+
+已用官方 Linux 正式工具链通过完整 strict（0 诊断）、原 browser/native 定义检查、原生 8/8、
+现有站点/数据合同 native 5/5 和 JS 5/5（无排除）、immutable 安装及完整前端构建。
+成功产物经 SHA256、原/新 blob 与 140 个定义/20 namespace 的完整结构化视图核验后才导入；
+临时事务、回放 runner 和准备 CI 不进入最终 PR，不新增维护脚本或放宽基线。
+
+本次没有重跑真实服务、账户存储、任务 UI、退出保存或冷启动；下面 alpha 阶段的运行验收
+是历史证据，不代表正式图已覆盖这些路径。生产后端准备、备份/回滚和协同上线限制继续保留。
+Alerts Prompt 的类型问题已在上游 #104 修复于较新正式版；本兼容依赖图仍使用 0.10.57，
+不冒称采用了新 Prompt 合同，也不为已知问题重复增加编译器规则。
+
+### 先前 alpha 迁移证据与尚未完成的部分
 
 未改源码的0.27.0基线使用原有只读缓存模块图，通过 browser376/376、native53/53、配对JS生成和
 CDN base的Vite构建；原项目附带测试为0，不能当作回归通过，也不将旧缓存称为干净依赖安装证明。
