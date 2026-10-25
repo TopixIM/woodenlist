@@ -15,7 +15,7 @@ const blob=()=>run('git',['hash-object','calcit.cirru']).trim(),guard=()=>{for(c
 if(mode==='before'){
  assert.equal(blob(),p.blob);assert.deepEqual(views(),norm(p.before));guard();
  for(const name of ['count','result:unwrap-or']){assert.ok(!p.before.defs.some(d=>d.id.endsWith('/'+name)));assert.ok(!JSON.stringify(p.before.namespaces).includes('"'+name+'"'));}
- const symbols=[];const collect=n=>{if(Array.isArray(n))n.forEach(collect);else if(n==='count'||n==='result:unwrap-or')symbols.push(n);};for(const d of p.before.defs){collect(d.code);for(const t of d.tests)collect(t.code);}assert.equal(symbols.length,p.sites.length,'all old symbol occurrences are reviewed call heads, no local binding');
+ const symbols=[];const collect=n=>{if(Array.isArray(n)){if(n[0]===';')return;n.forEach(collect);}else if(n==='count'||n==='result:unwrap-or')symbols.push(n);};for(const d of p.before.defs){collect(d.code);for(const t of d.tests)collect(t.code);}assert.equal(symbols.length,p.sites.length,'all executable old symbol occurrences are reviewed call heads, no local binding');
  for(const[i,s]of p.sites.entries())if(s.region==='code'){
   writeFileSync('acceptance/before-subtree-'+i+'.json',run('calcit',['tree','show',s.definition,'--path','@'+s.path,'--format','json']));
   const args=['query','type-at',s.definition,'--path','@'+s.path+'.1','--format','json'];if(s.definition.startsWith('app.server/')||s.definition.startsWith('app.twig.')||s.definition.startsWith('app.updater.'))args.unshift('--entry','server');
