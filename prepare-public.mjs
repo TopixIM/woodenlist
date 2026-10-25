@@ -7,17 +7,24 @@ const run=(exe,args)=>execFileSync(exe,args,{encoding:'utf8',maxBuffer:64e6,stdi
 const norm=v=>Array.isArray(v)?v.map(norm):v&&typeof v==='object'?Object.fromEntries(Object.entries(v).map(([k,x])=>[k,k==='__edn_set'?x.map(norm).sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b))):k==='schema'&&Array.isArray(x)&&x[0]==='{}'?['{}',...x.slice(1).map(norm).sort((a,b)=>a[0].localeCompare(b[0]))]:norm(x)])):v;
 const q=(...args)=>{const r=JSON.parse(run('calcit',['query',...args,'--format','json']));assert.deepEqual(r.diagnostics||[],[]);return norm(r.data);};
 const p=JSON.parse(readFileSync('reviewed-source.json')),mode=process.argv[2],phase=process.argv[3];mkdirSync('acceptance',{recursive:true});assert.equal(run('calcit',['-v']).trim(),'0.30.1');
-const replacements={count:'.len','result:unwrap-or':'.unwrap-or'},expected=structuredClone(p.before);
+const replacements={count:'.len','result:unwrap-or':'.unwrap-or','unsafe-coerce':'js-cast'},expected=structuredClone(p.before);
 for(const s of p.sites){const d=expected.defs.find(d=>d.id===s.definition);let n=s.region==='test'?d.tests[s.testIndex].code:d.code;for(const i of s.path.split('.').map(Number))n=n[i];assert.deepEqual(n,s.before);n[0]=replacements[s.head];}
-assert.equal(p.sites.length,16);
+assert.equal(p.sites.length,18);
 const views=()=>{const namespaces=[],defs=[];for(const ns of q('ns').namespaces){const info=q('ns',ns);namespaces.push(info);const names=run('calcit',['query','defs',ns]).split('\n').filter(l=>/^  \S/.test(l)).map(l=>l.trim().split(' ')[0]);assert.equal(names.length,info.definition_count);for(const n of names)defs.push(q('def',ns+'/'+n));}return {config:q('config'),namespaces,defs};};
 const blob=()=>run('git',['hash-object','calcit.cirru']).trim(),guard=()=>{for(const[f,h]of Object.entries(p.ordinaryBlobs))assert.equal(run('git',['hash-object',f]).trim(),h,f);};
 if(mode==='before'){
  assert.equal(blob(),p.blob);assert.deepEqual(views(),norm(p.before));guard();
  for(const name of ['count','result:unwrap-or']){assert.ok(!p.before.defs.some(d=>d.id.endsWith('/'+name)));assert.ok(!JSON.stringify(p.before.namespaces).includes('"'+name+'"'));}
- const symbols=[];const collect=n=>{if(Array.isArray(n)){if(n[0]===';')return;n.forEach(collect);}else if(n==='count'||n==='result:unwrap-or')symbols.push(n);};for(const d of p.before.defs){collect(d.code);for(const t of d.tests)collect(t.code);}assert.equal(symbols.length,p.sites.length,'all executable old symbol occurrences are reviewed call heads, no local binding');
+ const symbols=[];const collect=n=>{if(Array.isArray(n)){if(n[0]===';')return;n.forEach(collect);}else if(n==='count'||n==='result:unwrap-or')symbols.push(n);};for(const d of p.before.defs){collect(d.code);for(const t of d.tests)collect(t.code);}assert.equal(symbols.length,p.sites.filter(s=>s.head!=='unsafe-coerce').length,'all executable old collection/Result symbols are reviewed call heads');
  for(const[i,s]of p.sites.entries())if(s.region==='code'){
   writeFileSync('acceptance/before-subtree-'+i+'.json',run('calcit',['tree','show',s.definition,'--path','@'+s.path,'--format','json']));
+  if(s.head==='unsafe-coerce'){
+   const target=s.before[2].slice(1);assert.ok(['app.comp.done-tasks/DayjsHost','app.comp.home/RegExpHost'].includes(target));
+   const d=q('def',target);assert.deepEqual(d,p.before.defs.find(d=>d.id===target));assert.equal(d.ffi[':kind'].__edn_tag,'external-object');
+   writeFileSync('acceptance/host-trait-'+i+'.json',JSON.stringify(d));
+   const features=p.before.defs.find(d=>d.id===s.definition).schema.find(x=>Array.isArray(x)&&x[0]===':features');assert.ok(features[1].includes(':js-ffi'));
+   continue;
+  }
   const args=['query','type-at',s.definition,'--path','@'+s.path+'.1','--format','json'];if(s.definition.startsWith('app.server/')||s.definition.startsWith('app.twig.')||s.definition.startsWith('app.updater.'))args.unshift('--entry','server');
   const t=JSON.parse(run('calcit',args));writeFileSync('acceptance/type-'+i+'.json',JSON.stringify(t));assert.deepEqual(t.diagnostics||[],[]);const m=t.data.static_methods.find(m=>m.name===replacements[s.head]);assert.equal(m.status,'proven');
   if(s.head==='count'){assert.ok(['calcit.core/&list:count','calcit.core/&map:count','calcit.core/&str:count'].includes(m.definition));assert.equal(m.call_types.returns,"'Number");assert.deepEqual(m.parameter_types,[]);assert.equal(m.rest_type,null);}
@@ -44,7 +51,7 @@ if(mode==='before'){
  process.env.VITE_BASE_URL='./';writeFileSync('acceptance/'+phase+'-compile.log',run('yarn',['compile-page']));
 
  writeFileSync('acceptance/'+phase+'-build.log',run('yarn',['release-page']));
- writeFileSync('acceptance/'+phase+'-host.log',run('node',['host-replay.mjs']));
+ writeFileSync('acceptance/'+phase+'-host.log',run('node',['host-replay.mjs',phase]));
  const files=[];function visit(dir){for(const n of readdirSync(dir).sort()){const f=dir+'/'+n;if(statSync(f).isDirectory())visit(f);else if(f.endsWith('.mjs'))files.push({path:f,sha256:createHash('sha256').update(readFileSync(f)).digest('hex')});}}visit('js-out');writeFileSync('acceptance/'+phase+'-js.json',JSON.stringify(files));
  if(phase==='before')for(const f of files){const dest='/tmp/woodenlist-public-before/'+f.path;mkdirSync(dest.slice(0,dest.lastIndexOf('/')),{recursive:true});copyFileSync(f.path,dest);}
  else{const before=JSON.parse(readFileSync('acceptance/before-js.json')),a=new Map(files.map(f=>[f.path,f.sha256])),b=new Map(before.map(f=>[f.path,f.sha256])),changed=[...new Set([...a.keys(),...b.keys()])].filter(f=>a.get(f)!==b.get(f));let diff='';for(const f of changed){try{run('diff',['-u','--label','before/'+f,'--label','after/'+f,b.has(f)?'/tmp/woodenlist-public-before/'+f:'/dev/null',a.has(f)?f:'/dev/null']);}catch(e){assert.equal(e.status,1);diff+=e.stdout;}}writeFileSync('acceptance/generated-js.diff',diff);writeFileSync('acceptance/generated-js.json',JSON.stringify({before:before.length,after:files.length,changed}));}
