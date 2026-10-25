@@ -25,12 +25,30 @@ COS 只上传前端 `dist/`。生产 CDN 路径仍为 `https://cos-sh.tiye.me/To
 
 生产运行排队且不取消进行中的上传，一次 main SHA 预检跳过旧提交，不保证原子发布。原 web rsync 及 `/servers/woodenlist/` 服务端部署目录保持不变，`dist-server/` 不上传 COS。不启动生产服务或改变生产持久化数据；生成目录和旧 Snapshot 不入库。
 
-### 本次正式版迁移
+### 本轮标准方法与宿主边界清理
+
+保留任务次序、端口默认值、协议、存档和 HUD。15 处集合 `count` 改为 `.len`
+（含原附带测试中的 5 处），一处 Result 默认值读取改为 `.unwrap-or`，参数与默认值不变。
+RegExp 和 dayjs 的实际对象改用现有 `js-cast` 检查 `.test` / `.format` 方法形状，
+`unsafe` 从 3 降到 1；剩余 primitive String 的 `.match` 边界没有伪装为对象转换。
+方法形状检查不验证参数、返回值或深层数据；缺失方法现在更早报错，不承诺异常时序完全不变。
+
+官方 Linux 正式 0.30.1 准备 CI [40237846260](https://github.com/TopixIM/woodenlist/actions/runs/40237846260)
+通过原完整 strict、浏览器/服务端定义检查、原生 8/8，以及现有合同 native/JS 各 5/5。
+成功产物经 ZIP SHA256、Snapshot blob 和全部 140 个定义/20 namespace 的独立结构化对照核验。
+220 个浏览器生成模块中 218 个字节相同，另两个仅增加上述方法形状检查。
+实际生成函数另通过 6 个字符串的首个 URL 匹配、非法正则、4 个时间戳的原 dayjs 本地日期行为，
+以及隔离 Node 进程中缺失方法的负例；不是浏览器或真实服务验收。
+临时事务、回放脚本、准备工作流和生成目录均不入库，不改依赖、安全 lock 或类型预算。
+原 CI 保留全部门禁，规范化检查改用 blob 哈希相等判断，不输出 Snapshot 文本差异。
+不合并、不启动或部署生产服务，也不以这些证据替代生产后端准备和协同上线。
+
+### 前次正式版迁移
 
 四处 `option:unwrap-or` 改为 `.unwrap-or`，四处 Tag `case-default` 改为字面量 `match`，
 保留原参数、默认值、分支顺序和未知值处理。不改业务协议、存档格式、公开 schema、原测试或 HUD。
 十二个模块配对兼容的精确正式 tag；Memof 没有本仓库直接调用，不冒称其新 API 已有业务验收。
-移除过期的 procs 0.27.0 npm 豁免，不降低默认依赖隔离。原 workflow 完全不变。
+移除过期的 procs 0.27.0 npm 豁免，不降低默认依赖隔离。当时未改原 workflow。
 
 已用官方 Linux 正式工具链通过完整 strict（0 诊断）、原 browser/native 定义检查、原生 8/8、
 现有站点/数据合同 native 5/5 和 JS 5/5（无排除）、immutable 安装及完整前端构建。
@@ -96,14 +114,14 @@ Recollect补丁和缓存仍保留原Map协议。修复个人页按钮被文本�
 
 删除无消费者的旧user/task/router/notification模板和as-tag-map。RegExp方法按实际外部对象方法
 声明，match返回JsNullish再转Option，删除结果强转；真实生成JS通过无匹配、空串、Unicode和多个URL
-的首个链接选择。仍保留三个局部外部宿主信任边界（RegExp构造、String匹配能力、dayjs返回对象），
-不把它们称为已检查的数据转换。组合扫描仍有76处schema Dynamic（69个定义），包括扩展字段、
+的首个链接选择。当时保留三个局部外部宿主信任边界；本轮仅为 RegExp/dayjs 对象加入方法形状检查，
+String 匹配能力仍是显式信任边界，不把它称为已检查的数据转换。该阶段组合扫描有76处schema Dynamic（69个定义），包括扩展字段、
 异构UI/样式、网络Map和历史边界；unresolved type slot为0，没有放宽基线或声称债务清零。
 
 另在专用临时目录、空存档和仅回环绑定的实际native服务上，通过浏览器访客页面及使用配对JS
 runtime解码的匿名session补丁/ping/pong。没有注册账户或创建业务任务，不等于账户/任务浏览器
 端到端验收。测试服务已停止，生成JS已恢复主候选配置，隔离数据和证据保留。
-正式依赖图还需干净CI核对。生产连接仍是 `wss://wood.topix.im/ws`，不能套用其他应用地址；
+该阶段尚待的正式依赖图干净 CI 已由后续正式版迁移补齐。生产连接仍是 `wss://wood.topix.im/ws`，不能套用其他应用地址；
 存档格式和后端部署目录也不因COS前端迁移而改变。未合并或部署。
 
 ### License
