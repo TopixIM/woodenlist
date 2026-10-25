@@ -1,0 +1,87 @@
+name: Protected Woodenlist formal source migration
+on:
+  push:
+    branches: [prepare/woodenlist-formal-0301]
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6.5.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - uses: calcit-lang/setup-calcit@v1.5.0
+        with:
+          tools: calcit,caps
+          caps-version: "0.1.1"
+          deps-file: deps.cirru
+      - run: |
+          set -euo pipefail
+          corepack enable
+          corepack prepare yarn@4.18.0 --activate
+          caps --strict --ci
+          YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+          yarn install --immutable
+          caps verify --toolchain
+          node prepare-source.mjs apply
+      - name: Original full strict, canonical, namespace and native tests
+        run: |
+          set -euo pipefail
+          calcit calcit.cirru fix --workflow strict --verify --format json | tee acceptance/strict.json
+          before_blob="$(git hash-object calcit.cirru)"
+          calcit calcit.cirru edit format
+          test "$(git hash-object calcit.cirru)" = "$before_blob"
+          yarn check-client
+          yarn check-server
+          calcit calcit.cirru --entry server test --require-match --summary-only --format json | tee acceptance/native.json
+      - uses: actions/checkout@v7.0.1
+        with:
+          repository: calcit-lang/calcit
+          ref: 0.30.1
+          path: .calcit/core-test-tools
+          persist-credentials: false
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/run-core-tests.mjs
+            /scripts/core-test-protocol.mjs
+            /scripts/core-tests-exclusions.cirru
+            /docs/installation/wasm-support.md
+      - name: Replay original portable configuration and data contracts
+        run: |
+          set -euo pipefail
+          export CALCIT_BIN="$(command -v calcit)"
+          node .calcit/core-test-tools/scripts/run-core-tests.mjs \
+            --snapshot calcit.cirru --entry default --target app.config --target app.schema --backend native,js \
+            --exclusions .calcit/core-test-tools/scripts/core-tests-exclusions.cirru \
+            --support-matrix .calcit/core-test-tools/docs/installation/wasm-support.md \
+            --results-json acceptance/shared.json 2>&1 | tee acceptance/shared.log
+      - name: Original frontend build and complete after guards
+        env:
+          VITE_BASE_URL: ./
+        run: |
+          set -euo pipefail
+          yarn compile-page
+          yarn release-page
+          node prepare-source.mjs verify
+      - uses: actions/upload-artifact@v7.0.2
+        if: success()
+        with:
+          name: woodenlist-formal-accepted-source
+          path: |
+            calcit.cirru
+            yarn.lock
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@v7.0.2
+        if: always()
+        with:
+          name: woodenlist-formal-diagnostics
+          path: acceptance
+          if-no-files-found: error
+          retention-days: 30
