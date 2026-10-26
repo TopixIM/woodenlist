@@ -393,7 +393,7 @@
                     :style $ {} (:overflow :auto) (:height |100%) (:padding-bottom 120)
                   div ({})
                     <>
-                      str "|Done Tasks(" (count tasks) "|)"
+                      str "|Done Tasks(" (.len tasks) "|)"
                       {} (:font-size 24) (:font-family ui/font-fancy) (:font-weight 100)
                     =< 16 nil
                     if (:editing? state)
@@ -475,7 +475,7 @@
         'format-day $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn format-day (time)
             let
-                value $ unsafe-coerce (dayjs time) 'app.comp.done-tasks/DayjsHost
+                value $ js-cast (dayjs time) 'app.comp.done-tasks/DayjsHost
               .format value |DD
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'String)
@@ -529,7 +529,7 @@
                   :style $ {} (:padding 16) (:overflow :auto)
                 div ({})
                   <>
-                    str "|Working(" (count task-positions) "|)"
+                    str "|Working(" (.len task-positions) "|)"
                     {} (:font-size 24) (:font-family ui/font-fancy) (:font-weight 100)
                   =< 16 nil
                   comp-icon :plus
@@ -574,7 +574,7 @@
                         , &unit
                 list->
                   {} $ :style $ {} (:position :relative)
-                    :height $ + 8 $ * 48 (count task-positions)
+                    :height $ + 8 $ * 48 (.len task-positions)
                   map task-positions $ fn (position)
                     let
                         task $ :task position
@@ -743,7 +743,7 @@
           :schema $ :: 'Dynamic
         'make-regexp $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn make-regexp (pattern)
-            unsafe-coerce (new js/RegExp pattern) 'app.comp.home/RegExpHost
+            js-cast (new js/RegExp pattern) 'app.comp.home/RegExpHost
           :examples $ []
           :schema $ :: 'Fn $ {} (:return 'app.comp.home/RegExpHost)
             :args $ [] 'String
@@ -872,7 +872,7 @@
                 div
                   {} (:class-name css/font-fancy)
                     :style $ {} (:font-size 24) (:font-weight 100)
-                  <> $ str "|Pending Tasks(" (count tasks) "|)"
+                  <> $ str "|Pending Tasks(" (.len tasks) "|)"
                 list->
                   {} $ :style $ {} (:width |100%)
                   map task-keys $ fn (key)
@@ -1403,7 +1403,7 @@
               let
                   values $ decode-map-as raw $ :: 'List 'String
                 if
-                  not= 2 $ count values
+                  not= 2 $ .len values
                   raise |Expected-two-credential-strings
                 Credentials :username
                   .unwrap $ nth values 0
@@ -1942,7 +1942,7 @@
           :code $ quote $ defn main! ()
             println "|Running mode:" $ if config/dev? |dev |release
             let
-                port $ result:unwrap-or
+                port $ .unwrap-or
                   parse-float $ .unwrap-or (get-env |port)
                     str $ :port config/site
                   :port config/site
@@ -2093,7 +2093,7 @@
                   (:some session) (schema/session-to-wire session)
                   (:none) schema/session
                 base-data $ {} (:logged-in? false) (:session raw-session)
-                  :reel-length $ count records
+                  :reel-length $ .len records
               match maybe-session
                 (:none) base-data
                 (:some session)
@@ -2119,10 +2119,10 @@
                           :user $ twig-user user
                           :router $ assoc router :data route-data
                           :numbers $ {}
-                            :sessions $ count $ :sessions db
-                            :working $ count $ :working-tasks user
-                            :pending $ count $ :pending-tasks user
-                            :done $ count $ :done-tasks user
+                            :sessions $ .len $ :sessions db
+                            :working $ .len $ :working-tasks user
+                            :pending $ .len $ :pending-tasks user
+                            :done $ .len $ :done-tasks user
                           :color $ rand-hex-color!
           :examples $ []
           :schema $ :: 'Fn $ {}
@@ -2276,7 +2276,7 @@
                 task-at $ .unwrap $ get
                   :done-tasks $ user-at done
                   , |t1
-              assert= 8 $ count $ :records cleared
+              assert= 8 $ .len $ :records cleared
               assert= "|已编辑🐈" $ :text task-at
               assert= 6 $ :time task-at
               assert= (Option :some :working) (:mode task-at)
@@ -2284,9 +2284,9 @@
                 get
                   :working-tasks $ user-at edited
                   , |t1
-              assert= 0 $ count $ :working-tasks (user-at pending)
-              assert= 1 $ count $ :pending-tasks (user-at pending)
-              assert= 0 $ count $ :done-tasks (user-at cleared)
+              assert= 0 $ .len $ :working-tasks (user-at pending)
+              assert= 1 $ .len $ :pending-tasks (user-at pending)
+              assert= 0 $ .len $ :done-tasks (user-at cleared)
               assert=
                 app.schema/database-to-wire $ :db cleared
                 app.schema/database-to-wire $ :db refreshed
@@ -2387,7 +2387,7 @@
                 get
                   :working-tasks $ get-user changed 1
                   , |t1
-              assert= 1 $ count $ :users changed
+              assert= 1 $ .len $ :users changed
             :tags $ #{} :unit
         'get-user $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn get-user (db sid)
