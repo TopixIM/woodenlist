@@ -21,9 +21,9 @@
           :examples $ []
           :schema $ quote $ Ref (Map Tag Dynamic)
         '*store $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defref *store (:: :initial)
+          :code $ quote $ defref *store (app.schema/ConnectionState :initial)
           :examples $ []
-          :schema $ quote $ Ref Dynamic
+          :schema $ quote $ Ref app.schema/ClientStore
         'connect! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn connect! ()
             let
@@ -37,7 +37,7 @@
                 {}
                   :on-open $ fn (event) (simulate-login!)
                   :on-close $ fn (event)
-                    reset! *store $ :: :offline
+                    reset! *store $ app.schema/ConnectionState :offline
                     js/console.error "|Lost connection!"
                     , &unit
                   :on-data on-server-data
@@ -76,9 +76,12 @@
             add-watch! *store :changes $ fn (store prev) (render-app!)
             add-watch! *states :changes $ fn (states prev) (render-app!)
             on-page-touch $ fn ()
-              when
-                = @*store $ :: :offline
-                connect!
+              match @*store
+                (app.schema/ConnectionState connection)
+                  match connection
+                    (:offline) (connect!)
+                    (:initial) &unit
+                (app.schema/ClientSnapshot _) &unit
               , &unit
             println "|App started!"
             , &unit
@@ -96,7 +99,16 @@
                 (:patch changes)
                   do
                     when config/dev? $ js/console.log |Changes changes
-                    reset! *store $ patch-twig @*store $ recollect.schema/decode-changes changes
+                    let
+                        previous $ match @*store
+                          (app.schema/ConnectionState connection) connection
+                          (app.schema/ClientSnapshot snapshot) (:wire snapshot)
+                        next $ patch-twig previous $ recollect.schema/decode-changes changes
+                      if (enum? next)
+                        reset! *store $ decode-map-as next 'app.schema/ConnectionState
+                        let
+                            wire $ decode-map-as next $ Map Tag Dynamic
+                          reset! *store $ app.schema/ClientSnapshot :wire wire :view $ app.schema/decode-client-view wire
                 (:effect/pong) &unit
               raise |Expected-a-server-message-enum
             , &unit
@@ -118,7 +130,9 @@
           :code $ quote $ defn render-app! ()
             render! (mount-target)
               comp-container
-                .unwrap $ get @*states :states
+                decode-map-as
+                  .unwrap $ get @*states :states
+                  Map Tag Dynamic
                 , @*store
               , dispatch!
           :examples $ []
@@ -152,55 +166,57 @@
       :defs $ {}
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-container (states store)
-            if (enum? store)
-              match store
-                (:initial) (comp-offline :initial)
-                (:offline) (comp-offline :offline)
-                _ $ raise "|Unknown client view state"
-              let
-                  view $ app.schema/decode-client-view store
-                div
-                  {} $ :class-name $ str-spaced css/global css/fullscreen css/column
-                  comp-sidebar (:router view) (:logged-in? view) (:numbers view)
+            match store
+              (app.schema/ConnectionState connection)
+                match connection
+                  (:initial) (comp-offline :initial)
+                  (:offline) (comp-offline :offline)
+              (app.schema/ClientSnapshot snapshot)
+                let
+                    view $ :view snapshot
+                    wire $ :wire snapshot
                   div
-                    {} (:class-name css/flex)
-                      :style $ {} (:overflow :auto) (:height |100%)
+                    {} $ :class-name $ str-spaced css/global css/fullscreen css/column
+                    comp-sidebar (:router view) (:logged-in? view) (:numbers view)
                     div
-                      {} $ :style $ {} (:margin "|0 auto") (:max-width 800) (:height |100%) (:overflow :auto)
-                      if (:logged-in? view)
-                        match (:router view)
-                          (:some router)
-                            match (:name router)
-                              :profile $ comp-profile (:user-name view)
-                                decode-map-as
+                      {} (:class-name css/flex)
+                        :style $ {} (:overflow :auto) (:height |100%)
+                      div
+                        {} $ :style $ {} (:margin "|0 auto") (:max-width 800) (:height |100%) (:overflow :auto)
+                        if (:logged-in? view)
+                          match (:router view)
+                            (:some router)
+                              match (:name router)
+                                :profile $ comp-profile (:user-name view)
+                                  decode-map-as
+                                    .unwrap-or (:data router) ({})
+                                    Map Number String
+                                :home $ comp-home (>> states :home)
                                   .unwrap-or (:data router) ({})
-                                  Map Number String
-                              :home $ comp-home (>> states :home)
-                                .unwrap-or (:data router) ({})
-                              :pending $ comp-pending (>> states :pending)
-                                .unwrap-or (:data router) ({})
-                              :done $ comp-done-tasks (>> states :done)
-                                .unwrap-or (:data router) ({})
-                              _ $ <> $ str (:raw router)
-                          (:none) (<> |)
-                        comp-login $ >> states :login
-                  comp-messages (:messages view) ({})
-                    fn (info d!)
-                      hint-fn $ Fn Dynamic
-                        Fn *dispatch-op $ -> Unit
-                        -> Unit
-                      d! $ :: :session/remove-message info
-                      , &unit
-                  comp-status-color $ :color view
-                  if dev?
-                    Option :some $ comp-inspect |Store store style-debugger
-                    Option :none
-                  if dev?
-                    Option :some $ comp-reel (:reel-length view)
-                      {} $ :bottom 24
-                    Option :none
+                                :pending $ comp-pending (>> states :pending)
+                                  .unwrap-or (:data router) ({})
+                                :done $ comp-done-tasks (>> states :done)
+                                  .unwrap-or (:data router) ({})
+                                _ $ <> $ str (:raw router)
+                            (:none) (<> |)
+                          comp-login $ >> states :login
+                    comp-messages (:messages view) ({})
+                      fn (info d!)
+                        hint-fn $ Fn Dynamic
+                          Fn *dispatch-op $ -> Unit
+                          -> Unit
+                        d! $ :: :session/remove-message info
+                        , &unit
+                    comp-status-color $ :color view
+                    if dev?
+                      Option :some $ comp-inspect |Store wire style-debugger
+                      Option :none
+                    if dev?
+                      Option :some $ comp-reel (:reel-length view)
+                        {} $ :bottom 24
+                      Option :none
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Tag Dynamic) app.schema/ClientStore (-> respo.schema/Component) (:features :js-ffi)
         'comp-offline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-offline (state)
             div
@@ -1125,6 +1141,16 @@
         :code $ quote $ ns app.config
     'app.schema $ %{} 'FileEntry
       :defs $ {}
+        'ClientSnapshot $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defstruct ClientSnapshot
+            :wire $ Map Tag Dynamic
+            :view app.schema/ClientView
+          :examples $ []
+          :schema $ quote StructDef
+        'ClientStore $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion ClientStore app.schema/ConnectionState app.schema/ClientSnapshot
+          :examples $ []
+          :schema $ quote UnionDef
         'ClientView $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct ClientView (:logged-in? Bool) (:reel-length Number)
             :user-name $ Option String
@@ -1134,6 +1160,10 @@
             :messages $ Map String Dynamic
           :examples $ []
           :schema $ quote StructDef
+        'ConnectionState $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defenum ConnectionState (:initial) (:offline)
+          :examples $ []
+          :schema $ quote EnumDef
         'Credentials $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct Credentials (:username String) (:password String)
           :examples $ []
@@ -1266,9 +1296,8 @@
           :schema $ quote $ Fn app.schema/Database
             -> $ Map Tag Dynamic
         'decode-client-view $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn decode-client-view (raw)
+          :code $ quote $ defn decode-client-view (fields)
             let
-                fields $ decode-map-as raw $ Map Tag Dynamic
                 session $ decode-map-as
                   .unwrap $ get fields :session
                   Map Tag Dynamic
@@ -1293,7 +1322,7 @@
                     decode-optional-field user-fields :name $ fn (value) (decode-map-as value 'String)
                     , :color $ decode-optional-field fields :color $ fn (value) (decode-map-as value 'String)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/ClientView)
+          :schema $ quote $ Fn (Map Tag Dynamic) (-> app.schema/ClientView)
           :tests $ [] $ %{} 'TestEntry (:name |guest-and-account-wire-fields)
             :code $ quote $ let
                 guest $ decode-client-view $ {} (:logged-in? false) (:reel-length 0)
