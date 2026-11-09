@@ -27,7 +27,7 @@ jobs:
         node-version: 24
         package-manager-cache: false
 
-    - uses: calcit-lang/setup-calcit@v1.5.0
+    - uses: calcit-lang/setup-calcit@v1.5.1
       with:
         deps-file: deps.cirru
         tools: calcit,caps
