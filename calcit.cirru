@@ -1202,6 +1202,14 @@
           :code $ quote $ defstruct MoveTask (:id String) (:from Tag) (:to Tag)
           :examples $ []
           :schema $ quote StructDef
+        'ServerEffect $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defenum ServerEffect (:persist) (:ping)
+          :examples $ []
+          :schema $ quote EnumDef
+        'ServerInput $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion ServerInput app.schema/ServerOp app.schema/ServerEffect
+          :examples $ []
+          :schema $ quote UnionDef
         'ServerOp $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum ServerOp (:session/connect) (:session/disconnect) (:session/remove-message String) (:user/log-in app.schema/Credentials) (:user/sign-up app.schema/Credentials) (:user/log-out)
             :router/change $ Map Tag Dynamic
@@ -1214,7 +1222,6 @@
             :task/touch-working String
             :reel/reset
             :reel/merge
-            :unknown AnyEnum
           :examples $ []
           :schema $ quote EnumDef
         'Session $ %{} 'CodeEntry (:doc |)
@@ -1467,48 +1474,58 @@
             Fn Dynamic $ -> T
             -> $ Option T
             :generics T
-        'decode-server-op $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn decode-server-op (raw)
+        'decode-server-input $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn decode-server-input (raw)
             if (enum? raw)
               match raw
-                (:session/connect) (ServerOp :session/connect)
-                (:session/disconnect) (ServerOp :session/disconnect)
+                (:session/connect)
+                  Option :some $ ServerOp :session/connect
+                (:session/disconnect)
+                  Option :some $ ServerOp :session/disconnect
                 (:session/remove-message value)
-                  ServerOp :session/remove-message $ if (string? value) (decode-map-as value 'String)
+                  Option :some $ ServerOp :session/remove-message $ if (string? value) (decode-map-as value 'String)
                     decode-map-as
                       .unwrap $ get
                         decode-map-as value $ Map Tag Dynamic
                         , :id
                       , 'String
                 (:user/log-in value)
-                  ServerOp :user/log-in $ decode-credentials value
+                  Option :some $ ServerOp :user/log-in $ decode-credentials value
                 (:user/sign-up value)
-                  ServerOp :user/sign-up $ decode-credentials value
-                (:user/log-out) (ServerOp :user/log-out)
+                  Option :some $ ServerOp :user/sign-up $ decode-credentials value
+                (:user/log-out)
+                  Option :some $ ServerOp :user/log-out
                 (:router/change value)
-                  ServerOp :router/change $ decode-map-as value $ Map Tag Dynamic
+                  Option :some $ ServerOp :router/change $ decode-map-as value (Map Tag Dynamic)
                 (:task/create value)
-                  ServerOp :task/create $ decode-map-as value 'String
+                  Option :some $ ServerOp :task/create $ decode-map-as value 'String
                 (:task/move-task value)
-                  ServerOp :task/move-task $ decode-move-task value
+                  Option :some $ ServerOp :task/move-task $ decode-move-task value
                 (:task/update-text value)
-                  ServerOp :task/update-text $ decode-edit-task value
+                  Option :some $ ServerOp :task/update-text $ decode-edit-task value
                 (:task/remove-working value)
-                  ServerOp :task/remove-working $ decode-map-as value 'String
+                  Option :some $ ServerOp :task/remove-working $ decode-map-as value 'String
                 (:task/remove-done value)
-                  ServerOp :task/remove-done $ decode-map-as value 'String
-                (:task/clear-done value) (ServerOp :task/clear-done)
-                (:task/clear-done) (ServerOp :task/clear-done)
+                  Option :some $ ServerOp :task/remove-done $ decode-map-as value 'String
+                (:task/clear-done value)
+                  Option :some $ ServerOp :task/clear-done
+                (:task/clear-done)
+                  Option :some $ ServerOp :task/clear-done
                 (:task/touch-working value)
-                  ServerOp :task/touch-working $ decode-map-as value 'String
-                (:reel/reset) (ServerOp :reel/reset)
-                (:reel/merge) (ServerOp :reel/merge)
-                (:unknown value)
-                  if (enum? value) (ServerOp :unknown value) (ServerOp :unknown raw)
-                _ $ ServerOp :unknown raw
-              raise |Expected-server-operation-enum
+                  Option :some $ ServerOp :task/touch-working $ decode-map-as value 'String
+                (:reel/reset)
+                  Option :some $ ServerOp :reel/reset
+                (:reel/merge)
+                  Option :some $ ServerOp :reel/merge
+                (:effect/persist)
+                  Option :some $ ServerEffect :persist
+                (:effect/ping)
+                  Option :some $ ServerEffect :ping
+                _ $ Option :none
+              Option :none
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/ServerOp)
+          :schema $ quote $ Fn Dynamic
+            -> $ Option app.schema/ServerInput
         'decode-session $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-session (raw)
             let
@@ -1822,20 +1839,22 @@
           :schema $ quote $ Ref (cumulo-reel.core/ReelState app.schema/Database)
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op sid)
-            let
-                op-id $ generate-id!
-                op-time $ calcit.std.date/get-timestamp $ get-time!
-              when config/dev? $ println |Dispatch! (str op) sid
-              match op
-                (:effect/persist) (persist-db!)
-                (:effect/ping)
-                  do
-                    wss-send! sid $ format-cirru-edn $ :: :effect/pong
-                    , &unit
-                _ $ reset! *reel $ reel-reducer @*reel updater (schema/decode-server-op op) sid op-id op-time config/dev?
+            when config/dev? $ println |Dispatch! op sid
+            match op
+              (app.schema/ServerEffect effect)
+                match effect
+                  (:persist) (persist-db!)
+                  (:ping)
+                    do
+                      wss-send! sid $ format-cirru-edn $ :: :effect/pong
+                      , &unit
+              (app.schema/ServerOp action)
+                reset! *reel $ reel-reducer @*reel updater action sid (generate-id!)
+                  calcit.std.date/get-timestamp $ get-time!
+                  , config/dev?
             , &unit
           :examples $ []
-          :schema $ quote $ Fn AnyEnum Number (-> Unit)
+          :schema $ quote $ Fn app.schema/ServerInput Number (-> Unit)
         'get-backup-path! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn get-backup-path! ()
             let
@@ -1908,15 +1927,19 @@
                 match event
                   (:connect sid)
                     do
-                      dispatch! (:: :session/connect) sid
+                      dispatch! (schema/ServerOp :session/connect) sid
                       println "|New client."
                   (:message sid msg)
                     let
-                        action $ parse-cirru-edn msg
-                      if (enum? action) (dispatch! action sid) (raise |Expected-client-operation-enum)
+                        decoded $ try
+                          schema/decode-server-input $ parse-cirru-edn msg
+                          fn (_error) (Option :none)
+                      match decoded
+                        (:some input) (dispatch! input sid)
+                        (:none) (eprintln "|Invalid or unknown Woodenlist wire operation")
                   (:disconnect sid)
                     do (println "|Client closed!")
-                      dispatch! (:: :session/disconnect) sid
+                      dispatch! (schema/ServerOp :session/disconnect) sid
                   _ $ eprintln "|unknown data:" event
                 , &unit
           :examples $ []
@@ -2123,8 +2146,6 @@
               (:task/touch-working data) (task/touch-working db data sid op-id op-time)
               (:reel/reset) db
               (:reel/merge) db
-              (:unknown value)
-                do (eprintln "|Unknown op:" value) db
           :examples $ []
           :schema $ quote $ Fn app.schema/Database app.schema/ServerOp Number String Number (-> app.schema/Database)
           :tests $ [] $ %{} 'TestEntry (:name |account-task-lifecycle-and-real-reel-replay)
@@ -2133,7 +2154,12 @@
                 initial $ cumulo-reel.core/ReelState :base base :db base :records ([]) :merged? false
                 step $ fn (reel op id time)
                   hint-fn $ Fn (cumulo-reel.core/ReelState app.schema/Database) AnyEnum String Number $ -> (cumulo-reel.core/ReelState app.schema/Database)
-                  cumulo-reel.core/reel-reducer reel updater (app.schema/decode-server-op op) 1 id time true
+                  cumulo-reel.core/reel-reducer reel updater
+                    match
+                      .unwrap $ app.schema/decode-server-input op
+                      (app.schema/ServerOp action) action
+                      _ $ raise "|Expected a recordable operation"
+                    , 1 id time true
                 connected $ step initial (:: :session/connect) |connect 0
                 signed-up $ step connected
                   :: :user/sign-up $ [] "|用户🐈" |synthetic-password
@@ -2152,7 +2178,7 @@
                 cleared $ step done (:: :task/clear-done nil) |clear 7
                 replay $ fn (db op sid id time)
                   hint-fn $ Fn app.schema/Database Dynamic Dynamic Dynamic Dynamic $ -> app.schema/Database
-                  updater db (app.schema/decode-server-op op) (decode-map-as sid 'Number) (decode-map-as id 'String) (decode-map-as time 'Number)
+                  updater db (decode-map-as op app.schema/ServerOp) (decode-map-as sid 'Number) (decode-map-as id 'String) (decode-map-as time 'Number)
                 refreshed $ cumulo-reel.core/refresh-reel cleared base replay
                 user-at $ fn (reel)
                   hint-fn $ Fn (cumulo-reel.core/ReelState app.schema/Database) (-> app.schema/User)
@@ -2178,6 +2204,11 @@
                 app.schema/database-to-wire $ :db refreshed
               assert= (Option :some |u1)
                 :user-id $ app.updater.session/get-session (:db refreshed) 1
+              assert=
+                Option :some $ app.schema/ServerEffect :ping
+                app.schema/decode-server-input $ :: :effect/ping
+              assert= (Option :none)
+                app.schema/decode-server-input $ :: :unrecognized
             :tags $ #{} :unit
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater
