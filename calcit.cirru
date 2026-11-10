@@ -66,7 +66,7 @@
               raise "|Expected a client action enum"
             , &unit
           :examples $ []
-          :schema $ quote $ Fn AnyEnum (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn AnyEnum (-> Unit) (:features :js-ffi) (:open :decode)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             println "|Running mode:" $ if config/dev? |dev |release
@@ -186,18 +186,17 @@
                         if (:logged-in? view)
                           match (:router view)
                             (:some router)
-                              match (:name router)
-                                :profile $ comp-profile (:user-name view)
-                                  decode-map-as
-                                    .unwrap-or (:data router) ({})
-                                    Map Number String
-                                :home $ comp-home (>> states :home)
-                                  .unwrap-or (:data router) ({})
-                                :pending $ comp-pending (>> states :pending)
-                                  .unwrap-or (:data router) ({})
-                                :done $ comp-done-tasks (>> states :done)
-                                  .unwrap-or (:data router) ({})
-                                _ $ <> $ str (:raw router)
+                              match router
+                                (:profile users)
+                                  comp-profile (:user-name view) users
+                                (:home tasks)
+                                  comp-home (>> states :home) tasks
+                                (:pending tasks)
+                                  comp-pending (>> states :pending) tasks
+                                (:done done-view)
+                                  comp-done-tasks (>> states :done) done-view
+                                (:unknown _name raw)
+                                  <> $ str raw
                             (:none) (<> |)
                           comp-login $ >> states :login
                     comp-messages (:messages view) ({})
@@ -343,13 +342,12 @@
           :examples $ []
           :schema $ quote $ Fn Dynamic app.schema/Task Bool (-> respo.schema/Component)
         'comp-done-tasks $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defcomp comp-done-tasks (states router-data)
+          :code $ quote $ defcomp comp-done-tasks (states view)
             let
                 cursor $ decode-map-as
                   .unwrap $ get states :cursor
                   List app.schema/StateKey
                 state $ app.schema/read-done-tasks-state $ .unwrap-or (get states :data) ({})
-                view $ app.schema/decode-done-tasks-view router-data
                 day-cursor $ :cursor view
                 months $ :months view
                 tasks $ :tasks view
@@ -442,7 +440,7 @@
                       <> |Clear
                 =< nil 240
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic app.schema/DoneTasksView (-> respo.schema/Component) (:features :js-ffi)
         'css-done-content $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-done-content
             {} $ |$0 $ {}
@@ -497,9 +495,9 @@
           :ffi $ {} (:backend :js) (:kind :external-object)
           :schema $ quote Trait
         'comp-home $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defcomp comp-home (states raw-tasks)
+          :code $ quote $ defcomp comp-home (states tasks)
             let
-                task-positions $ app.schema/working-task-positions raw-tasks
+                task-positions $ app.schema/working-task-positions tasks
                 create-plugin $ use-prompt (>> states :create)
                   {} (:text "|New task:") (:initial |)
               div
@@ -553,7 +551,7 @@
                           , task $ :index position
                 .render create-plugin
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (Map String app.schema/Task) (-> respo.schema/Component) (:features :js-ffi)
         'comp-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-task (states task idx)
             let
@@ -803,9 +801,8 @@
     'app.comp.pending $ %{} 'FileEntry
       :defs $ {}
         'comp-pending $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defcomp comp-pending (states raw-tasks)
+          :code $ quote $ defcomp comp-pending (states tasks)
             let
-                tasks $ app.schema/decode-tasks raw-tasks
                 task-keys $ ->
                   map-list-kv tasks $ fn (key task) key
                   .sort-by $ fn (key)
@@ -826,7 +823,7 @@
                         >> states $ :id task
                         , task
           :examples $ []
-          :schema $ quote $ Fn Dynamic Dynamic (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (Map String app.schema/Task) (-> respo.schema/Component) (:features :js-ffi)
         'comp-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-task (states task)
             let
@@ -1267,11 +1264,14 @@
           :examples $ []
           :schema $ quote StructDef
         'ViewRouter $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct ViewRouter (:name Tag)
-            :data $ Option Dynamic
-            :raw $ Map Tag Dynamic
+          :code $ quote $ defenum ViewRouter
+            :home $ Map String app.schema/Task
+            :pending $ Map String app.schema/Task
+            :done app.schema/DoneTasksView
+            :profile $ Map Number String
+            :unknown Tag $ Map Tag Dynamic
           :examples $ []
-          :schema $ quote StructDef
+          :schema $ quote EnumDef
         'assoc-wire-field $ %{} 'CodeEntry
           :doc "|Keep the original explicit nil field in persisted and WebSocket maps."
           :code $ quote $ defn assoc-wire-field (fields field value)
@@ -1669,13 +1669,17 @@
           :code $ quote $ defn decode-view-router (raw)
             let
                 fields $ decode-map-as raw $ Map Tag Dynamic
-              ViewRouter :name
-                decode-map-as
+                name $ decode-map-as
                   .unwrap $ get fields :name
-                  , 'Tag
-                , :data
-                  decode-optional-field fields :data $ fn (value) value
-                  , :raw fields
+                  , Tag
+                data $ .unwrap-or (get fields :data) ({})
+                payload $ if (nil? data) ({}) data
+              match name
+                :home $ ViewRouter :home $ decode-tasks payload
+                :pending $ ViewRouter :pending $ decode-tasks payload
+                :done $ ViewRouter :done $ decode-done-tasks-view payload
+                :profile $ ViewRouter :profile $ decode-map-as payload (Map Number String)
+                _ $ ViewRouter :unknown name fields
           :examples $ []
           :schema $ quote $ Fn Dynamic (-> app.schema/ViewRouter)
         'read-done-tasks-state $ %{} 'CodeEntry (:doc |)
@@ -1732,14 +1736,13 @@
           :schema $ quote $ Fn app.schema/Session
             -> $ Map Tag Dynamic
         'sorted-task-values $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn sorted-task-values (raw)
+          :code $ quote $ defn sorted-task-values (tasks)
             ->
-              map-list-kv (decode-tasks raw)
-                fn (id task) task
+              map-list-kv tasks $ fn (id task) task
               .sort-by $ fn (task)
                 negate $ :time task
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn (Map String app.schema/Task)
             -> $ List app.schema/Task
         'task-to-wire $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn task-to-wire (task)
@@ -1780,18 +1783,23 @@
           :code $ quote $ defn view-route-selected? (router name)
             match router
               (:some value)
-                = (:name value) name
+                match value
+                  (:home _tasks) (= name :home)
+                  (:pending _tasks) (= name :pending)
+                  (:done _view) (= name :done)
+                  (:profile _users) (= name :profile)
+                  (:unknown tag _raw) (= name tag)
               (:none) false
           :examples $ []
           :schema $ quote $ Fn (Option app.schema/ViewRouter) Tag (-> Bool)
         'working-task-positions $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn working-task-positions (raw)
-            -> (sorted-task-values raw)
+          :code $ quote $ defn working-task-positions (tasks)
+            -> (sorted-task-values tasks)
               .map-indexed $ fn (idx task) (TaskPosition :index idx :task task)
               .sort-by $ fn (position)
                 :id $ :task position
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn (Map String app.schema/Task)
             -> $ List app.schema/TaskPosition
           :tests $ [] $ %{} 'TestEntry (:name |preserve-time-position-and-key-render-order)
             :code $ quote $ let
@@ -1799,12 +1807,13 @@
                   |a $ {} (:id |a) (:text |A) (:mode nil) (:time 1)
                   |z $ {} (:id |z) (:text |Z) (:mode nil) (:time 3)
                   |m $ {} (:id |m) (:text |M) (:mode nil) (:time 2)
+                decoded $ decode-tasks tasks
               assert= ([] |z |m |a)
-                map (sorted-task-values tasks)
+                map (sorted-task-values decoded)
                   fn (task) (:id task)
               assert=
                 [] ([] |a 2) ([] |m 1) ([] |z 0)
-                map (working-task-positions tasks)
+                map (working-task-positions decoded)
                   fn (position)
                     []
                       :id $ :task position
