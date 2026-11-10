@@ -257,7 +257,7 @@
           :code $ quote $ defstyle css-status-color
             {} $ |$0 $ {} (:height 16) (:width 16) (:position :absolute) (:border-radius |8px) (:top 8) (:right 8) (:transition-duration |300ms)
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote String
         'style-body $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-body
             {} $ :padding "|8px 16px"
@@ -453,7 +453,7 @@
               :overflow :auto
               :white-space :nowrap
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote String
         'format-day $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn format-day (time)
             let
@@ -680,7 +680,7 @@
               :background-color $ hsl 0 0 94
               :padding "|0 8px"
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote String
         'first-match $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn first-match (text pattern)
             let
@@ -953,7 +953,7 @@
               :border-radius |16px
               :margin "|0 4px"
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote String
         'style-trigger $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-trigger
             {} (:font-size 14) (:cursor :pointer)
@@ -1084,13 +1084,13 @@
               :height 40
               :margin-right 24
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote String
         'css-icon $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-icon
             {} $ |$0 $ merge ui/center
               {} $ :width 24
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote String
         'style-count $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-count
             decode-map-as
