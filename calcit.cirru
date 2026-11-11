@@ -1960,23 +1960,24 @@
           :schema $ quote String
         'sync-clients! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn sync-clients! (reel)
-            wss-each! $ fn (sid)
-              hint-fn $ Fn Number $ -> Unit
-              let
-                  db $ :db reel
-                  records $ :records reel
-                  session $ get (:sessions db) sid
-                  new-store $ twig-container db session records
-                  changes $ match (get @*client-caches sid)
-                    (:some store)
-                      diff-twig store new-store $ {} $ :key :id
-                    (:none)
-                      diff-twig nil new-store $ {} $ :key :id
-                when
-                  not $ empty? changes
-                  wss-send! sid $ format-cirru-edn $ :: :patch changes
-                  swap! *client-caches assoc sid new-store
-                , &unit
+            let
+                reel-length $ .len $ :records reel
+              wss-each! $ fn (sid)
+                hint-fn $ Fn Number $ -> Unit
+                let
+                    db $ :db reel
+                    session $ get (:sessions db) sid
+                    new-store $ twig-container db session reel-length
+                    changes $ match (get @*client-caches sid)
+                      (:some store)
+                        diff-twig store new-store $ {} $ :key :id
+                      (:none)
+                        diff-twig nil new-store $ {} $ :key :id
+                  when
+                    not $ empty? changes
+                    wss-send! sid $ format-cirru-edn $ :: :patch changes
+                    swap! *client-caches assoc sid new-store
+                  , &unit
             , &unit
           :examples $ []
           :schema $ quote $ Fn (cumulo-reel.core/ReelState schema/Database) (-> Unit)
@@ -2016,13 +2017,12 @@
     'app.twig.container $ %{} 'FileEntry
       :defs $ {}
         'twig-container $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defn twig-container (db maybe-session records)
+          :code $ quote $ defn twig-container (db maybe-session reel-length)
             let
                 raw-session $ match maybe-session
                   (:some session) (schema/session-to-wire session)
                   (:none) schema/session
-                base-data $ {} (:logged-in? false) (:session raw-session)
-                  :reel-length $ .len records
+                base-data $ {} (:logged-in? false) (:session raw-session) (:reel-length reel-length)
               match maybe-session
                 (:none) base-data
                 (:some session)
@@ -2053,7 +2053,7 @@
                             :done $ .len $ :done-tasks user
                           :color $ rand-hex-color!
           :examples $ []
-          :schema $ quote $ Fn schema/Database (Option schema/Session) (List Dynamic)
+          :schema $ quote $ Fn schema/Database (Option schema/Session) Number
             -> $ Map Tag Dynamic
         'twig-done-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn twig-done-tasks (done-tasks year-month)
