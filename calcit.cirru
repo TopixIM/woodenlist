@@ -262,7 +262,7 @@
           :code $ quote $ def style-body
             {} $ :padding "|8px 16px"
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag String
         'style-debugger $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-debugger
             {} (:bottom 8) (:right 8) (:max-width |100%) (:margin 0)
@@ -340,7 +340,7 @@
                   , None
                 .render remove-plugin
           :examples $ []
-          :schema $ quote $ Fn Dynamic app.schema/Task Bool (-> respo.schema/Component)
+          :schema $ quote $ Fn respo.schema/States app.schema/Task Bool (-> respo.schema/Component)
         'comp-done-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-done-tasks (states view)
             let
@@ -440,7 +440,7 @@
                       <> |Clear
                 =< nil 240
           :examples $ []
-          :schema $ quote $ Fn Dynamic app.schema/DoneTasksView (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn respo.schema/States app.schema/DoneTasksView (-> respo.schema/Component) (:features :js-ffi)
         'css-done-content $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-done-content
             {} $ |$0 $ {}
@@ -551,7 +551,7 @@
                           , task $ :index position
                 .render create-plugin
           :examples $ []
-          :schema $ quote $ Fn Dynamic (Map String app.schema/Task) (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn respo.schema/States (Map String app.schema/Task) (-> respo.schema/Component) (:features :js-ffi)
         'comp-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-task (states task idx)
             let
@@ -673,7 +673,7 @@
                 .render remove-plugin
                 .render update-plugin
           :examples $ []
-          :schema $ quote $ Fn Dynamic app.schema/Task Number (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn respo.schema/States app.schema/Task Number (-> respo.schema/Component) (:features :js-ffi)
         'css-item $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-item
             {} $ |$0 $ {} (:line-height |32px) (:margin "|8px 0px") (:position :absolute) (:width |100%) (:transition-duration |300ms) (:white-space :nowrap) (:line-height |32px) (:height |32px) (:max-width 480)
@@ -764,7 +764,7 @@
                     span $ {} (:inner-text "|Log in") (:class-name css/link)
                       :on-click $ on-submit (:username state) (:password state) false
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> respo.schema/Component)
+          :schema $ quote $ Fn respo.schema/States (-> respo.schema/Component)
         'on-submit $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn on-submit (username password signup?)
             fn (e dispatch!)
@@ -823,7 +823,7 @@
                         >> states $ :id task
                         , task
           :examples $ []
-          :schema $ quote $ Fn Dynamic (Map String app.schema/Task) (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn respo.schema/States (Map String app.schema/Task) (-> respo.schema/Component) (:features :js-ffi)
         'comp-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-task (states task)
             let
@@ -880,7 +880,7 @@
                   comp-i :check 14 $ hsl 0 0 50
                 .render update-plugin
           :examples $ []
-          :schema $ quote $ Fn Dynamic app.schema/Task (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn respo.schema/States app.schema/Task (-> respo.schema/Component) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.pending
           :require
@@ -961,7 +961,7 @@
               :color :white
               :padding "|0 8px"
           :examples $ []
-          :schema $ quote Dynamic
+          :schema $ quote $ Map Tag respo.schema/CssValue
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.profile
           :require
