@@ -345,9 +345,9 @@
           :code $ quote $ defcomp comp-done-tasks (states view)
             let
                 cursor $ decode-map-as
-                  .unwrap $ get states :cursor
+                  .unwrap $ &map:get states :cursor
                   List app.schema/StateKey
-                state $ app.schema/read-done-tasks-state $ .unwrap-or (get states :data) ({})
+                state $ app.schema/read-done-tasks-state $ .unwrap-or (&map:get states :data) ({})
                 day-cursor $ :cursor view
                 months $ :months view
                 tasks $ :tasks view
@@ -556,10 +556,10 @@
           :code $ quote $ defcomp comp-task (states task idx)
             let
                 cursor $ decode-map-as
-                  .unwrap $ get states :cursor
+                  .unwrap $ &map:get states :cursor
                   List app.schema/StateKey
                 state $ app.schema/read-task-card-state
-                  .unwrap-or (get states :data) ({})
+                  .unwrap-or (&map:get states :data) ({})
                   :text task
                 remove-plugin $ use-confirm (>> states :remove)
                   {} $ :text "|Sure to remove?"
@@ -723,9 +723,9 @@
           :code $ quote $ defcomp comp-login (states)
             let
                 cursor $ decode-map-as
-                  .unwrap $ get states :cursor
+                  .unwrap $ &map:get states :cursor
                   List app.schema/StateKey
-                state $ app.schema/read-login-state $ .unwrap-or (get states :data) ({})
+                state $ app.schema/read-login-state $ .unwrap-or (&map:get states :data) ({})
               div
                 {} $ :class-name $ str-spaced css/flex css/center
                 div ({})
