@@ -10,6 +10,10 @@ Site http://wood.topix.im/
 
 https://github.com/Cumulo/calcium-workflow
 
+### Calcit 0.41.0
+
+前后端使用配对的正式 Calcit 0.41.0，并使用 `calcit.std` 0.2.55。重新安装依赖并构建后按原流程部署。消息关闭回调使用 Respo Message 已声明的 Map 参数，原 WebSocket 和存档格式保持。
+
 ### 构建与部署
 
 当前迁移候选精确配对正式 Calcit / `@calcit/procs` **0.30.1**、

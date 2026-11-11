@@ -23,7 +23,7 @@
         '*store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *store (app.schema/ConnectionState :initial)
           :examples $ []
-          :schema $ quote $ Ref app.schema/ClientStore
+          :schema $ quote $ Ref schema/ClientStore
         'connect! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn connect! ()
             let
@@ -201,19 +201,19 @@
                           comp-login $ >> states :login
                     comp-messages (:messages view) ({})
                       fn (info d!)
-                        hint-fn $ Fn Dynamic
+                        hint-fn $ Fn (Map Tag Dynamic)
                           Fn *dispatch-op $ -> Unit
                           -> Unit
                         d! $ :: :session/remove-message info
                         , &unit
                     comp-status-color $ :color view
                     if dev?
-                      Option :some $ comp-inspect |Store wire style-debugger
-                      Option :none
+                      Some $ comp-inspect |Store wire style-debugger
+                      , None
                     if dev?
-                      Option :some $ comp-reel (:reel-length view)
+                      Some $ comp-reel (:reel-length view)
                         {} $ :bottom 24
-                      Option :none
+                      , None
           :examples $ []
           :schema $ quote $ Fn (Map Tag Dynamic) app.schema/ClientStore (-> respo.schema/Component) (:features :js-ffi)
         'comp-offline $ %{} 'CodeEntry (:doc |)
@@ -309,7 +309,7 @@
                 span $ {} (:class-name css-done-content)
                   :inner-text $ :text task
                 if editing?
-                  Option :some $ comp-icon :trash
+                  Some $ comp-icon :trash
                     &{} :font-size 14 :color (hsl 0 0 50) :cursor :pointer
                     fn (e d!)
                       hint-fn $ Fn respo.schema/RespoEvent
@@ -321,9 +321,9 @@
                         d! $ :: :task/remove-done $ :id task
                         , &unit
                       , &unit
-                  Option :none
+                  , None
                 if editing?
-                  Option :some $ div
+                  Some $ div
                     {}
                       :style $ {} $ :cursor :pointer
                       :on-click $ fn (e d!)
@@ -337,7 +337,7 @@
                           :to :working-tasks
                         , &unit
                     comp-i :repeat 14 $ hsl 0 0 50
-                  Option :none
+                  , None
                 .render remove-plugin
           :examples $ []
           :schema $ quote $ Fn Dynamic app.schema/Task Bool (-> respo.schema/Component)
@@ -523,7 +523,7 @@
                         , &unit
                       , &unit
                 if (empty? task-positions)
-                  Option :some $ div
+                  Some $ div
                     {} $ :class-name css/row-parted
                     button $ {} (:class-name css/button) (:inner-text |Add)
                       :on-click $ fn (e d!)
@@ -538,7 +538,7 @@
                             d! $ :: :task/create result
                           , &unit
                         , &unit
-                  Option :none
+                  , None
                 list->
                   {} $ :style $ {} (:position :relative)
                     :height $ + 8 $ * 48 (.len task-positions)
@@ -690,20 +690,20 @@
                 (:some matched) (.-0 matched)
                 (:none) |
           :examples $ []
-          :schema $ quote $ Fn String app.comp.home/RegExpHost (-> String) (:features :js-ffi)
+          :schema $ quote $ Fn String RegExpHost (-> String) (:features :js-ffi)
         'http-pattern $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def http-pattern (make-regexp |https?://)
           :examples $ []
-          :schema $ quote app.comp.home/RegExpHost
+          :schema $ quote RegExpHost
         'make-regexp $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn make-regexp (pattern)
             js-cast (new js/RegExp pattern) 'app.comp.home/RegExpHost
           :examples $ []
-          :schema $ quote $ Fn String (-> app.comp.home/RegExpHost) (:features :js-ffi)
+          :schema $ quote $ Fn String (-> RegExpHost) (:features :js-ffi)
         'url-pattern $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def url-pattern (make-regexp |https?://\S+)
           :examples $ []
-          :schema $ quote app.comp.home/RegExpHost
+          :schema $ quote RegExpHost
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.home
           :require
@@ -1123,7 +1123,7 @@
           :code $ quote $ def site
             SiteConfig :port 11000 :title |Woodenlist :icon |http://cdn.tiye.me/logo/woodenlist.png :server-folder |tiye.me:servers/woodenlist :theme |#4DB386 :storage-key |woodenlist-storage :storage-file |woodenlist.cirru
           :examples $ []
-          :schema $ quote app.config/SiteConfig
+          :schema $ quote SiteConfig
           :tests $ [] $ %{} 'TestEntry (:name |preserve-seven-original-site-values)
             :code $ quote $ do
               assert= 11000 $ :port site
@@ -1300,7 +1300,7 @@
                   fn (sid session)
                     MapEntryDecision :keep sid $ session-to-wire session
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database
+          :schema $ quote $ Fn Database
             -> $ Map Tag Dynamic
         'decode-client-view $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-client-view (fields)
@@ -1329,7 +1329,7 @@
                     decode-optional-field user-fields :name $ fn (value) (decode-map-as value 'String)
                     , :color $ decode-optional-field fields :color $ fn (value) (decode-map-as value 'String)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (-> app.schema/ClientView)
+          :schema $ quote $ Fn (Map Tag Dynamic) (-> ClientView)
           :tests $ [] $ %{} 'TestEntry (:name |guest-and-account-wire-fields)
             :code $ quote $ let
                 guest $ decode-client-view $ {} (:logged-in? false) (:reel-length 0)
@@ -1345,13 +1345,13 @@
                   :numbers $ {} (:working 1) (:pending 2) (:done 3) (:sessions 4)
                   :color |red
               assert= false $ :logged-in? guest
-              assert= (Option :none) (:router guest)
-              assert= (Option :none) (:numbers guest)
-              assert= (Option :none) (:color guest)
+              assert= None $ :router guest
+              assert= None $ :numbers guest
+              assert= None $ :color guest
               assert= 2 $ :reel-length account
-              assert= (Option :some "|迁移用户🐈") (:user-name account)
+              assert= (Some "|迁移用户🐈") (:user-name account)
               assert= 3 $ :done $ .unwrap (:numbers account)
-              assert= (Option :some |red) (:color account)
+              assert= (Some |red) (:color account)
             :tags $ #{} :unit
         'decode-credentials $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-credentials (raw)
@@ -1368,14 +1368,14 @@
                 if (struct? raw) (&struct:to-map raw) raw
                 , 'app.schema/Credentials
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/Credentials)
+          :schema $ quote $ Fn Dynamic (-> Credentials)
         'decode-database $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-database (raw)
             let
                 fields $ merge database $ decode-map-as raw (Map Tag Dynamic)
               Database :users (decode-nullable-field fields :users decode-users) :sessions (decode-nullable-field fields :sessions decode-sessions) :extra $ -> fields (dissoc :users) (dissoc :sessions)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/Database)
+          :schema $ quote $ Fn Dynamic (-> Database)
           :tests $ [] $ %{} 'TestEntry (:name |legacy-domain-and-task-roundtrip)
             :code $ quote $ let
                 task $ {} (:id |t1) (:text "|任务🐈") (:time 0) (:mode nil) (:extension false)
@@ -1398,7 +1398,7 @@
                 get
                   :working-tasks $ .unwrap $ get (:users model) |u1
                   , |t1
-              assert= (Option :some |u1)
+              assert= (Some |u1)
                 :user-id $ .unwrap $ get (:sessions model) 1
             :tags $ #{} :unit
         'decode-done-tasks-view $ %{} 'CodeEntry (:doc |)
@@ -1415,7 +1415,7 @@
                     List String
                   , :tasks $ decode-tasks $ .unwrap (get fields :tasks)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/DoneTasksView)
+          :schema $ quote $ Fn Dynamic (-> DoneTasksView)
         'decode-edit-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-edit-task (raw)
             let
@@ -1436,7 +1436,7 @@
                       .unwrap $ get fields :time
                       , 'Number
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/EditTask)
+          :schema $ quote $ Fn Dynamic (-> EditTask)
         'decode-move-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-move-task (raw)
             let
@@ -1451,7 +1451,7 @@
                   decode-task-group $ .unwrap $ get fields :from
                   , :to $ decode-task-group $ .unwrap (get fields :to)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/MoveTask)
+          :schema $ quote $ Fn Dynamic (-> MoveTask)
         'decode-nullable-field $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-nullable-field (fields field decoder)
             match (get fields field)
@@ -1466,9 +1466,8 @@
           :code $ quote $ defn decode-optional-field (fields field decoder)
             match (get fields field)
               (:some value)
-                if (nil? value) (Option :none)
-                  Option :some $ decoder value
-              (:none) (Option :none)
+                if (nil? value) None $ Some $ decoder value
+              (:none) None
           :examples $ []
           :schema $ quote $ Fn (Map Tag Dynamic) Tag
             Fn Dynamic $ -> T
@@ -1479,53 +1478,53 @@
             if (enum? raw)
               match raw
                 (:session/connect)
-                  Option :some $ ServerOp :session/connect
+                  Some $ ServerOp :session/connect
                 (:session/disconnect)
-                  Option :some $ ServerOp :session/disconnect
+                  Some $ ServerOp :session/disconnect
                 (:session/remove-message value)
-                  Option :some $ ServerOp :session/remove-message $ if (string? value) (decode-map-as value 'String)
+                  Some $ ServerOp :session/remove-message $ if (string? value) (decode-map-as value 'String)
                     decode-map-as
                       .unwrap $ get
                         decode-map-as value $ Map Tag Dynamic
                         , :id
                       , 'String
                 (:user/log-in value)
-                  Option :some $ ServerOp :user/log-in $ decode-credentials value
+                  Some $ ServerOp :user/log-in $ decode-credentials value
                 (:user/sign-up value)
-                  Option :some $ ServerOp :user/sign-up $ decode-credentials value
+                  Some $ ServerOp :user/sign-up $ decode-credentials value
                 (:user/log-out)
-                  Option :some $ ServerOp :user/log-out
+                  Some $ ServerOp :user/log-out
                 (:router/change value)
-                  Option :some $ ServerOp :router/change $ decode-map-as value (Map Tag Dynamic)
+                  Some $ ServerOp :router/change $ decode-map-as value (Map Tag Dynamic)
                 (:task/create value)
-                  Option :some $ ServerOp :task/create $ decode-map-as value 'String
+                  Some $ ServerOp :task/create $ decode-map-as value 'String
                 (:task/move-task value)
-                  Option :some $ ServerOp :task/move-task $ decode-move-task value
+                  Some $ ServerOp :task/move-task $ decode-move-task value
                 (:task/update-text value)
-                  Option :some $ ServerOp :task/update-text $ decode-edit-task value
+                  Some $ ServerOp :task/update-text $ decode-edit-task value
                 (:task/remove-working value)
-                  Option :some $ ServerOp :task/remove-working $ decode-map-as value 'String
+                  Some $ ServerOp :task/remove-working $ decode-map-as value 'String
                 (:task/remove-done value)
-                  Option :some $ ServerOp :task/remove-done $ decode-map-as value 'String
+                  Some $ ServerOp :task/remove-done $ decode-map-as value 'String
                 (:task/clear-done value)
-                  Option :some $ ServerOp :task/clear-done
+                  Some $ ServerOp :task/clear-done
                 (:task/clear-done)
-                  Option :some $ ServerOp :task/clear-done
+                  Some $ ServerOp :task/clear-done
                 (:task/touch-working value)
-                  Option :some $ ServerOp :task/touch-working $ decode-map-as value 'String
+                  Some $ ServerOp :task/touch-working $ decode-map-as value 'String
                 (:reel/reset)
-                  Option :some $ ServerOp :reel/reset
+                  Some $ ServerOp :reel/reset
                 (:reel/merge)
-                  Option :some $ ServerOp :reel/merge
+                  Some $ ServerOp :reel/merge
                 (:effect/persist)
-                  Option :some $ ServerEffect :persist
+                  Some $ ServerEffect :persist
                 (:effect/ping)
-                  Option :some $ ServerEffect :ping
-                _ $ Option :none
-              Option :none
+                  Some $ ServerEffect :ping
+                _ None
+              , None
           :examples $ []
           :schema $ quote $ Fn Dynamic
-            -> $ Option app.schema/ServerInput
+            -> $ Option ServerInput
         'decode-session $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-session (raw)
             let
@@ -1546,7 +1545,7 @@
                           decode-map-as value $ Map String Dynamic
                         , :extra $ -> fields (dissoc :id) (dissoc :user-id) (dissoc :nickname) (dissoc :router) (dissoc :messages)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/Session)
+          :schema $ quote $ Fn Dynamic (-> Session)
         'decode-sessions $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-sessions (raw)
             filter-map-kv
@@ -1555,7 +1554,7 @@
                 MapEntryDecision :keep key $ decode-session value
           :examples $ []
           :schema $ quote $ Fn Dynamic
-            -> $ Map Number app.schema/Session
+            -> $ Map Number Session
         'decode-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-task (raw)
             let
@@ -1575,19 +1574,18 @@
                     , :mode
                       match (get fields :mode)
                         (:some value)
-                          if (nil? value) (Option :none)
-                            Option :some $ decode-map-as value 'Tag
-                        (:none) (Option :none)
+                          if (nil? value) None $ Some $ decode-map-as value 'Tag
+                        (:none) None
                       , :extra $ -> fields (dissoc :id) (dissoc :text) (dissoc :time) (dissoc :mode)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/Task)
+          :schema $ quote $ Fn Dynamic (-> Task)
           :tests $ [] $ %{} 'TestEntry (:name |legacy-task-roundtrip-preserves-extension)
             :code $ quote $ let
                 raw $ {} (:id |t1) (:text "|迁移任务🐈") (:mode nil) (:time 0) (:custom false)
                 task $ decode-task raw
               assert= raw $ task-to-wire task
               assert= "|迁移任务🐈" $ :text task
-              assert= (Option :none) (:mode task)
+              assert= None $ :mode task
             :tags $ #{} :unit
         'decode-task-group $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-task-group (raw)
@@ -1605,7 +1603,7 @@
                 MapEntryDecision :keep id $ decode-task value
           :examples $ []
           :schema $ quote $ Fn Dynamic
-            -> $ Map String app.schema/Task
+            -> $ Map String Task
         'decode-user $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-user (raw)
             let
@@ -1634,7 +1632,7 @@
                         decode-optional-field fields :avatar $ fn (value) (decode-map-as value 'String)
                         , :working-tasks (decode-nullable-field task-fields :working-tasks decode-tasks) :pending-tasks (decode-nullable-field task-fields :pending-tasks decode-tasks) :done-tasks (decode-nullable-field task-fields :done-tasks decode-tasks) :extra $ -> fields (dissoc :id) (dissoc :name) (dissoc :password) (dissoc :nickname) (dissoc :avatar) (dissoc :working-tasks) (dissoc :pending-tasks) (dissoc :done-tasks)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/User)
+          :schema $ quote $ Fn Dynamic (-> User)
         'decode-users $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-users (raw)
             filter-map-kv
@@ -1643,7 +1641,7 @@
                 MapEntryDecision :keep key $ decode-user value
           :examples $ []
           :schema $ quote $ Fn Dynamic
-            -> $ Map String app.schema/User
+            -> $ Map String User
         'decode-view-numbers $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-view-numbers (raw)
             let
@@ -1664,7 +1662,7 @@
                       .unwrap $ get fields :sessions
                       , 'Number
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/ViewNumbers)
+          :schema $ quote $ Fn Dynamic (-> ViewNumbers)
         'decode-view-router $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-view-router (raw)
             let
@@ -1681,7 +1679,7 @@
                 :profile $ ViewRouter :profile $ decode-map-as payload (Map Number String)
                 _ $ ViewRouter :unknown name fields
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/ViewRouter)
+          :schema $ quote $ Fn Dynamic (-> ViewRouter)
         'read-done-tasks-state $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-done-tasks-state (raw)
             decode-map-as
@@ -1692,7 +1690,7 @@
                   Map Tag Dynamic
               , 'app.schema/DoneTasksState
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/DoneTasksState)
+          :schema $ quote $ Fn Dynamic (-> DoneTasksState)
         'read-login-state $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-login-state (raw)
             decode-map-as
@@ -1703,7 +1701,7 @@
                   Map Tag Dynamic
               , 'app.schema/LoginState
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> app.schema/LoginState)
+          :schema $ quote $ Fn Dynamic (-> LoginState)
         'read-task-card-state $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-task-card-state (raw text)
             decode-map-as
@@ -1714,7 +1712,7 @@
                   Map Tag Dynamic
               , 'app.schema/TaskCardState
           :examples $ []
-          :schema $ quote $ Fn Dynamic String (-> app.schema/TaskCardState)
+          :schema $ quote $ Fn Dynamic String (-> TaskCardState)
         'session $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def session
             {} (:user-id nil) (:id nil) (:nickname nil)
@@ -1733,7 +1731,7 @@
               assoc-wire-field :user-id $ :user-id session
               assoc-wire-field :nickname $ :nickname session
           :examples $ []
-          :schema $ quote $ Fn app.schema/Session
+          :schema $ quote $ Fn Session
             -> $ Map Tag Dynamic
         'sorted-task-values $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn sorted-task-values (tasks)
@@ -1742,8 +1740,8 @@
               .sort-by $ fn (task)
                 negate $ :time task
           :examples $ []
-          :schema $ quote $ Fn (Map String app.schema/Task)
-            -> $ List app.schema/Task
+          :schema $ quote $ Fn (Map String Task)
+            -> $ List Task
         'task-to-wire $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn task-to-wire (task)
             ->
@@ -1754,14 +1752,14 @@
                   :time $ :time task
               assoc-wire-field :mode $ :mode task
           :examples $ []
-          :schema $ quote $ Fn app.schema/Task
+          :schema $ quote $ Fn Task
             -> $ Map Tag Dynamic
         'tasks-to-wire $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn tasks-to-wire (tasks)
             filter-map-kv tasks $ fn (id task)
               MapEntryDecision :keep id $ task-to-wire task
           :examples $ []
-          :schema $ quote $ Fn (Map String app.schema/Task)
+          :schema $ quote $ Fn (Map String Task)
             -> $ Map String $ Map Tag Dynamic
         'user-to-wire $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn user-to-wire (user)
@@ -1777,7 +1775,7 @@
               assoc-wire-field :nickname $ :nickname user
               assoc-wire-field :avatar $ :avatar user
           :examples $ []
-          :schema $ quote $ Fn app.schema/User
+          :schema $ quote $ Fn User
             -> $ Map Tag Dynamic
         'view-route-selected? $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn view-route-selected? (router name)
@@ -1791,7 +1789,7 @@
                   (:unknown tag _raw) (= name tag)
               (:none) false
           :examples $ []
-          :schema $ quote $ Fn (Option app.schema/ViewRouter) Tag (-> Bool)
+          :schema $ quote $ Fn (Option ViewRouter) Tag (-> Bool)
         'working-task-positions $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn working-task-positions (tasks)
             -> (sorted-task-values tasks)
@@ -1799,8 +1797,8 @@
               .sort-by $ fn (position)
                 :id $ :task position
           :examples $ []
-          :schema $ quote $ Fn (Map String app.schema/Task)
-            -> $ List app.schema/TaskPosition
+          :schema $ quote $ Fn (Map String Task)
+            -> $ List TaskPosition
           :tests $ [] $ %{} 'TestEntry (:name |preserve-time-position-and-key-render-order)
             :code $ quote $ let
                 tasks $ {}
@@ -1836,16 +1834,16 @@
                 schema/decode-database $ parse-cirru-edn $ read-file storage-file
               do (println "|Found no data") (schema/decode-database schema/database)
           :examples $ []
-          :schema $ quote $ Ref app.schema/Database
+          :schema $ quote $ Ref schema/Database
         '*reader-reel $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *reader-reel @*reel
           :examples $ []
-          :schema $ quote $ Ref (cumulo-reel.core/ReelState app.schema/Database)
+          :schema $ quote $ Ref (cumulo-reel.core/ReelState schema/Database)
         '*reel $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *reel
             cumulo-reel.core/ReelState :base @*initial-db :db @*initial-db :records ([]) :merged? false
           :examples $ []
-          :schema $ quote $ Ref (cumulo-reel.core/ReelState app.schema/Database)
+          :schema $ quote $ Ref (cumulo-reel.core/ReelState schema/Database)
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op sid)
             when config/dev? $ println |Dispatch! op sid
@@ -1863,7 +1861,7 @@
                   , config/dev?
             , &unit
           :examples $ []
-          :schema $ quote $ Fn app.schema/ServerInput Number (-> Unit)
+          :schema $ quote $ Fn schema/ServerInput Number (-> Unit)
         'get-backup-path! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn get-backup-path! ()
             let
@@ -1942,7 +1940,7 @@
                     let
                         decoded $ try
                           schema/decode-server-input $ parse-cirru-edn msg
-                          fn (_error) (Option :none)
+                          fn (_error) None
                       match decoded
                         (:some input) (dispatch! input sid)
                         (:none) (eprintln "|Invalid or unknown Woodenlist wire operation")
@@ -1981,7 +1979,7 @@
                 , &unit
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (cumulo-reel.core/ReelState app.schema/Database) (-> Unit)
+          :schema $ quote $ Fn (cumulo-reel.core/ReelState schema/Database) (-> Unit)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.server
           :require (app.schema :as schema)
@@ -2055,7 +2053,7 @@
                             :done $ .len $ :done-tasks user
                           :color $ rand-hex-color!
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database (Option app.schema/Session) (List Dynamic)
+          :schema $ quote $ Fn schema/Database (Option schema/Session) (List Dynamic)
             -> $ Map Tag Dynamic
         'twig-done-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn twig-done-tasks (done-tasks year-month)
@@ -2078,16 +2076,16 @@
               {} (:months year-months) (:cursor cursor)
                 :tasks $ schema/tasks-to-wire reading-tasks
           :examples $ []
-          :schema $ quote $ Fn (Map String app.schema/Task) (Option String)
+          :schema $ quote $ Fn (Map String schema/Task) (Option String)
             -> $ Map Tag Dynamic
           :tests $ [] $ %{} 'TestEntry (:name |legacy-month-selection-and-wire-format)
             :code $ quote $ let
                 september $ {} (:id |s) (:text |September) (:mode :working) (:time 1789732800000)
                 october $ {} (:id |o) (:text |October) (:mode :working) (:time 1792324800000) (:custom |retained)
                 tasks $ {} (|s september) (|o october)
-                selected $ twig-done-tasks (schema/decode-tasks tasks) (Option :some |2026-09)
-                latest $ twig-done-tasks (schema/decode-tasks tasks) (Option :none)
-                empty-result $ twig-done-tasks ({}) (Option :none)
+                selected $ twig-done-tasks (schema/decode-tasks tasks) (Some |2026-09)
+                latest $ twig-done-tasks (schema/decode-tasks tasks) None
+                empty-result $ twig-done-tasks ({}) None
               assert= |2026-09 $ .unwrap $ get selected :cursor
               assert=
                 {} $ |s september
@@ -2110,11 +2108,11 @@
                     (:some user) (:name user)
                     (:none) |unknown
           :examples $ []
-          :schema $ quote $ Fn (Map Number app.schema/Session) (Map String app.schema/User)
+          :schema $ quote $ Fn (Map Number schema/Session) (Map String schema/User)
             -> $ Map Number String
         'wrap-format-time $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn wrap-format-time (stamp format)
-            format-time (calcit.std.date/Date0 :date stamp) (Option :some format)
+            format-time (calcit.std.date/Date0 :date stamp) (Some format)
           :examples $ []
           :schema $ quote $ Fn Number String (-> String)
       :ns $ %{} 'NsEntry (:doc |)
@@ -2200,7 +2198,7 @@
               assert= 8 $ .len $ :records cleared
               assert= "|已编辑🐈" $ :text task-at
               assert= 6 $ :time task-at
-              assert= (Option :some :working) (:mode task-at)
+              assert= (Some :working) (:mode task-at)
               assert= 4 $ :time $ .unwrap
                 get
                   :working-tasks $ user-at edited
@@ -2211,13 +2209,12 @@
               assert=
                 app.schema/database-to-wire $ :db cleared
                 app.schema/database-to-wire $ :db refreshed
-              assert= (Option :some |u1)
+              assert= (Some |u1)
                 :user-id $ app.updater.session/get-session (:db refreshed) 1
               assert=
-                Option :some $ app.schema/ServerEffect :ping
+                Some $ app.schema/ServerEffect :ping
                 app.schema/decode-server-input $ :: :effect/ping
-              assert= (Option :none)
-                app.schema/decode-server-input $ :: :unrecognized
+              assert= None $ app.schema/decode-server-input $ :: :unrecognized
             :tags $ #{} :unit
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater
@@ -2242,27 +2239,27 @@
               put-session db sid $ struct-with session $ :messages
                 assoc (:messages session) id $ {} (:id id) (:text text)
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database Number String String (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database Number String String (-> schema/Database)
         'connect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn connect (db sid op-id op-time)
             put-session db sid $ schema/decode-session $ assoc schema/session :id sid
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database Number String Number (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database Number String Number (-> schema/Database)
         'disconnect $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn disconnect (db sid op-id op-time)
             struct-with db $ :sessions $ dissoc (:sessions db) sid
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database Number String Number (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database Number String Number (-> schema/Database)
         'get-session $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn get-session (db sid)
             .unwrap $ get (:sessions db) sid
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database Number (-> app.schema/Session)
+          :schema $ quote $ Fn schema/Database Number (-> schema/Session)
         'put-session $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn put-session (db sid session)
             struct-with db $ :sessions $ assoc (:sessions db) sid session
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database Number app.schema/Session (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database Number schema/Session (-> schema/Database)
         'remove-message $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn remove-message (db id sid op-id op-time)
             let
@@ -2270,7 +2267,7 @@
               put-session db sid $ struct-with session $ :messages
                 dissoc (:messages session) id
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database String Number String Number (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database String Number String Number (-> schema/Database)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater.session
           :require $ app.schema :as schema
@@ -2281,16 +2278,16 @@
             put-user db sid $ struct-with (get-user db sid)
               :done-tasks $ {}
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database Number String Number (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database Number String Number (-> schema/Database)
         'create $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn create (db text sid op-id op-time)
             let
                 user $ get-user db sid
-                task $ schema/Task :id op-id :text text :time op-time :mode (Option :some :working) :extra $ {}
+                task $ schema/Task :id op-id :text text :time op-time :mode (Some :working) :extra $ {}
               put-user db sid $ struct-with user $ :working-tasks
                 assoc (:working-tasks user) op-id task
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database String Number String Number (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database String Number String Number (-> schema/Database)
           :tests $ [] $ %{} 'TestEntry (:name |create-task-under-session-user-id)
             :code $ quote $ let
                 db $ schema/decode-database $ {}
@@ -2310,7 +2307,7 @@
           :code $ quote $ defn get-user (db sid)
             .unwrap $ get (:users db) (session-user-id db sid)
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database Number (-> app.schema/User)
+          :schema $ quote $ Fn schema/Database Number (-> schema/User)
         'group-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn group-tasks (user group)
             match group
@@ -2319,8 +2316,8 @@
               :done-tasks $ :done-tasks user
               _ $ raise |Unknown-task-group
           :examples $ []
-          :schema $ quote $ Fn app.schema/User Tag
-            -> $ Map String app.schema/Task
+          :schema $ quote $ Fn schema/User Tag
+            -> $ Map String schema/Task
         'move-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn move-task (db move sid op-id op-time)
             let
@@ -2340,12 +2337,12 @@
                         , task-id
                 (:none) (app.updater.session/add-message db sid op-id "|No such task")
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database app.schema/MoveTask Number String Number (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database schema/MoveTask Number String Number (-> schema/Database)
         'put-user $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn put-user (db sid user)
             struct-with db $ :users $ assoc (:users db) (session-user-id db sid) user
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database Number app.schema/User (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database Number schema/User (-> schema/Database)
         'remove-done $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn remove-done (db id sid op-id op-time)
             let
@@ -2353,7 +2350,7 @@
               put-user db sid $ struct-with user $ :done-tasks
                 dissoc (:done-tasks user) id
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database String Number String Number (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database String Number String Number (-> schema/Database)
         'remove-working $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn remove-working (db id sid op-id op-time)
             let
@@ -2361,12 +2358,12 @@
               put-user db sid $ struct-with user $ :working-tasks
                 dissoc (:working-tasks user) id
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database String Number String Number (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database String Number String Number (-> schema/Database)
         'session-user-id $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn session-user-id (db sid)
             .unwrap $ :user-id $ app.updater.session/get-session db sid
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database Number (-> String)
+          :schema $ quote $ Fn schema/Database Number (-> String)
         'touch-working $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn touch-working (db id sid op-id op-time)
             let
@@ -2378,7 +2375,7 @@
                     assoc (:working-tasks user) id $ struct-with task $ :time op-time
                 (:none) db
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database String Number String Number (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database String Number String Number (-> schema/Database)
         'update-text $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn update-text (db edit sid op-id op-time)
             let
@@ -2391,7 +2388,7 @@
               put-user db sid $ with-tasks user (:group edit)
                 assoc tasks (:id edit) changed
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database app.schema/EditTask Number String Number (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database schema/EditTask Number String Number (-> schema/Database)
         'with-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn with-tasks (user group tasks)
             match group
@@ -2400,7 +2397,7 @@
               :done-tasks $ struct-with user $ :done-tasks tasks
               _ $ raise |Unknown-task-group
           :examples $ []
-          :schema $ quote $ Fn app.schema/User Tag (Map String app.schema/Task) (-> app.schema/User)
+          :schema $ quote $ Fn schema/User Tag (Map String schema/Task) (-> schema/User)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater.task
           :require
@@ -2422,18 +2419,17 @@
                   if
                     = (md5 password) (:password user)
                     app.updater.session/put-session db sid $ struct-with (app.updater.session/get-session db sid)
-                      :user-id $ Option :some $ :id user
+                      :user-id $ Some $ :id user
                     app.updater.session/add-message db sid op-id $ str "|Wrong password for " username
                 (:none)
                   app.updater.session/add-message db sid op-id $ str "|No user named: " username
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database app.schema/Credentials Number String Number (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database schema/Credentials Number String Number (-> schema/Database)
         'log-out $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn log-out (db sid op-id op-time)
-            app.updater.session/put-session db sid $ struct-with (app.updater.session/get-session db sid)
-              :user-id $ Option :none
+            app.updater.session/put-session db sid $ struct-with (app.updater.session/get-session db sid) (:user-id None)
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database Number String Number (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database Number String Number (-> schema/Database)
         'sign-up $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn sign-up (db credentials sid op-id op-time)
             let
@@ -2453,9 +2449,9 @@
                       session $ app.updater.session/get-session db sid
                       next-db $ struct-with db $ :users
                         assoc (:users db) op-id user
-                    app.updater.session/put-session next-db sid $ struct-with session $ :user-id (Option :some op-id)
+                    app.updater.session/put-session next-db sid $ struct-with session $ :user-id (Some op-id)
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database app.schema/Credentials Number String Number (-> app.schema/Database)
+          :schema $ quote $ Fn schema/Database schema/Credentials Number String Number (-> schema/Database)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater.user
           :require
