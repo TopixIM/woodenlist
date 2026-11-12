@@ -43,7 +43,7 @@
                   :on-data on-server-data
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             if (enum? op)
@@ -66,7 +66,7 @@
               raise "|Expected a client action enum"
             , &unit
           :examples $ []
-          :schema $ quote $ Fn AnyEnum (-> Unit) (:features :js-ffi) (:open :decode)
+          :schema $ quote $ Fn AnyEnum (-> Unit) (:features :io :js-ffi :state) (:open :decode)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             println "|Running mode:" $ if config/dev? |dev |release
@@ -86,7 +86,7 @@
             println "|App started!"
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mount-target ()
             .unwrap $ respo.ffi.browser/query-selector |.app
@@ -113,7 +113,7 @@
               raise |Expected-a-server-message-enum
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi :state)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if
@@ -125,7 +125,7 @@
                 println "|Code updated."
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             render! (mount-target)
@@ -136,7 +136,7 @@
                 , @*store
               , dispatch!
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'simulate-login! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn simulate-login! ()
             match
@@ -147,7 +147,7 @@
               (:none) (println "|Found no storage.")
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.client
           :require
@@ -215,7 +215,7 @@
                         {} $ :bottom 24
                       , None
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) app.schema/ClientStore (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn (Map Tag Dynamic) app.schema/ClientStore (-> respo.schema/Component) (:features :io :js-ffi)
         'comp-offline $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-offline (state)
             div
@@ -551,7 +551,7 @@
                           , task $ :index position
                 .render create-plugin
           :examples $ []
-          :schema $ quote $ Fn respo.schema/States (Map String app.schema/Task) (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn respo.schema/States (Map String app.schema/Task) (-> respo.schema/Component) (:features :io :js-ffi)
         'comp-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-task (states task idx)
             let
@@ -673,7 +673,7 @@
                 .render remove-plugin
                 .render update-plugin
           :examples $ []
-          :schema $ quote $ Fn respo.schema/States app.schema/Task Number (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn respo.schema/States app.schema/Task Number (-> respo.schema/Component) (:features :io :js-ffi)
         'css-item $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-item
             {} $ |$0 $ {} (:line-height |32px) (:margin "|8px 0px") (:position :absolute) (:width |100%) (:transition-duration |300ms) (:white-space :nowrap) (:line-height |32px) (:height |32px) (:max-width 480)
@@ -823,7 +823,7 @@
                         >> states $ :id task
                         , task
           :examples $ []
-          :schema $ quote $ Fn respo.schema/States (Map String app.schema/Task) (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn respo.schema/States (Map String app.schema/Task) (-> respo.schema/Component) (:features :io :js-ffi)
         'comp-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-task (states task)
             let
@@ -880,7 +880,7 @@
                   comp-i :check 14 $ hsl 0 0 50
                 .render update-plugin
           :examples $ []
-          :schema $ quote $ Fn respo.schema/States app.schema/Task (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn respo.schema/States app.schema/Task (-> respo.schema/Component) (:features :io :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.pending
           :require
@@ -945,7 +945,7 @@
                       , &unit
                   <> "|Log out"
           :examples $ []
-          :schema $ quote $ Fn (Option String) (Map Number String) (-> respo.schema/Component) (:features :js-ffi)
+          :schema $ quote $ Fn (Option String) (Map Number String) (-> respo.schema/Component) (:features :io :js-ffi)
         'css-member-label $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-member-label
             {} $ |$0 $ {} (:padding "|0 8px")
@@ -1368,14 +1368,14 @@
                 if (struct? raw) (&struct:to-map raw) raw
                 , 'app.schema/Credentials
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Credentials)
+          :schema $ quote $ Fn Input (-> Credentials) (:generics Input)
         'decode-database $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-database (raw)
             let
                 fields $ merge database $ decode-map-as raw (Map Tag Dynamic)
               Database :users (decode-nullable-field fields :users decode-users) :sessions (decode-nullable-field fields :sessions decode-sessions) :extra $ -> fields (dissoc :users) (dissoc :sessions)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Database)
+          :schema $ quote $ Fn Input (-> Database) (:generics Input)
           :tests $ [] $ %{} 'TestEntry (:name |legacy-domain-and-task-roundtrip)
             :code $ quote $ let
                 task $ {} (:id |t1) (:text "|任务🐈") (:time 0) (:mode nil) (:extension false)
@@ -1436,7 +1436,7 @@
                       .unwrap $ get fields :time
                       , 'Number
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> EditTask)
+          :schema $ quote $ Fn Input (-> EditTask) (:generics Input)
         'decode-move-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-move-task (raw)
             let
@@ -1451,7 +1451,7 @@
                   decode-task-group $ .unwrap $ get fields :from
                   , :to $ decode-task-group $ .unwrap (get fields :to)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> MoveTask)
+          :schema $ quote $ Fn Input (-> MoveTask) (:generics Input)
         'decode-nullable-field $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-nullable-field (fields field decoder)
             match (get fields field)
@@ -1545,7 +1545,7 @@
                           decode-map-as value $ Map String Dynamic
                         , :extra $ -> fields (dissoc :id) (dissoc :user-id) (dissoc :nickname) (dissoc :router) (dissoc :messages)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Session)
+          :schema $ quote $ Fn Input (-> Session) (:generics Input)
         'decode-sessions $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-sessions (raw)
             filter-map-kv
@@ -1578,7 +1578,7 @@
                         (:none) None
                       , :extra $ -> fields (dissoc :id) (dissoc :text) (dissoc :time) (dissoc :mode)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Task)
+          :schema $ quote $ Fn Input (-> Task) (:generics Input)
           :tests $ [] $ %{} 'TestEntry (:name |legacy-task-roundtrip-preserves-extension)
             :code $ quote $ let
                 raw $ {} (:id |t1) (:text "|迁移任务🐈") (:mode nil) (:time 0) (:custom false)
@@ -1632,7 +1632,7 @@
                         decode-optional-field fields :avatar $ fn (value) (decode-map-as value 'String)
                         , :working-tasks (decode-nullable-field task-fields :working-tasks decode-tasks) :pending-tasks (decode-nullable-field task-fields :pending-tasks decode-tasks) :done-tasks (decode-nullable-field task-fields :done-tasks decode-tasks) :extra $ -> fields (dissoc :id) (dissoc :name) (dissoc :password) (dissoc :nickname) (dissoc :avatar) (dissoc :working-tasks) (dissoc :pending-tasks) (dissoc :done-tasks)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> User)
+          :schema $ quote $ Fn Input (-> User) (:generics Input)
         'decode-users $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-users (raw)
             filter-map-kv
@@ -1861,7 +1861,7 @@
                   , config/dev?
             , &unit
           :examples $ []
-          :schema $ quote $ Fn schema/ServerInput Number (-> Unit)
+          :schema $ quote $ Fn schema/ServerInput Number (-> Unit) (:features :io :state)
         'get-backup-path! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn get-backup-path! ()
             let
@@ -1889,11 +1889,11 @@
             on-control-c on-exit!
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :io :state)
         'on-exit! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn on-exit! () (persist-db!) (quit! 0)
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :io :state)
         'persist-db! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn persist-db! ()
             let
@@ -1906,7 +1906,7 @@
               check-write-file! backup-path file-content
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :state)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! () (println "|Code updated..")
             if (not config/dev?) (raise "|reloading only happens in dev mode")
@@ -1915,7 +1915,7 @@
             sync-clients! @*reader-reel
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :io :state)
         'render-loop! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-loop! ()
             when
@@ -1924,7 +1924,7 @@
               sync-clients! @*reader-reel
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit)
+          :schema $ quote $ Fn (-> Unit) (:features :state)
         'run-server! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn run-server! (port)
             wss-serve!
@@ -1950,7 +1950,7 @@
                   _ $ eprintln "|unknown data:" event
                 , &unit
           :examples $ []
-          :schema $ quote $ Fn Number (-> FfiTask)
+          :schema $ quote $ Fn Number (-> FfiTask) (:features :io :state)
         'storage-file $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def storage-file
             if (empty? calcit-dirname)
@@ -1980,7 +1980,7 @@
                   , &unit
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (cumulo-reel.core/ReelState schema/Database) (-> Unit)
+          :schema $ quote $ Fn (cumulo-reel.core/ReelState schema/Database) (-> Unit) (:features :state)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.server
           :require (app.schema :as schema)
