@@ -1188,7 +1188,7 @@
           :examples $ []
           :schema $ quote StructDef
         'EditTask $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct EditTask (:id String) (:group Tag) (:text String) (:time Number)
+          :code $ quote $ defstruct EditTask (:id String) (:group app.schema/TaskGroup) (:text String) (:time Number)
           :examples $ []
           :schema $ quote StructDef
         'LoginState $ %{} 'CodeEntry (:doc |)
@@ -1196,7 +1196,7 @@
           :examples $ []
           :schema $ quote StructDef
         'MoveTask $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct MoveTask (:id String) (:from Tag) (:to Tag)
+          :code $ quote $ defstruct MoveTask (:id String) (:from app.schema/TaskGroup) (:to app.schema/TaskGroup)
           :examples $ []
           :schema $ quote StructDef
         'ServerEffect $ %{} 'CodeEntry (:doc |)
@@ -1245,6 +1245,10 @@
           :code $ quote $ defstruct TaskCardState (:show-menu? Bool) (:show-editor? Bool) (:task-draft String)
           :examples $ []
           :schema $ quote StructDef
+        'TaskGroup $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defenum TaskGroup (:working) (:pending) (:done)
+          :examples $ []
+          :schema $ quote EnumDef
         'TaskPosition $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct TaskPosition (:index Number) (:task app.schema/Task)
           :examples $ []
@@ -1591,12 +1595,14 @@
             :tags $ #{} :unit
         'decode-task-group $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-task-group (raw)
-            let
-                group $ decode-map-as raw 'Tag
-              match group (:working-tasks group) (:pending-tasks group) (:done-tasks group)
+            if (enum? raw) (decode-map-as raw TaskGroup)
+              match (decode-map-as raw 'Tag)
+                :working-tasks $ TaskGroup :working
+                :pending-tasks $ TaskGroup :pending
+                :done-tasks $ TaskGroup :done
                 _ $ raise |Unknown-task-group
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Tag)
+          :schema $ quote $ Fn Input (-> TaskGroup) (:generics Input)
         'decode-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-tasks (raw)
             filter-map-kv
@@ -2315,12 +2321,11 @@
         'group-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn group-tasks (user group)
             match group
-              :working-tasks $ :working-tasks user
-              :pending-tasks $ :pending-tasks user
-              :done-tasks $ :done-tasks user
-              _ $ raise |Unknown-task-group
+              (:working) (:working-tasks user)
+              (:pending) (:pending-tasks user)
+              (:done) (:done-tasks user)
           :examples $ []
-          :schema $ quote $ Fn schema/User Tag
+          :schema $ quote $ Fn schema/User schema/TaskGroup
             -> $ Map String schema/Task
         'move-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn move-task (db move sid op-id op-time)
@@ -2396,12 +2401,14 @@
         'with-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn with-tasks (user group tasks)
             match group
-              :working-tasks $ struct-with user $ :working-tasks tasks
-              :pending-tasks $ struct-with user $ :pending-tasks tasks
-              :done-tasks $ struct-with user $ :done-tasks tasks
-              _ $ raise |Unknown-task-group
+              (:working)
+                struct-with user $ :working-tasks tasks
+              (:pending)
+                struct-with user $ :pending-tasks tasks
+              (:done)
+                struct-with user $ :done-tasks tasks
           :examples $ []
-          :schema $ quote $ Fn schema/User Tag (Map String schema/Task) (-> schema/User)
+          :schema $ quote $ Fn schema/User schema/TaskGroup (Map String schema/Task) (-> schema/User)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater.task
           :require
