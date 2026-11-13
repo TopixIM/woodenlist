@@ -1415,7 +1415,7 @@
                     List String
                   , :tasks $ decode-tasks $ .unwrap (get fields :tasks)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> DoneTasksView)
+          :schema $ quote $ Fn Input (-> DoneTasksView) (:generics Input)
         'decode-edit-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-edit-task (raw)
             let
@@ -1662,7 +1662,7 @@
                       .unwrap $ get fields :sessions
                       , 'Number
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> ViewNumbers)
+          :schema $ quote $ Fn Input (-> ViewNumbers) (:generics Input)
         'decode-view-router $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-view-router (raw)
             let
@@ -1679,7 +1679,7 @@
                 :profile $ ViewRouter :profile $ decode-map-as payload (Map Number String)
                 _ $ ViewRouter :unknown name fields
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> ViewRouter)
+          :schema $ quote $ Fn Input (-> ViewRouter) (:generics Input)
         'read-done-tasks-state $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-done-tasks-state (raw)
             decode-map-as
@@ -1690,7 +1690,7 @@
                   Map Tag Dynamic
               , 'app.schema/DoneTasksState
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> DoneTasksState)
+          :schema $ quote $ Fn Input (-> DoneTasksState) (:generics Input)
         'read-login-state $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-login-state (raw)
             decode-map-as
@@ -1701,7 +1701,7 @@
                   Map Tag Dynamic
               , 'app.schema/LoginState
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> LoginState)
+          :schema $ quote $ Fn Input (-> LoginState) (:generics Input)
         'read-task-card-state $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-task-card-state (raw text)
             decode-map-as
@@ -1712,7 +1712,7 @@
                   Map Tag Dynamic
               , 'app.schema/TaskCardState
           :examples $ []
-          :schema $ quote $ Fn Dynamic String (-> TaskCardState)
+          :schema $ quote $ Fn Input String (-> TaskCardState) (:generics Input)
         'session $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def session
             {} (:user-id nil) (:id nil) (:nickname nil)
