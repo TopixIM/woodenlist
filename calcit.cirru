@@ -1523,8 +1523,9 @@
                 _ None
               , None
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn Input
             -> $ Option ServerInput
+            :generics Input
         'decode-session $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-session (raw)
             let
@@ -1553,8 +1554,9 @@
               fn (key value)
                 MapEntryDecision :keep key $ decode-session value
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn Input
             -> $ Map Number Session
+            :generics Input
         'decode-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-task (raw)
             let
@@ -1602,8 +1604,9 @@
               fn (id value)
                 MapEntryDecision :keep id $ decode-task value
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn Input
             -> $ Map String Task
+            :generics Input
         'decode-user $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-user (raw)
             let
@@ -1640,8 +1643,9 @@
               fn (key value)
                 MapEntryDecision :keep key $ decode-user value
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn Input
             -> $ Map String User
+            :generics Input
         'decode-view-numbers $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-view-numbers (raw)
             let
