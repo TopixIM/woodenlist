@@ -2170,7 +2170,8 @@
                 base $ app.schema/decode-database app.schema/database
                 initial $ cumulo-reel.core/ReelState :base base :db base :records ([]) :merged? false
                 step $ fn (reel op id time)
-                  hint-fn $ Fn (cumulo-reel.core/ReelState app.schema/Database) AnyEnum String Number $ -> (cumulo-reel.core/ReelState app.schema/Database)
+                  hint-fn $ Fn (cumulo-reel.core/ReelState app.schema/Database) WireOp String Number (:generics WireOp)
+                    -> $ cumulo-reel.core/ReelState app.schema/Database
                   cumulo-reel.core/reel-reducer reel updater
                     match
                       .unwrap $ app.schema/decode-server-input op
