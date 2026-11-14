@@ -1333,7 +1333,7 @@
                     decode-optional-field user-fields :name $ fn (value) (decode-map-as value 'String)
                     , :color $ decode-optional-field fields :color $ fn (value) (decode-map-as value 'String)
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) (-> ClientView)
+          :schema $ quote $ Fn (Map Tag Field) (-> ClientView) (:generics Field)
           :tests $ [] $ %{} 'TestEntry (:name |guest-and-account-wire-fields)
             :code $ quote $ let
                 guest $ decode-client-view $ {} (:logged-in? false) (:reel-length 0)
