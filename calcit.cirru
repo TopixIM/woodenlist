@@ -1473,10 +1473,10 @@
                 if (nil? value) None $ Some $ decoder value
               (:none) None
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) Tag
-            Fn Dynamic $ -> T
+          :schema $ quote $ Fn (Map Tag Field) Tag
+            Fn Field $ -> T
             -> $ Option T
-            :generics T
+            :generics Field T
         'decode-server-input $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-server-input (raw)
             if (enum? raw)
