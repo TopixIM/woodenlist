@@ -1462,10 +1462,10 @@
               (:some value) (decoder value)
               (:none) (decoder nil)
           :examples $ []
-          :schema $ quote $ Fn (Map K Dynamic) K
-            Fn Dynamic $ -> T
+          :schema $ quote $ Fn (Map K Field) K
+            Fn (JsNullish Field) (-> T)
             -> T
-            :generics K T
+            :generics K Field T
         'decode-optional-field $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-optional-field (fields field decoder)
             match (get fields field)
@@ -1473,10 +1473,10 @@
                 if (nil? value) None $ Some $ decoder value
               (:none) None
           :examples $ []
-          :schema $ quote $ Fn (Map Tag Dynamic) Tag
-            Fn Dynamic $ -> T
+          :schema $ quote $ Fn (Map Tag Field) Tag
+            Fn Field $ -> T
             -> $ Option T
-            :generics T
+            :generics Field T
         'decode-server-input $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-server-input (raw)
             if (enum? raw)
@@ -2170,7 +2170,8 @@
                 base $ app.schema/decode-database app.schema/database
                 initial $ cumulo-reel.core/ReelState :base base :db base :records ([]) :merged? false
                 step $ fn (reel op id time)
-                  hint-fn $ Fn (cumulo-reel.core/ReelState app.schema/Database) AnyEnum String Number $ -> (cumulo-reel.core/ReelState app.schema/Database)
+                  hint-fn $ Fn (cumulo-reel.core/ReelState app.schema/Database) WireOp String Number (:generics WireOp)
+                    -> $ cumulo-reel.core/ReelState app.schema/Database
                   cumulo-reel.core/reel-reducer reel updater
                     match
                       .unwrap $ app.schema/decode-server-input op
