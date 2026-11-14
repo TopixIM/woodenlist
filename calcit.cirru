@@ -1462,10 +1462,10 @@
               (:some value) (decoder value)
               (:none) (decoder nil)
           :examples $ []
-          :schema $ quote $ Fn (Map K Dynamic) K
+          :schema $ quote $ Fn (Map K Field) K
             Fn Dynamic $ -> T
             -> T
-            :generics K T
+            :generics K Field T
         'decode-optional-field $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-optional-field (fields field decoder)
             match (get fields field)
