@@ -1463,7 +1463,7 @@
               (:none) (decoder nil)
           :examples $ []
           :schema $ quote $ Fn (Map K Field) K
-            Fn Dynamic $ -> T
+            Fn (JsNullish Field) (-> T)
             -> T
             :generics K Field T
         'decode-optional-field $ %{} 'CodeEntry (:doc |)
