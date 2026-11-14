@@ -2238,7 +2238,7 @@
                 session $ app.updater.session/get-session db sid
               app.updater.session/put-session db sid $ struct-with session $ :router route
           :examples $ []
-          :schema $ quote $ Fn app.schema/Database (Map Tag Dynamic) Number String Number (-> app.schema/Database)
+          :schema $ quote $ Fn app.schema/Database (Map Tag Field) Number String Number (-> app.schema/Database) (:generics Field)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater.router
     'app.updater.session $ %{} 'FileEntry
