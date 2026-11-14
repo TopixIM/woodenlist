@@ -66,7 +66,7 @@
               raise "|Expected a client action enum"
             , &unit
           :examples $ []
-          :schema $ quote $ Fn AnyEnum (-> Unit) (:features :io :js-ffi :state) (:open :decode)
+          :schema $ quote $ Fn Input (-> Unit) (:generics Input) (:features :io :js-ffi :state) (:open :decode)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             println "|Running mode:" $ if config/dev? |dev |release
@@ -113,7 +113,7 @@
               raise |Expected-a-server-message-enum
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Unit) (:features :js-ffi :state)
+          :schema $ quote $ Fn Input (-> Unit) (:generics Input) (:features :js-ffi :state)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if
@@ -1188,7 +1188,7 @@
           :examples $ []
           :schema $ quote StructDef
         'EditTask $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct EditTask (:id String) (:group Tag) (:text String) (:time Number)
+          :code $ quote $ defstruct EditTask (:id String) (:group app.schema/TaskGroup) (:text String) (:time Number)
           :examples $ []
           :schema $ quote StructDef
         'LoginState $ %{} 'CodeEntry (:doc |)
@@ -1196,7 +1196,7 @@
           :examples $ []
           :schema $ quote StructDef
         'MoveTask $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct MoveTask (:id String) (:from Tag) (:to Tag)
+          :code $ quote $ defstruct MoveTask (:id String) (:from app.schema/TaskGroup) (:to app.schema/TaskGroup)
           :examples $ []
           :schema $ quote StructDef
         'ServerEffect $ %{} 'CodeEntry (:doc |)
@@ -1245,6 +1245,10 @@
           :code $ quote $ defstruct TaskCardState (:show-menu? Bool) (:show-editor? Bool) (:task-draft String)
           :examples $ []
           :schema $ quote StructDef
+        'TaskGroup $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defenum TaskGroup (:working) (:pending) (:done)
+          :examples $ []
+          :schema $ quote EnumDef
         'TaskPosition $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct TaskPosition (:index Number) (:task app.schema/Task)
           :examples $ []
@@ -1415,7 +1419,7 @@
                     List String
                   , :tasks $ decode-tasks $ .unwrap (get fields :tasks)
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> DoneTasksView)
+          :schema $ quote $ Fn Input (-> DoneTasksView) (:generics Input)
         'decode-edit-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-edit-task (raw)
             let
@@ -1523,8 +1527,9 @@
                 _ None
               , None
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn Input
             -> $ Option ServerInput
+            :generics Input
         'decode-session $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-session (raw)
             let
@@ -1553,8 +1558,9 @@
               fn (key value)
                 MapEntryDecision :keep key $ decode-session value
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn Input
             -> $ Map Number Session
+            :generics Input
         'decode-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-task (raw)
             let
@@ -1589,12 +1595,14 @@
             :tags $ #{} :unit
         'decode-task-group $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-task-group (raw)
-            let
-                group $ decode-map-as raw 'Tag
-              match group (:working-tasks group) (:pending-tasks group) (:done-tasks group)
+            if (enum? raw) (decode-map-as raw TaskGroup)
+              match (decode-map-as raw 'Tag)
+                :working-tasks $ TaskGroup :working
+                :pending-tasks $ TaskGroup :pending
+                :done-tasks $ TaskGroup :done
                 _ $ raise |Unknown-task-group
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Tag)
+          :schema $ quote $ Fn Input (-> TaskGroup) (:generics Input)
         'decode-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-tasks (raw)
             filter-map-kv
@@ -1602,8 +1610,9 @@
               fn (id value)
                 MapEntryDecision :keep id $ decode-task value
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn Input
             -> $ Map String Task
+            :generics Input
         'decode-user $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-user (raw)
             let
@@ -1640,8 +1649,9 @@
               fn (key value)
                 MapEntryDecision :keep key $ decode-user value
           :examples $ []
-          :schema $ quote $ Fn Dynamic
+          :schema $ quote $ Fn Input
             -> $ Map String User
+            :generics Input
         'decode-view-numbers $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-view-numbers (raw)
             let
@@ -1662,7 +1672,7 @@
                       .unwrap $ get fields :sessions
                       , 'Number
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> ViewNumbers)
+          :schema $ quote $ Fn Input (-> ViewNumbers) (:generics Input)
         'decode-view-router $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn decode-view-router (raw)
             let
@@ -1679,7 +1689,7 @@
                 :profile $ ViewRouter :profile $ decode-map-as payload (Map Number String)
                 _ $ ViewRouter :unknown name fields
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> ViewRouter)
+          :schema $ quote $ Fn Input (-> ViewRouter) (:generics Input)
         'read-done-tasks-state $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-done-tasks-state (raw)
             decode-map-as
@@ -1690,7 +1700,7 @@
                   Map Tag Dynamic
               , 'app.schema/DoneTasksState
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> DoneTasksState)
+          :schema $ quote $ Fn Input (-> DoneTasksState) (:generics Input)
         'read-login-state $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-login-state (raw)
             decode-map-as
@@ -1701,7 +1711,7 @@
                   Map Tag Dynamic
               , 'app.schema/LoginState
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> LoginState)
+          :schema $ quote $ Fn Input (-> LoginState) (:generics Input)
         'read-task-card-state $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn read-task-card-state (raw text)
             decode-map-as
@@ -1712,7 +1722,7 @@
                   Map Tag Dynamic
               , 'app.schema/TaskCardState
           :examples $ []
-          :schema $ quote $ Fn Dynamic String (-> TaskCardState)
+          :schema $ quote $ Fn Input String (-> TaskCardState) (:generics Input)
         'session $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def session
             {} (:user-id nil) (:id nil) (:nickname nil)
@@ -2311,12 +2321,11 @@
         'group-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn group-tasks (user group)
             match group
-              :working-tasks $ :working-tasks user
-              :pending-tasks $ :pending-tasks user
-              :done-tasks $ :done-tasks user
-              _ $ raise |Unknown-task-group
+              (:working) (:working-tasks user)
+              (:pending) (:pending-tasks user)
+              (:done) (:done-tasks user)
           :examples $ []
-          :schema $ quote $ Fn schema/User Tag
+          :schema $ quote $ Fn schema/User schema/TaskGroup
             -> $ Map String schema/Task
         'move-task $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn move-task (db move sid op-id op-time)
@@ -2392,12 +2401,14 @@
         'with-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn with-tasks (user group tasks)
             match group
-              :working-tasks $ struct-with user $ :working-tasks tasks
-              :pending-tasks $ struct-with user $ :pending-tasks tasks
-              :done-tasks $ struct-with user $ :done-tasks tasks
-              _ $ raise |Unknown-task-group
+              (:working)
+                struct-with user $ :working-tasks tasks
+              (:pending)
+                struct-with user $ :pending-tasks tasks
+              (:done)
+                struct-with user $ :done-tasks tasks
           :examples $ []
-          :schema $ quote $ Fn schema/User Tag (Map String schema/Task) (-> schema/User)
+          :schema $ quote $ Fn schema/User schema/TaskGroup (Map String schema/Task) (-> schema/User)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.updater.task
           :require
