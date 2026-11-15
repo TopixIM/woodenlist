@@ -12,6 +12,5 @@
     |calcit-lang/calcit-wss |0.2.44
     |calcit-lang/calcit.std |0.2.55
     |calcit-lang/js-ffi |0.2.13
-    |calcit-lang/memof |0.0.49
     |calcit-lang/recollect |0.3.4
     |mvc-works/ws-edn.calcit |0.1.1
