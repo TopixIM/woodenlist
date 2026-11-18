@@ -10,20 +10,20 @@ Site http://wood.topix.im/
 
 https://github.com/Cumulo/calcium-workflow
 
-### Calcit 0.42.1
+### Calcit 0.43.0
 
-前后端使用配对的正式 Calcit 0.42.1，并使用 `calcit.std` 0.2.55。重新安装依赖并构建后按原流程部署。消息关闭回调使用 Respo Message 已声明的 Map 参数，原 WebSocket 和存档格式保持。
+前后端使用配对的正式 Calcit 0.43.0，并使用 `calcit.std` 0.2.56。重新安装依赖并构建后按原流程部署。消息关闭回调使用 Respo Message 已声明的 Map 参数，原 WebSocket 和存档格式保持。
 
 ### 构建与部署
 
-当前迁移候选精确配对正式 Calcit / `@calcit/procs` **0.30.1**、
+当前版本精确配对正式 Calcit / `@calcit/procs` **0.43.0**、
 Caps 0.1.1、Node.js 24、Yarn 4.18.0，保留原 browser/native 入口目标。所有模块改为精确正式版本，
 不使用 hash、浮动 main 或模块 alpha。没有消费者的 Lilac 已移除。
 **本地迁移门禁已通过，但未验收生产后端环境，不能仅凭本地或PR绿灯直接合并部署。**
 
 CI 保留 strict workflow 和工具链门禁，使用当前 `--check-only --ns` 检查两种目标的所有应用定义，
-以及定义附带的原生回归测试；不维护额外统计脚本或测试框架。本地不运行 Caps，干净模块安装与
-新 native 构建由独立 Linux CI 验证。
+以及定义附带的原生回归测试；不维护额外统计脚本或测试框架。Caps 严格安装并构建原生依赖，
+Linux CI 也会验证干净安装。
 
 COS 只上传前端 `dist/`。生产 CDN 路径仍为 `https://cos-sh.tiye.me/TopixIM/woodenlist/`，同仓库 PR 使用 `pr/<编号>/<run-id>/<attempt>/` 隔离资源；fork PR 只构建。`worktools/cos-upload-action@v1.2.0` 用 `public-base-url` 和内置 `verify-*` 默认配置校验，无额外脚本。
 
