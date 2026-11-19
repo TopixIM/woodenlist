@@ -1,5 +1,5 @@
 
-{} (:calcit-version |0.43.0)
+{} (:calcit-version |0.44.0)
   :version |0.1.1
   :dependencies $ {} (|Cumulo/cumulo-reel.calcit |0.3.5)
     |Cumulo/cumulo-util.calcit |0.0.44
