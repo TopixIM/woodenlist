@@ -10,13 +10,13 @@ Site http://wood.topix.im/
 
 https://github.com/Cumulo/calcium-workflow
 
-### Calcit 0.43.0
+### Calcit 0.44.0
 
-前后端使用配对的正式 Calcit 0.43.0，并使用 `calcit.std` 0.2.56。重新安装依赖并构建后按原流程部署。消息关闭回调使用 Respo Message 已声明的 Map 参数，原 WebSocket 和存档格式保持。
+前后端使用配对的正式 Calcit 0.44.0，并使用 `calcit.std` 0.2.56。重新安装依赖并构建后按原流程部署。消息关闭回调使用 Respo Message 已声明的 Map 参数，原 WebSocket 和存档格式保持。
 
 ### 构建与部署
 
-当前版本精确配对正式 Calcit / `@calcit/procs` **0.43.0**、
+当前版本精确配对正式 Calcit / `@calcit/procs` **0.44.0**、
 Caps 0.1.1、Node.js 24、Yarn 4.18.0，保留原 browser/native 入口目标。所有模块改为精确正式版本，
 不使用 hash、浮动 main 或模块 alpha。没有消费者的 Lilac 已移除。
 **本地迁移门禁已通过，但未验收生产后端环境，不能仅凭本地或PR绿灯直接合并部署。**
