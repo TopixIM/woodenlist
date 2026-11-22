@@ -16,6 +16,8 @@ https://github.com/Cumulo/calcium-workflow
 
 正式依赖图对齐 Cumulo Reel 0.3.9、WS-EDN 0.2.7 与 Recollect 0.3.10；前后端需配套更新。
 
+界面类型槽使用具名 `UiOp`，任务移动和编辑的字段值使用 String/Tag/Number union。发送具名操作前会恢复原匿名 Cirru EDN 消息；旧匿名事件仍按原路径发送，服务端协议不变。
+
 ### 构建与部署
 
 当前版本精确配对正式 Calcit / `@calcit/procs` **0.44.0**、
