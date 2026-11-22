@@ -32,15 +32,15 @@
                 host $ .unwrap-or (js-ffi.shared/search-params-get query |host) (.-hostname location)
                 port $ .unwrap-or (js-ffi.shared/search-params-get query |port)
                   str $ :port config/site
-              ws-connect!
+                opened $ fn (event) (simulate-login!) &unit
+                closed $ fn (event)
+                  reset! *store $ app.schema/ConnectionState :offline
+                  js/console.error "|Lost connection!"
+                  , &unit
+              ws-edn.client/ws-connect-typed!
                 if config/dev? (str |ws:// host |: port) |wss://wood.topix.im/ws
-                {}
-                  :on-open $ fn (event) (simulate-login!)
-                  :on-close $ fn (event)
-                    reset! *store $ app.schema/ConnectionState :offline
-                    js/console.error "|Lost connection!"
-                    , &unit
-                  :on-data on-server-data
+                ws-edn.client/ClientConfig :retry-base-ms None :retry-max-ms None :retry-jitter None :heartbeat-timeout-ms None :class-mapper $ {}
+                ws-edn.client/ClientCallbacks :on-open (Some opened) :on-close (Some closed) :on-error None :on-data $ Some on-server-data
             , &unit
           :examples $ []
           :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
