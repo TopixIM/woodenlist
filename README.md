@@ -12,9 +12,9 @@ https://github.com/Cumulo/calcium-workflow
 
 ### Calcit 0.44.0
 
-前后端使用配对的正式 Calcit 0.44.0，并使用 `calcit.std` 0.2.58 和 `calcit-wss` 0.2.46。重新安装依赖并构建后按原流程部署。消息关闭回调使用 Respo Message 已声明的 Map 参数，原 WebSocket 和存档格式保持。
+前后端使用配对的正式 Calcit 0.44.0，并使用 `calcit.std` 0.2.58 和 `calcit-wss` 0.2.46。重新安装依赖并构建后按原流程部署。消息关闭回调使用 Respo Message 已声明的 Map 参数，客户端连接使用按事件区分的类型化回调，原 WebSocket 和存档格式保持。
 
-正式依赖图对齐 Cumulo Reel 0.3.8、WS-EDN 0.2.6 与 Recollect 0.3.10；前后端需配套更新。
+正式依赖图对齐 Cumulo Reel 0.3.9、WS-EDN 0.2.7 与 Recollect 0.3.10；前后端需配套更新。
 
 ### 构建与部署
 
