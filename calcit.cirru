@@ -6,7 +6,7 @@
     :default $ {} (:description |) (:init-fn 'app.client/main!) (:mode :js) (:reload-fn 'app.client/reload!) (:target :browser)
       :feature-policy $ {}
       :modules $ [] |respo.calcit/ |recollect/ |respo-ui.calcit/ |ws-edn.calcit/ |cumulo-util.calcit/ |respo-message.calcit/ |cumulo-reel.calcit/ |respo-feather.calcit/ |alerts.calcit/ |respo-markdown.calcit/
-      :type-slots $ {} $ :dispatch-op 'app.schema/DispatchOp
+      :type-slots $ {} $ :dispatch-op 'app.schema/UiOp
     :server $ {} (:description |) (:init-fn 'app.server/main!) (:mode :native) (:reload-fn 'app.server/reload!) (:target :native)
       :feature-policy $ {}
       :modules $ [] |recollect/ |cumulo-util.calcit/ |cumulo-reel.calcit/ |calcit-wss/ |calcit.std/
@@ -62,7 +62,10 @@
                         , s
                       Map Tag Dynamic
                   (:effect/connect) (connect!)
-                  _ $ ws-send! op
+                  _ $ ws-send! $ if
+                    = (enum-definition op) (Some app.schema/UiOp)
+                    schema/ui-op-to-wire $ decode-map-as op 'app.schema/UiOp
+                    , op
               raise "|Expected a client action enum"
             , &unit
           :examples $ []
@@ -1253,6 +1256,59 @@
           :code $ quote $ defstruct TaskPosition (:index Number) (:task app.schema/Task)
           :examples $ []
           :schema $ quote StructDef
+        'TaskWireValue $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defunion TaskWireValue String Tag Number
+          :examples $ []
+        'UiOp $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defenum UiOp
+            :states (List app.schema/StateKey) Dynamic
+            :effect/connect
+            :session/remove-message $ Map Tag Dynamic
+            :router/change $ Map Tag Dynamic
+            :user/log-in Dynamic
+            :user/sign-up Dynamic
+            :user/log-out
+            :task/create String
+            :task/move-task $ Map Tag TaskWireValue
+            :task/update-text $ Map Tag TaskWireValue
+            :task/remove-working String
+            :task/remove-done String
+            :task/touch-working String
+            :task/clear-done
+            :reel/reset
+            :reel/merge
+          :examples $ []
+          :schema $ quote EnumDef
+          :tests $ [] $ %{} 'TestEntry (:name |ui-wire-roundtrip)
+            :code $ quote $ let
+                creds $ [] |alice |secret
+                move $ {} (:id |task-1) (:from :working-tasks) (:to :done-tasks)
+                edit $ {} (:id |task-1) (:text |updated) (:group :working-tasks) (:time 1234)
+                msg $ {} $ :id |message-1
+                route $ {} (:name :done) (:data |2026-11)
+              assert=
+                format-cirru-edn $ :: :task/create |hello
+                format-cirru-edn $ ui-op-to-wire $ UiOp :task/create |hello
+              assert=
+                format-cirru-edn $ :: :user/log-in creds
+                format-cirru-edn $ ui-op-to-wire $ UiOp :user/log-in creds
+              assert=
+                format-cirru-edn $ :: :task/move-task move
+                format-cirru-edn $ ui-op-to-wire $ UiOp :task/move-task move
+              assert=
+                format-cirru-edn $ :: :task/update-text edit
+                format-cirru-edn $ ui-op-to-wire $ UiOp :task/update-text edit
+              assert=
+                format-cirru-edn $ :: :session/remove-message msg
+                format-cirru-edn $ ui-op-to-wire $ UiOp :session/remove-message msg
+              assert=
+                format-cirru-edn $ :: :router/change route
+                format-cirru-edn $ ui-op-to-wire $ UiOp :router/change route
+              assert=
+                Some $ ServerOp :task/create |hello
+                decode-server-input $ parse-cirru-edn $ format-cirru-edn
+                  ui-op-to-wire $ UiOp :task/create |hello
+            :tags $ #{} :unit
         'User $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct User (:id String) (:name String) (:password String)
             :nickname $ Option String
@@ -1771,6 +1827,27 @@
           :examples $ []
           :schema $ quote $ Fn (Map String Task)
             -> $ Map String $ Map Tag Dynamic
+        'ui-op-to-wire $ %{} 'CodeEntry (:doc |)
+          :code $ quote $ defn ui-op-to-wire (op)
+            match op
+              (:states cursor value) (:: :states cursor value)
+              (:effect/connect) (:: :effect/connect)
+              (:session/remove-message data) (:: :session/remove-message data)
+              (:router/change data) (:: :router/change data)
+              (:user/log-in data) (:: :user/log-in data)
+              (:user/sign-up data) (:: :user/sign-up data)
+              (:user/log-out) (:: :user/log-out)
+              (:task/create data) (:: :task/create data)
+              (:task/move-task data) (:: :task/move-task data)
+              (:task/update-text data) (:: :task/update-text data)
+              (:task/remove-working id) (:: :task/remove-working id)
+              (:task/remove-done id) (:: :task/remove-done id)
+              (:task/touch-working id) (:: :task/touch-working id)
+              (:task/clear-done) (:: :task/clear-done)
+              (:reel/reset) (:: :reel/reset)
+              (:reel/merge) (:: :reel/merge)
+          :examples $ []
+          :schema $ quote $ Fn UiOp (-> AnyEnum) (:open :reflect)
         'user-to-wire $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn user-to-wire (user)
             ->
