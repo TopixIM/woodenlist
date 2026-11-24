@@ -343,7 +343,7 @@
                   , None
                 .render remove-plugin
           :examples $ []
-          :schema $ quote $ Fn respo.schema/States app.schema/Task Bool (-> respo.schema/Component) (:features :state)
+          :schema $ quote $ Fn respo.schema/States app.schema/Task Bool (-> respo.schema/Component) (:features :io :state)
         'comp-done-tasks $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-done-tasks (states view)
             let
@@ -443,7 +443,7 @@
                       <> |Clear
                 =< nil 240
           :examples $ []
-          :schema $ quote $ Fn respo.schema/States app.schema/DoneTasksView (-> respo.schema/Component) (:features :js-ffi :state)
+          :schema $ quote $ Fn respo.schema/States app.schema/DoneTasksView (-> respo.schema/Component) (:features :io :js-ffi :state)
         'css-done-content $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-done-content
             {} $ |$0 $ {}
